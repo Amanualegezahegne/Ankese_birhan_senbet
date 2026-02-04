@@ -1,0 +1,89 @@
+{
+    "navbar": {
+        "brand": "አንቀፀ ብርሃን ሰንበት ት/ቤት",
+        "home": "ዋና ገጽ",
+        "about": "ስለ እኛ",
+        "contact": "ያግኙን",
+        "signIn": "ይግቡ"
+    },
+    "home": {
+        "heroTitle": "እንኳን በደህና መጡ",
+        "heroSubtitle": "የላቀ ውጤት ለማምጣት ጉዞዎ እዚህ ይጀምራል።",
+        "getStarted": "አሁን ይመዝገቡ",
+        "features": {
+            "fastSecure": {
+                "title": "ፈጣን እና ደህንነቱ የተጠበቀ",
+                "desc": "በከፍተኛ ደህንነት እና በመብረቅ ፍጥነት ይደሰቱ።"
+            },
+            "userFriendly": {
+                "title": "ለተጠቃሚ ምቹ",
+                "desc": "እርስዎን ታሳቢ በማድረግ የተሰራ፣ ቀላል እና ግልጽ።"
+            },
+            "support": {
+                "title": "24/7 ድጋፍ",
+                "desc": "ስኬታማ እንዲሆኑ ልንረዳዎ ምንግዜም ዝግጁ ነን።"
+            }
+        }
+    },
+    "about": {
+        "title": "ስለ እኛ",
+        "description": "ለተጠቃሚዎቻችን ምርጥ መፍትሄዎችን ለማቅረብ ቁርጠኛ ነን። ቡድናችን ቴክኖሎጂ ህይወትን እንደሚያሻሽል በሚያምኑ ልበ ቀና ባለሙያዎች የተዋቀረ ነው።",
+        "missionTitle": "ተልዕኳችን",
+        "missionDesc": "ውስብስብነትን በሚያቃልሉ እና እድገትን በሚያፋጥኑ መሳሪያዎች ግለሰቦችን እና ድርጅቶችን ማጎልበት።",
+        "visionTitle": "ራዕያችን",
+        "visionDesc": "ቴክኖሎጂ ለሁሉም ሰው ተደራሽ፣ ለመረዳት ቀላል እና ጠቃሚ የሚሆንበት ዓለም ማየት።"
+    },
+    "contact": {
+        "title": "ያግኙን",
+        "intro": "ከእርስዎ መስማት እንፈልጋለን። መልዕክት ይላኩልን፤ በተቻለ ፍጥነት ምላሽ እንሰጣለን።",
+        "getInTouch": "አድራሻዎቻችን",
+        "form": {
+            "name": "ስም",
+            "email": "ኢሜይል",
+            "message": "መልዕክት",
+            "send": "መልዕክት ይላኩ",
+            "placeholders": {
+                "name": "ስምዎ",
+                "email": "ኢሜይልዎ",
+                "message": "ምን እንርዳዎ?"
+            }
+        }
+    },
+    "signin": {
+        "title": "እንኳን በደህና መጡ",
+        "subtitle": "እባክዎ ወደ መለያዎ ይግቡ",
+        "email": "ኢሜይል",
+        "password": "የይለፍ ቃል",
+        "button": "ይግቡ",
+        "noAccount": "መለያ የለዎትም?",
+        "signup": "ይመዝገቡ"
+    },
+    "signup": {
+        "title": "መለያ ይፍጠሩ",
+        "subtitle": "ነፃ መለያዎን በመፍጠር ይጀምሩ",
+        "name": "ሙሉ ስም",
+        "email": "ኢሜይል",
+        "phone": "ስልክ ቁጥር",
+        "sex": "ጾታ",
+        "selectSex": "ጾታ ይምረጡ",
+        "male": "ወንድ",
+        "female": "ሴት",
+        "nationalId": "ብሄራዊ መታወቂያ",
+        "dob": "የትውልድ ቀን",
+        "password": "የይለፍ ቃል",
+        "confirmPassword": "የይለፍ ቃል ያረጋግጡ",
+        "selectOption": "ምርጫ ይምረጡ",
+        "button": "መለያ ይፍጠሩ",
+        "haveAccount": "መለያ አለዎት?",
+        "signIn": "ይግቡ",
+        "passwordMismatch": "የይለፍ ቃሎች አይዛመዱም!",
+        "servedQuestion": "በሌላ ሰንበት ት/ቤት/ቤተክርስቲያን አገልግለው ያውቃሉ?",
+        "servedWhere": "የት ነው ያገለገሉት?",
+        "yesLabel": "አዎ",
+        "noLabel": "አይ",
+        "attachCertificate": "የምስክር ወረቀት ወይም የድጋፍ ደብዳቤ ካለዎት እዚህ ያያይዙ",
+        "placeholders": {
+            "name": "አበበ ከበደ"
+        }
+    }
+}

@@ -1,0 +1,89 @@
+{
+    "navbar": {
+        "brand": "Ankese Birhan Senbet Sunday School",
+        "home": "Home",
+        "about": "About",
+        "contact": "Contact",
+        "signIn": "Sign In"
+    },
+    "home": {
+        "heroTitle": "Welcome to Our Platform",
+        "heroSubtitle": "Your journey to excellence starts here.",
+        "getStarted": "Register Now",
+        "features": {
+            "fastSecure": {
+                "title": "Fast & Secure",
+                "desc": "Experience lightning fast performance with top-notch security."
+            },
+            "userFriendly": {
+                "title": "User Friendly",
+                "desc": "Designed with you in mind, simple and intuitive."
+            },
+            "support": {
+                "title": "24/7 Support",
+                "desc": "We are always here to help you succeed."
+            }
+        }
+    },
+    "about": {
+        "title": "About Us",
+        "description": "We are dedicated to providing the best solutions for our users. Our team is composed of passionate individuals who believe in the power of technology to improve lives.",
+        "missionTitle": "Our Mission",
+        "missionDesc": "To empower individuals and businesses with tools that simplify complexity and drive growth.",
+        "visionTitle": "Our Vision",
+        "visionDesc": "A world where technology is accessible, intuitive, and beneficial for everyone."
+    },
+    "contact": {
+        "title": "Contact Us",
+        "intro": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+        "getInTouch": "Get in Touch",
+        "form": {
+            "name": "Name",
+            "email": "Email",
+            "message": "Message",
+            "send": "Send Message",
+            "placeholders": {
+                "name": "Your Name",
+                "email": "Your Email",
+                "message": "How can we help?"
+            }
+        }
+    },
+    "signin": {
+        "title": "Welcome Back",
+        "subtitle": "Please sign in to your account",
+        "email": "Email",
+        "password": "Password",
+        "button": "Sign In",
+        "noAccount": "Don't have an account?",
+        "signup": "Sign up"
+    },
+    "signup": {
+        "title": "Create Account",
+        "subtitle": "Get started with your free account",
+        "name": "Full Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "sex": "Sex",
+        "selectSex": "Select Sex",
+        "male": "Male",
+        "female": "Female",
+        "nationalId": "National ID",
+        "dob": "Date of Birth",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "selectOption": "Select Option",
+        "button": "Create Account",
+        "haveAccount": "Already have an account?",
+        "signIn": "Sign In",
+        "passwordMismatch": "Passwords do not match!",
+        "servedQuestion": "Have you served in another Sunday School/Church?",
+        "servedWhere": "Where did you serve?",
+        "yesLabel": "Yes",
+        "noLabel": "No",
+        "attachCertificate": "Attach certificate or recommendation letter (if available)",
+        "placeholders": {
+            "name": "Jane Doe"
+        }
+    }
+}
