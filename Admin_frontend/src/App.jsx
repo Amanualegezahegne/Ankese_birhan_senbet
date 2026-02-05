@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navbar from './Components/Navbar';
+import Sidebar from './Components/Sidebar';
 import Home from './Pages/Home';
 import Contact from './Pages/Contact';
 import Messages from './Pages/Messages';
 import UserManagement from './Pages/UserManagement';
+import NewsManager from './Pages/NewsManager';
+import Profile from './Pages/Profile';
 import SignIn from './Pages/SignIn';
 import './App.css';
 
@@ -42,39 +45,54 @@ function App() {
           isAuthenticated={isAuthenticated}
           handleLogout={handleLogout}
         />
-        <div className="admin-content">
-          <Routes>
-            <Route path="/signin" element={
-              isAuthenticated ? <Navigate to="/" /> : <SignIn />
-            } />
+        <div className={`admin-main-layout ${isAuthenticated ? 'has-sidebar' : ''}`}>
+          {isAuthenticated && <Sidebar />}
+          <div className="admin-content">
+            <Routes>
+              <Route path="/signin" element={
+                isAuthenticated ? <Navigate to="/" /> : <SignIn />
+              } />
 
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            } />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/messages" element={
-              <ProtectedRoute>
-                <Messages />
-              </ProtectedRoute>
-            } />
+              <Route path="/messages" element={
+                <ProtectedRoute>
+                  <Messages />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/users" element={
-              <ProtectedRoute>
-                <UserManagement />
-              </ProtectedRoute>
-            } />
+              <Route path="/users" element={
+                <ProtectedRoute>
+                  <UserManagement />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/contact" element={
-              <ProtectedRoute>
-                <Contact />
-              </ProtectedRoute>
-            } />
+              <Route path="/contact" element={
+                <ProtectedRoute>
+                  <Contact />
+                </ProtectedRoute>
+              } />
 
-            {/* Catch-all redirect */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
+              <Route path="/news" element={
+                <ProtectedRoute>
+                  <NewsManager />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+
+              {/* Catch-all redirect */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </Router>

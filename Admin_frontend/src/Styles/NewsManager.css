@@ -1,0 +1,240 @@
+.news-manager {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-section {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.manager-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+}
+
+.news-form-card,
+.news-list-card {
+    background: var(--card-bg);
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border: 1px solid var(--nav-border);
+    transition: all 0.3s ease;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.field.full {
+    grid-column: span 2;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.field input,
+.field textarea,
+.field select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1.5px solid var(--input-border);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--shadow-color);
+}
+
+.field textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.save-btn {
+    flex: 2;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.save-btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    padding: 1rem 1.5rem;
+    background: var(--nav-bg);
+    color: var(--text-color);
+    border: 1px solid var(--nav-border);
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th {
+    text-align: left;
+    padding: 1.2rem 1rem;
+    border-bottom: 2px solid var(--nav-border);
+    color: var(--muted-text);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid var(--nav-border);
+    color: var(--text-color);
+}
+
+.tag {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Light mode tags */
+.tag.church {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.tag.school {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.tag.holiday {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.tag.service {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+/* Dark mode tags */
+[data-theme='dark'] .tag.church {
+    background: rgba(25, 118, 210, 0.2);
+    color: #90caf9;
+}
+
+[data-theme='dark'] .tag.school {
+    background: rgba(123, 31, 162, 0.2);
+    color: #e1bee7;
+}
+
+[data-theme='dark'] .tag.holiday {
+    background: rgba(245, 124, 0, 0.2);
+    color: #ffcc80;
+}
+
+[data-theme='dark'] .tag.service {
+    background: rgba(56, 142, 60, 0.2);
+    color: #a5d6a7;
+}
+
+.edit-link {
+    color: var(--secondary-color);
+    margin-right: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.edit-link:hover {
+    text-decoration: underline;
+}
+
+.delete-link {
+    color: #ff4444;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.delete-link:hover {
+    color: #ff0000;
+}
+
+@media (max-width: 1024px) {
+    .manager-content {
+        grid-template-columns: 1fr;
+    }
+}

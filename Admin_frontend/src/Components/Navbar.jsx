@@ -20,7 +20,10 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
         <nav className="admin-navbar">
             {/* Brand */}
             <div className="navbar-brand">
-                <Link to="/">{t('admin.navbar.brand')}</Link>
+                <Link to="/">
+                    <span className="brand-full">{t('admin.navbar.brand')}</span>
+                    <span className="brand-short">ABSSS</span>
+                </Link>
             </div>
 
             {/* Hamburger */}
@@ -39,8 +42,6 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
                 {isAuthenticated ? (
                     <>
                         <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.home')}</Link>
-                        <Link to="/users" onClick={() => setIsOpen(false)}>{t('admin.navbar.users') || 'User Management'}</Link>
-                        <Link to="/messages" onClick={() => setIsOpen(false)}>{t('admin.navbar.messages')}</Link>
                         <Link to="/contact" onClick={() => setIsOpen(false)}>{t('admin.navbar.contact')}</Link>
 
                         <button

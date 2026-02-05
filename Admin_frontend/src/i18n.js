@@ -11,6 +11,8 @@ const resources = {
                     contact: "Contact",
                     messages: "Messages",
                     users: "User Management",
+                    news: "Information",
+                    profile: "Profile",
                     signIn: "Sign In",
                     logout: "Logout"
                 },
@@ -71,6 +73,21 @@ const resources = {
                         status: "Status",
                         actions: "Actions"
                     }
+                },
+                profile: {
+                    title: "Profile",
+                    subtitle: "Manage your account security and info",
+                    accountInfo: "Account Details",
+                    email: "Email",
+                    updateInfo: "Save Changes",
+                    changePassword: "Change Password",
+                    currentPassword: "Current Password",
+                    newPassword: "New Password",
+                    confirmPassword: "Confirm Password",
+                    updatePassword: "Update Password",
+                    successInfo: "Profile updated successfully!",
+                    successPassword: "Password changed successfully!",
+                    passwordMismatch: "Passwords do not match!"
                 }
             }
         }
@@ -84,6 +101,8 @@ const resources = {
                     contact: "ያግኙን",
                     messages: "መልዕክቶች",
                     users: "የተጠቃሚዎች አስተዳደር",
+                    news: "መረጃዎች",
+                    profile: "መገለጫ",
                     signIn: "ይግቡ",
                     logout: "ውጣ"
                 },
@@ -144,6 +163,21 @@ const resources = {
                         status: "ሁኔታ",
                         actions: "ተግባራት"
                     }
+                },
+                profile: {
+                    title: "መገለጫ",
+                    subtitle: "የመለያዎን ደህንነት እና መረጃ ያስተዳድሩ",
+                    accountInfo: "የመለያ ዝርዝሮች",
+                    email: "ኢሜይል",
+                    updateInfo: "ለውጦችን አስቀምጥ",
+                    changePassword: "የይለፍ ቃል ይቀይሩ",
+                    currentPassword: "የአሁኑ የይለፍ ቃል",
+                    newPassword: "አዲስ የይለፍ ቃል",
+                    confirmPassword: "የይለፍ ቃል ያረጋግጡ",
+                    updatePassword: "የይለፍ ቃል አዘምን",
+                    successInfo: "መገለጫ በተሳካ ሁኔታ ተዘምኗል!",
+                    successPassword: "የይለፍ ቃል በተሳካ ሁኔታ ተቀይሯል!",
+                    passwordMismatch: "የይለፍ ቃላቱ አይጣጣሙም!"
                 }
             }
         }

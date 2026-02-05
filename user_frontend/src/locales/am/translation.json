@@ -4,7 +4,22 @@
         "home": "ዋና ገጽ",
         "about": "ስለ እኛ",
         "contact": "ያግኙን",
-        "signIn": "ይግቡ"
+        "news": "ዜናዎች",
+        "profile": "ፕሮፋይል",
+        "signIn": "ይግቡ",
+        "logout": "ውጣ"
+    },
+    "news": {
+        "title": "የቅርብ ጊዜ ዜናዎች እና መረጃዎች",
+        "subtitle": "ስለ ቤተክርስቲያናችን እና ስለ ትምህርት ቤታችን መረጃ ያግኙ",
+        "church": "ቤተክርስቲያን",
+        "school": "ትምህርት ቤት",
+        "holiday": "በዓል",
+        "service": "አገልግሎት",
+        "readMore": "ተጨማሪ ያንብቡ",
+        "noNews": "ምንም ዜና አልተገኘም",
+        "loading": "በመጫን ላይ...",
+        "error": "ዜናዎችን መጫን አልተሳካም"
     },
     "home": {
         "heroTitle": "ወደ አንቀፀ ብርሃን እንኳን በደህና መጡ",
@@ -88,9 +103,27 @@
         "noLabel": "አይ",
         "attachCertificate": "የምስክር ወረቀት ወይም የድጋፍ ደብዳቤ ካለዎት እዚህ ያያይዙ",
         "placeholders": {
-            "name": "አበበ ከበደ"
+            "name": "ሙሉ ስም",
+            "christianName": "የክርስትና ስም",
+            "email": "ኢሜይል",
+            "phone": "0911000000",
+            "nationalId": "መታወቂያ ቁጥር",
+            "password": "ቢያንስ 6 ፊደላት"
         },
         "successMessage": "ምዝገባው በተሳካ ሁኔታ ተጠናቅቋል! በቅርቡ እናገኝዎታለን።",
         "errorMessage": "ምዝገባው አልተሳካም። እባክዎ እንደገና ይሞክሩ።"
+    },
+    "profile": {
+        "title": "ፕሮፋይል",
+        "personalInfo": "የግል መረጃ",
+        "saveChanges": "ለውጦችን አስቀምጥ",
+        "changePassword": "የይለፍ ቃል ለመቀየር",
+        "currentPassword": "የአሁኑ የይለፍ ቃል",
+        "newPassword": "አዲስ የይለፍ ቃል",
+        "confirmNewPassword": "አዲሱን የይለፍ ቃል ያረጋግጡ",
+        "updateSuccess": "ፕሮፋይልዎ በተሳካ ሁኔታ ተስተካክሏል!",
+        "updateError": "ፕሮፋይልዎን ማስተካከል አልተቻለም",
+        "passwordSuccess": "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!",
+        "passwordError": "የይለፍ ቃል መቀየር አልተቻለም"
     }
 }

@@ -4,7 +4,22 @@
         "home": "Home",
         "about": "About",
         "contact": "Contact",
-        "signIn": "Sign In"
+        "news": "News",
+        "profile": "Profile",
+        "signIn": "Sign In",
+        "logout": "Logout"
+    },
+    "news": {
+        "title": "Latest News & Information",
+        "subtitle": "Stay updated with our church and school community",
+        "church": "Church",
+        "school": "School",
+        "holiday": "Holiday",
+        "service": "Service",
+        "readMore": "Read More",
+        "noNews": "No news updates found.",
+        "loading": "Loading updates...",
+        "error": "Failed to load news updates."
     },
     "home": {
         "heroTitle": "Welcome to Ankese Birhan",
@@ -88,9 +103,27 @@
         "noLabel": "No",
         "attachCertificate": "Attach certificate or recommendation letter (if available)",
         "placeholders": {
-            "name": "Jane Doe"
+            "name": "Full Name",
+            "christianName": "Christian Name",
+            "email": "email@example.com",
+            "phone": "0911000000",
+            "nationalId": "ID Number",
+            "password": "Min 6 characters"
         },
         "successMessage": "Registration successful! We will contact you soon.",
         "errorMessage": "Registration failed. Please try again."
+    },
+    "profile": {
+        "title": "Profile",
+        "personalInfo": "Personal Information",
+        "saveChanges": "Save Changes",
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmNewPassword": "Confirm New Password",
+        "updateSuccess": "Profile updated successfully!",
+        "updateError": "Failed to update profile",
+        "passwordSuccess": "Password changed successfully!",
+        "passwordError": "Failed to change password"
     }
 }

@@ -14,6 +14,9 @@
   --input-bg: #ffffff;
   --muted-text: #5D4037;
   --shadow-color: rgba(139, 0, 0, 0.1);
+  --nav-bg: #ffffff;
+  --nav-text: #000000;
+  --nav-border: #e0e0e0;
 }
 
 [data-theme='dark'] {
@@ -33,6 +36,9 @@
   --input-bg: #3a3a3a;
   --muted-text: #b0b0b0;
   --shadow-color: rgba(0, 0, 0, 0.5);
+  --nav-bg: #000000;
+  --nav-text: #ffffff;
+  --nav-border: #333333;
 }
 
 * {
@@ -53,6 +59,30 @@ body {
 
 .admin-app {
   min-height: 100vh;
+}
+
+.admin-main-layout {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  /* 80px for navbar */
+  margin-top: 80px;
+}
+
+.admin-main-layout.has-sidebar {
+  padding-left: 260px;
+  /* Sidebar width */
+}
+
+.admin-content {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .admin-main-layout.has-sidebar {
+    padding-left: 70px;
+  }
 }
 
 /* Form Styles */

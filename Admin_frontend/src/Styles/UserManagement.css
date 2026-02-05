@@ -1,8 +1,7 @@
-/* User Management Styles */
 .user-management-page {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 1.5rem 0.5rem;
+    width: 100%;
+    margin: 0;
 }
 
 .page-header {
@@ -38,10 +37,12 @@
 }
 
 .table-wrapper {
-    background-color: white;
+    background-color: var(--card-bg);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    overflow-x: auto;
+    border: 1px solid var(--nav-border);
+    width: 100%;
 }
 
 .management-table {
@@ -51,19 +52,22 @@
 }
 
 .management-table th {
-    background-color: #f8fafc;
-    padding: 1rem 1.5rem;
-    font-weight: 600;
-    color: #475569;
-    border-bottom: 2px solid #edf2f7;
+    background-color: var(--nav-bg);
+    padding: 1rem 1rem;
+    font-weight: 700;
+    color: var(--muted-text);
+    border-bottom: 2px solid var(--nav-border);
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .management-table td {
-    padding: 1.2rem 1.5rem;
-    border-bottom: 1px solid #edf2f7;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--nav-border);
+    color: var(--text-color);
+    font-size: 0.9rem;
 }
 
 .management-table tr:last-child td {
@@ -88,7 +92,9 @@
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .status-pending {
@@ -107,12 +113,15 @@
 }
 
 .status-selector {
-    padding: 0.4rem;
-    border: 1px solid #ddd;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--nav-border);
     border-radius: 6px;
-    background-color: white;
-    font-size: 0.9rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.85rem;
     cursor: pointer;
+    width: 100%;
+    max-width: 120px;
 }
 
 .no-data {

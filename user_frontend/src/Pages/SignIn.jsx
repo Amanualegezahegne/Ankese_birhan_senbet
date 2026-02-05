@@ -1,17 +1,39 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import '../styles/SignIn.css';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../Styles/SignIn.css';
+import '../Styles/Alert.css';
 
-const SignIn = () => {
+const SignIn = ({ setAuthState }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [status, setStatus] = useState({ type: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Sign in with:', email, password);
-        // Add logic to handle sign in
+        setIsSubmitting(true);
+        setStatus({ type: '', message: '' });
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/students/login', { email, password });
+            if (response.data.success) {
+                localStorage.setItem('studentToken', response.data.token);
+                localStorage.setItem('studentInfo', JSON.stringify(response.data.student));
+                setAuthState(true);
+                navigate('/news');
+            }
+        } catch (error) {
+            setStatus({
+                type: 'error',
+                message: error.response?.data?.message || 'Invalid email or password'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -19,6 +41,13 @@ const SignIn = () => {
             <div className="signin-card">
                 <h2>{t('signin.title')}</h2>
                 <p>{t('signin.subtitle')}</p>
+
+                {status.message && (
+                    <div className={`alert alert-${status.type}`}>
+                        {status.message}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">{t('signin.email')}</label>
@@ -42,7 +71,9 @@ const SignIn = () => {
                             placeholder="********"
                         />
                     </div>
-                    <button type="submit" className="submit-btn">{t('signin.button')}</button>
+                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                        {isSubmitting ? t('signin.button') + '...' : t('signin.button')}
+                    </button>
                 </form>
                 <p className="signup-link">{t('signin.noAccount')} <Link to="/signup">{t('signin.signup')}</Link></p>
             </div>

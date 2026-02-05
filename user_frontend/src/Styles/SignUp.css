@@ -89,6 +89,18 @@
     display: block;
 }
 
+/* Fix for Browser Autofill Background */
+.reference-group input:-webkit-autofill,
+.reference-group input:-webkit-autofill:hover,
+.reference-group input:-webkit-autofill:focus,
+.reference-group select:-webkit-autofill,
+.reference-group select:-webkit-autofill:hover,
+.reference-group select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text-color);
+    -webkit-box-shadow: 0 0 0px 1000px var(--card-bg) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 .reference-group select {
     background-color: var(--card-bg);
     cursor: pointer;

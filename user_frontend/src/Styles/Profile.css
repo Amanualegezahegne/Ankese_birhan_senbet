@@ -1,0 +1,132 @@
+.profile-page {
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+}
+
+.profile-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 15px 45px var(--shadow-color);
+    border: 1px solid var(--input-border);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.profile-section h3 {
+    margin-bottom: 2rem;
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.profile-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.profile-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.profile-form input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--input-border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.profile-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--shadow-color);
+}
+
+.save-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    margin-top: 1rem;
+}
+
+.save-btn:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.save-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.password-btn {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.profile-loading {
+    text-align: center;
+    padding: 5rem;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+@media (max-width: 850px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .profile-card {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Dark Mode Adjustments */
+[data-theme='dark'] .profile-section {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1);
+}

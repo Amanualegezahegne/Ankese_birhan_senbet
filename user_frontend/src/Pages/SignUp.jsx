@@ -99,7 +99,8 @@ const SignUp = () => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                placeholder="****************"
+                                placeholder={t('signup.placeholders.name')}
+                                autoComplete="name"
                             />
                         </div>
                         <div className="form-group reference-group">
@@ -110,7 +111,8 @@ const SignUp = () => {
                                 value={christianName}
                                 onChange={(e) => setChristianName(e.target.value)}
                                 required
-                                placeholder="****************"
+                                placeholder={t('signup.placeholders.christianName')}
+                                autoComplete="off"
                             />
                         </div>
                     </div>
@@ -124,7 +126,8 @@ const SignUp = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                placeholder="****************"
+                                placeholder={t('signup.placeholders.email')}
+                                autoComplete="email"
                             />
                         </div>
                         <div className="form-group reference-group">
@@ -135,7 +138,8 @@ const SignUp = () => {
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 required
-                                placeholder="****************"
+                                placeholder={t('signup.placeholders.phone')}
+                                autoComplete="tel"
                             />
                         </div>
                     </div>
@@ -163,7 +167,8 @@ const SignUp = () => {
                                 value={nationalId}
                                 onChange={(e) => setNationalId(e.target.value)}
                                 required
-                                placeholder="****************"
+                                placeholder={t('signup.placeholders.nationalId')}
+                                autoComplete="off"
                             />
                         </div>
                     </div>
@@ -231,8 +236,9 @@ const SignUp = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    placeholder="****************"
+                                    placeholder={t('signup.placeholders.password')}
                                     className="password-field"
+                                    autoComplete="new-password"
                                 />
                                 <button
                                     type="button"
@@ -252,8 +258,9 @@ const SignUp = () => {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
-                                    placeholder="****************"
+                                    placeholder={t('signup.placeholders.password')}
                                     className="password-field"
+                                    autoComplete="new-password"
                                 />
                                 <button
                                     type="button"

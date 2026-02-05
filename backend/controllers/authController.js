@@ -65,4 +65,74 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+// @desc    Get admin profile
+// @route   GET /api/auth/profile
+// @access  Private/Admin
+const getAdminProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (user) {
+            res.json({
+                success: true,
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    role: user.role
+                }
+            });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Update admin profile
+// @route   PUT /api/auth/profile
+// @access  Private/Admin
+const updateAdminProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('+password');
+
+        if (user) {
+            // Verify current password if password is being changed
+            if (req.body.password) {
+                if (!req.body.currentPassword) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Please provide current password to update password'
+                    });
+                }
+
+                const isMatch = await user.matchPassword(req.body.currentPassword);
+                if (!isMatch) {
+                    return res.status(401).json({
+                        success: false,
+                        message: 'Incorrect current password'
+                    });
+                }
+                user.password = req.body.password;
+            }
+
+            user.email = req.body.email || user.email;
+
+            const updatedUser = await user.save();
+
+            res.json({
+                success: true,
+                user: {
+                    id: updatedUser._id,
+                    email: updatedUser.email,
+                    role: updatedUser.role
+                }
+            });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { register, login, getAdminProfile, updateAdminProfile };
