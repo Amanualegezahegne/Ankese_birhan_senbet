@@ -1,15 +1,18 @@
-/* Navbar */
-.navbar {
+/* Admin Navbar */
+.admin-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2rem 2.5rem;
-    background-color: var(--nav-bg);
+    padding: 1rem 5%;
+    background-color: var(--primary-color);
+    /* Deep Red */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 1200;
     border-bottom: 3px solid var(--secondary-color);
+    width: 100%;
+    margin: 0;
 }
 
 .navbar-brand a {
@@ -63,7 +66,7 @@
         left: 0;
         width: 100%;
         flex-direction: column;
-        background-color: var(--nav-bg);
+        background-color: var(--primary-color);
         padding: 2rem 1rem;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         align-items: center;
@@ -88,7 +91,7 @@
 /* Links and buttons */
 .navbar-links a {
     text-decoration: none;
-    color: var(--nav-text);
+    color: var(--secondary-color);
     font-weight: 600;
     transition: all 0.3s ease;
     text-transform: uppercase;

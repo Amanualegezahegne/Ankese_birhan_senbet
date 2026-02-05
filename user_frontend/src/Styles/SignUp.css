@@ -1,50 +1,328 @@
-/* Sign Up Page */
+/* Sign Up Page Reference Design - Final Polished Version */
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    padding: 3rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
 .signup-card {
-    max-width: 500px;
-    margin: 0 auto;
+    max-width: 900px;
+    width: 100%;
     background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px var(--shadow-color);
-    opacity: 0;
-    animation: slideUp 0.6s ease-out forwards;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
+    padding: 3.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px var(--shadow-color);
     border: 1px solid var(--input-border);
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    border-radius: 4px;
-    font-size: 1rem;
+    opacity: 0;
+    animation: fadeInScale 0.6s ease-out forwards;
+    transition: all 0.3s ease;
 }
 
-.submit-btn {
+.signup-card h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.signup-card h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--secondary-color);
+    margin: 1.5rem auto 3rem;
+    border-radius: 2px;
+}
+
+.reference-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+    /* Increased to avoid overlap with long labels */
+}
+
+.reference-group {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.reference-label {
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background: var(--card-bg);
+    padding: 0 10px;
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 2;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    /* Prevents wrapping messy labels */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
+
+.reference-group input,
+.reference-group select,
+.reference-group .password-field {
     width: 100%;
-    padding: 0.75rem;
-    background-color: var(--primary-color);
+    padding: 1.1rem 1.2rem;
+    border: 1.5px solid var(--input-border);
+    background-color: transparent;
+    /* Changed from shorthand to avoid resetting backgrounds */
+    color: var(--text-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.reference-group select {
+    background-color: var(--card-bg);
+    cursor: pointer;
+    appearance: none;
+    /* Crucial for custom arrows */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.reference-group select option {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 10px;
+}
+
+.reference-group input:focus,
+.reference-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px var(--shadow-color);
+}
+
+.reference-group input::placeholder {
+    color: var(--muted-text);
+    opacity: 0.4;
+}
+
+/* Fix for date input icon */
+.reference-group input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    background-color: transparent;
+}
+
+[data-theme='dark'] .reference-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Specific styling for select dropdowns to prevent repeating background "awful" issue */
+.form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1.2rem center !important;
+    background-size: 14px !important;
+    padding-right: 3rem !important;
+}
+
+[data-theme='dark'] .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--muted-text);
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.reference-submit {
+    width: 100%;
+    max-width: 320px;
+    margin: 1rem auto;
+    display: block;
+    padding: 1.2rem;
+    background: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
     cursor: pointer;
-    margin-top: 1rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px var(--shadow-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reference-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px var(--shadow-color);
+    filter: brightness(1.1);
+}
+
+.terms-checkbox {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    color: var(--muted-text);
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.4;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .signin-link {
-    margin-top: 1rem;
-    font-size: 0.9rem;
+    margin-top: 2.5rem;
+    text-align: center;
     color: var(--muted-text);
+    font-size: 1rem;
+}
+
+.signin-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.signin-link a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.98) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Mobile & Tablet Responsiveness */
+@media (max-width: 992px) {
+    .signup-card {
+        padding: 3rem 2rem;
+    }
+
+    .signup-card h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .signup-page {
+        padding: 1.5rem 0.5rem;
+    }
+
+    .signup-card {
+        padding: 2.5rem 1.5rem;
+        border-radius: 16px;
+    }
+
+    .reference-row {
+        grid-template-columns: 1fr;
+        gap: 2.8rem;
+        margin-bottom: 2.8rem;
+    }
+
+    .signup-card h2 {
+        font-size: 1.8rem;
+    }
+
+    .reference-submit {
+        max-width: 100%;
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+
+    .reference-label {
+        font-size: 0.8rem;
+        left: 10px;
+        top: -9px;
+    }
+
+    .terms-checkbox {
+        font-size: 0.85rem;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .signup-card {
+        padding: 2rem 1rem;
+        box-shadow: none;
+        /* Cleaner on very small screens */
+        border: none;
+        background: transparent;
+    }
+
+    .signup-page {
+        background-color: var(--card-bg);
+        /* Use card background for the whole page on tiny devices */
+    }
+
+    .signup-card h2 {
+        font-size: 1.6rem;
+    }
+
+    .reference-row {
+        gap: 2.5rem;
+    }
+
+    .reference-group input,
+    .reference-group select,
+    .reference-group .password-field {
+        padding: 0.9rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .signin-link {
+        font-size: 0.9rem;
+    }
 }

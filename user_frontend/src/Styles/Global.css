@@ -1,15 +1,21 @@
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
-    --background-color: #f8f9fa;
-    --text-color: #333;
-    --nav-bg: #fff;
-    --nav-text: #333;
-    --card-bg: #fff;
-    --input-border: #ddd;
-    --input-bg: #fff;
-    --muted-text: #666;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #8B0000;
+    /* Deep Red */
+    --secondary-color: #D4AF37;
+    /* Gold */
+    --accent-color: #FFD700;
+    /* Bright Gold */
+    --background-color: #FFFAF0;
+    /* Floral White */
+    --text-color: #2C1810;
+    /* Dark Earth */
+    --nav-bg: #8B0000;
+    --nav-text: #FFD700;
+    --card-bg: #ffffff;
+    --input-border: #D4AF37;
+    --input-bg: #ffffff;
+    --muted-text: #5D4037;
+    --shadow-color: rgba(139, 0, 0, 0.1);
 }
 
 [data-theme='dark'] {

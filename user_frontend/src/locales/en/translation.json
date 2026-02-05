@@ -7,31 +7,31 @@
         "signIn": "Sign In"
     },
     "home": {
-        "heroTitle": "Welcome to Our Platform",
-        "heroSubtitle": "Your journey to excellence starts here.",
-        "getStarted": "Register Now",
+        "heroTitle": "Welcome to Ankese Birhan",
+        "heroSubtitle": "Nurturing spiritual growth through the teachings of the Orthodox Church.",
+        "getStarted": "Join Our Sunday School",
         "features": {
-            "fastSecure": {
-                "title": "Fast & Secure",
-                "desc": "Experience lightning fast performance with top-notch security."
+            "spiritual": {
+                "title": "Spiritual Growth",
+                "desc": "Deepen your faith through prayer, meditation, and spiritual guidance."
             },
-            "userFriendly": {
-                "title": "User Friendly",
-                "desc": "Designed with you in mind, simple and intuitive."
+            "education": {
+                "title": "Religious Education",
+                "desc": "Learn the holy scriptures and the rich traditions of our Orthodox faith."
             },
-            "support": {
-                "title": "24/7 Support",
-                "desc": "We are always here to help you succeed."
+            "community": {
+                "title": "Pious Community",
+                "desc": "Connect with fellow believers in a journey of love and service."
             }
         }
     },
     "about": {
-        "title": "About Us",
-        "description": "We are dedicated to providing the best solutions for our users. Our team is composed of passionate individuals who believe in the power of technology to improve lives.",
+        "title": "About Our Sunday School",
+        "description": "Ankese Birhan Senbet Sunday School is dedicated to nurturing the spiritual and intellectual growth of our children and youth in the light of the Ethiopian Orthodox Tewahedo Church.",
         "missionTitle": "Our Mission",
-        "missionDesc": "To empower individuals and businesses with tools that simplify complexity and drive growth.",
+        "missionDesc": "To preserve and transmit the holy tradition, dogmas, and values of the EOTC to the next generation through comprehensive education and active participation in church life.",
         "visionTitle": "Our Vision",
-        "visionDesc": "A world where technology is accessible, intuitive, and beneficial for everyone."
+        "visionDesc": "A vibrant community of believers who are deeply rooted in their faith, spiritually enlightened, and committed to serving God and humanity."
     },
     "contact": {
         "title": "Contact Us",
@@ -42,10 +42,13 @@
             "email": "Email",
             "message": "Message",
             "send": "Send Message",
+            "sending": "Sending...",
+            "successMessage": "Thank you! Your message has been sent successfully.",
+            "errorMessage": "Failed to send message. Please try again later.",
             "placeholders": {
                 "name": "Your Name",
-                "email": "Your Email",
-                "message": "How can we help?"
+                "email": "your.email@example.com",
+                "message": "Your message here..."
             }
         }
     },
@@ -60,7 +63,7 @@
     },
     "signup": {
         "title": "Create Account",
-        "subtitle": "Get started with your free account",
+        "christianName": "Christian Name",
         "name": "Full Name",
         "email": "Email",
         "phone": "Phone Number",
@@ -73,7 +76,9 @@
         "password": "Password",
         "confirmPassword": "Confirm Password",
         "selectOption": "Select Option",
-        "button": "Create Account",
+        "button": "REGISTER",
+        "registering": "Registering...",
+        "terms": "I agree to the terms and conditions and privacy policy of Ankese Birhan Senbet.",
         "haveAccount": "Already have an account?",
         "signIn": "Sign In",
         "passwordMismatch": "Passwords do not match!",
@@ -84,6 +89,8 @@
         "attachCertificate": "Attach certificate or recommendation letter (if available)",
         "placeholders": {
             "name": "Jane Doe"
-        }
+        },
+        "successMessage": "Registration successful! We will contact you soon.",
+        "errorMessage": "Registration failed. Please try again."
     }
 }
