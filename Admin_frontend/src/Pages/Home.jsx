@@ -9,7 +9,6 @@ const Home = () => {
         <div className="admin-home">
             <div className="hero-section" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${churchImage})` }}>
                 <div className="hero-content">
-                    <h1>{t('admin.home.title')}</h1>
                     <p>{t('admin.home.subtitle')}</p>
                 </div>
             </div>

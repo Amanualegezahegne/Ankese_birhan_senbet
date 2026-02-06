@@ -4,7 +4,7 @@
 }
 
 .hero-section {
-    height: 80vh;
+    height: calc(100vh - 80px);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

@@ -37,6 +37,7 @@ app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/news', require('./routes/newsRoutes'));
+app.use('/api/attendance', require('./routes/attendanceRoutes'));
 
 // TODO: Add your routes here
 // app.use('/api/users', require('./routes/userRoutes'));

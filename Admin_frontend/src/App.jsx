@@ -8,6 +8,7 @@ import Messages from './Pages/Messages';
 import UserManagement from './Pages/UserManagement';
 import NewsManager from './Pages/NewsManager';
 import Profile from './Pages/Profile';
+import Attendance from './Pages/Attendance';
 import SignIn from './Pages/SignIn';
 import './App.css';
 
@@ -80,6 +81,12 @@ function App() {
               <Route path="/news" element={
                 <ProtectedRoute>
                   <NewsManager />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/attendance" element={
+                <ProtectedRoute>
+                  <Attendance />
                 </ProtectedRoute>
               } />
 

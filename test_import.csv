@@ -1,0 +1,4 @@
+Name,Christian Name,Email,Phone,Sex,National ID,DOB,hasServed
+"John Smith","Yohannes","john.import@example.com","0911000000","male","ID-12345","1990-05-15","no"
+"Abebe Kebede","Abeba","abebe.import@example.com","0912000000","male","ID-67890","1992-10-20","yes"
+"Selamawit Tadesse","Selam","selam.import@example.com","0913000000","female","ID-11223","1995-12-01","no"

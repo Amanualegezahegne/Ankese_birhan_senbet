@@ -142,8 +142,9 @@ table {
 th {
     text-align: left;
     padding: 1.2rem 1rem;
+    background-color: var(--nav-bg);
     border-bottom: 2px solid var(--nav-border);
-    color: var(--muted-text);
+    color: #ffffff;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.85rem;

@@ -91,6 +91,14 @@ const loginStudent = async (req, res) => {
         const student = await Student.findOne({ email }).select('+password');
 
         if (student && (await student.matchPassword(password))) {
+            // Check status
+            if (student.status === 'Pending') {
+                return res.status(403).json({ success: false, message: 'Your account is pending approval' });
+            }
+            if (student.status === 'Rejected') {
+                return res.status(403).json({ success: false, message: 'Your account has been rejected' });
+            }
+
             const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, {
                 expiresIn: '30d'
             });
@@ -179,6 +187,116 @@ const updateStudentProfile = async (req, res) => {
     }
 };
 
+const XLSX = require('xlsx');
+const fs = require('fs');
+
+// @desc    Import students from Excel/CSV
+// @route   POST /api/students/import
+// @access  Private (Admin Only)
+const importStudents = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Please upload a file' });
+        }
+
+        const filePath = req.file.path;
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        if (data.length === 0) {
+            fs.unlinkSync(filePath);
+            return res.status(400).json({ success: false, message: 'File is empty' });
+        }
+
+        const studentsToInsert = [];
+        const errors = [];
+        const existingEmails = new Set((await Student.find({}, 'email')).map(s => s.email));
+
+        for (const row of data) {
+            // Basic mapping - case insensitive header checks could be added here
+            const studentData = {
+                name: row.Name || row.name || row['Full Name'],
+                christianName: row['Christian Name'] || row.christianName || row['ክርስትና ስም'],
+                email: row.Email || row.email || row['ኢሜይል'],
+                phone: row.Phone || row.phone || row['ስልክ'],
+                sex: row.Sex || row.sex || row['ጾታ'],
+                nationalId: row['National ID'] || row.nationalId || row['መታወቂያ'],
+                dob: row.DOB || row.dob || row['የትውልድ ቀን'],
+                password: 'student123', // Default password
+                status: 'Approved',
+                hasServed: row.hasServed || 'no'
+            };
+
+            // Basic validation
+            if (!studentData.name || !studentData.email) {
+                errors.push(`Row missing name or email: ${JSON.stringify(row)}`);
+                continue;
+            }
+
+            if (existingEmails.has(studentData.email)) {
+                errors.push(`Email already exists: ${studentData.email}`);
+                continue;
+            }
+
+            studentsToInsert.push(studentData);
+            existingEmails.add(studentData.email);
+        }
+
+        if (studentsToInsert.length > 0) {
+            // Using a loop with create to ensure pre-save hooks (like password hashing) run
+            for (const student of studentsToInsert) {
+                await Student.create(student);
+            }
+        }
+
+        // Clean up file
+        fs.unlinkSync(filePath);
+
+        res.status(200).json({
+            success: true,
+            message: `Successfully imported ${studentsToInsert.length} students.`,
+            count: studentsToInsert.length,
+            errors: errors.length > 0 ? errors : null
+        });
+
+    } catch (error) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        console.error('Import Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Delete all students
+// @route   DELETE /api/students/all
+// @access  Private (Admin Only)
+const deleteAllStudents = async (req, res) => {
+    try {
+        await Student.deleteMany({});
+        res.status(200).json({ success: true, message: 'All students deleted successfully.' });
+    } catch (error) {
+        console.error('Delete All Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Delete single student
+// @route   DELETE /api/students/:id
+// @access  Private (Admin Only)
+const deleteStudent = async (req, res) => {
+    try {
+        const student = await Student.findByIdAndDelete(req.params.id);
+        if (!student) {
+            return res.status(404).json({ success: false, message: 'Student not found' });
+        }
+        res.status(200).json({ success: true, message: 'Student deleted successfully' });
+    } catch (error) {
+        console.error('Delete Student Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     registerStudent,
     loginStudent,
@@ -186,5 +304,8 @@ module.exports = {
     getStudentById,
     updateStudentStatus,
     getStudentProfile,
-    updateStudentProfile
+    updateStudentProfile,
+    importStudents,
+    deleteAllStudents,
+    deleteStudent
 };

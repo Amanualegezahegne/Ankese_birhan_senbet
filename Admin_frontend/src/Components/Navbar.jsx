@@ -17,12 +17,11 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
     };
 
     return (
-        <nav className="admin-navbar">
+        <nav className="navbar">
             {/* Brand */}
             <div className="navbar-brand">
-                <Link to="/">
-                    <span className="brand-full">{t('admin.navbar.brand')}</span>
-                    <span className="brand-short">ABSSS</span>
+                <Link to="/" onClick={() => setIsOpen(false)}>
+                    {t('admin.navbar.brand')}
                 </Link>
             </div>
 
@@ -39,43 +38,14 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
 
             {/* Links */}
             <div className={`navbar-links ${isOpen ? 'active' : ''}`}>
-                {isAuthenticated ? (
-                    <>
-                        <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.home')}</Link>
-                        <Link to="/contact" onClick={() => setIsOpen(false)}>{t('admin.navbar.contact')}</Link>
-
-                        <button
-                            onClick={handleLogout}
-                            className="btn-signin logout"
-                            style={{
-                                backgroundColor: '#dc3545',
-                                border: 'none',
-                                padding: '0.8rem 1.5rem',
-                                borderRadius: '30px',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                marginLeft: '1rem'
-                            }}
-                        >
-                            {t('admin.navbar.logout')}
-                        </button>
-                    </>
-                ) : (
-                    <Link
-                        to="/signin"
-                        className="btn-signin"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        {t('admin.navbar.signIn')}
-                    </Link>
-                )}
+                <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.home')}</Link>
+                <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.about')}</Link>
+                <Link to="/contact" onClick={() => setIsOpen(false)}>{t('admin.navbar.contact')}</Link>
 
                 <button
                     onClick={changeLanguage}
                     className="theme-toggle-btn"
                     aria-label="Change Language"
-                    style={{ fontSize: '1rem', fontWeight: 'bold' }}
                 >
                     {i18n.language === 'en' ? 'AM' : 'EN'}
                 </button>
@@ -87,6 +57,26 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
                 >
                     {theme === 'light' ? '🌙' : '☀️'}
                 </button>
+
+                {isAuthenticated ? (
+                    <button
+                        onClick={() => {
+                            handleLogout();
+                            setIsOpen(false);
+                        }}
+                        className="btn-signin logout-btn"
+                    >
+                        {t('admin.navbar.logout')}
+                    </button>
+                ) : (
+                    <Link
+                        to="/signin"
+                        className="btn-signin"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        {t('admin.navbar.signIn')}
+                    </Link>
+                )}
             </div>
         </nav>
     );

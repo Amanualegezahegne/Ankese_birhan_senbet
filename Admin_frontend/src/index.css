@@ -14,9 +14,9 @@
   --input-bg: #ffffff;
   --muted-text: #5D4037;
   --shadow-color: rgba(139, 0, 0, 0.1);
-  --nav-bg: #ffffff;
-  --nav-text: #000000;
-  --nav-border: #e0e0e0;
+  --nav-bg: #8B0000;
+  --nav-text: #FFD700;
+  --nav-border: #D4AF37;
 }
 
 [data-theme='dark'] {

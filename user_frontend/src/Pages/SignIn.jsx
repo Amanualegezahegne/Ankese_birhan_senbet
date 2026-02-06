@@ -27,9 +27,18 @@ const SignIn = ({ setAuthState }) => {
                 navigate('/news');
             }
         } catch (error) {
+            let errorMessage = error.response?.data?.message || 'Invalid email or password';
+
+            // Map backend messages to localized keys
+            if (errorMessage === 'Your account is pending approval') {
+                errorMessage = t('signin.pendingError');
+            } else if (errorMessage === 'Your account has been rejected') {
+                errorMessage = t('signin.rejectedError');
+            }
+
             setStatus({
                 type: 'error',
-                message: error.response?.data?.message || 'Invalid email or password'
+                message: errorMessage
             });
         } finally {
             setIsSubmitting(false);

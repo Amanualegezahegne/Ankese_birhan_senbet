@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FaUsers, FaInfoCircle, FaEnvelope, FaUserAlt } from 'react-icons/fa';
+import { FaUsers, FaInfoCircle, FaEnvelope, FaUserAlt, FaClipboardCheck } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import '../Styles/Sidebar.css';
 
@@ -15,6 +15,11 @@ const Sidebar = () => {
                 <NavLink to="/users" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaUsers className="icon" />
                     <span className="label">{t('admin.navbar.users') || 'Students'}</span>
+                </NavLink>
+
+                <NavLink to="/attendance" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <FaClipboardCheck className="icon" />
+                    <span className="label">{t('admin.navbar.attendance')}</span>
                 </NavLink>
 
                 <NavLink to="/news" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
