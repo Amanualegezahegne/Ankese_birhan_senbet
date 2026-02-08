@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'dark');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
 
   useEffect(() => {
@@ -27,7 +27,9 @@ function App() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('adminTheme', newTheme);
   };
 
   const handleLogout = () => {

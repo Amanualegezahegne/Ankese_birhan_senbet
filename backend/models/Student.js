@@ -56,16 +56,18 @@ const studentSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Approved', 'Rejected'],
         default: 'Pending'
-    }
+    },
+    resetOTP: String,
+    resetOTPExpires: Date
 }, {
     timestamps: true
 });
 
 const bcrypt = require('bcryptjs');
 
-studentSchema.pre('save', async function (next) {
+studentSchema.pre('save', async function () {
     if (!this.isModified('password')) {
-        next();
+        return;
     }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

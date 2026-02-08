@@ -22,7 +22,7 @@
         "error": "ዜናዎችን መጫን አልተሳካም"
     },
     "home": {
-        "heroTitle": "ወደ አንቀፀ ብርሃን እንኳን በደህና መጡ",
+        "heroTitle": "እንኳን ወደ አንቀፀ ብርሃን ሰንበት ት/ቤት በደህና መጡ",
         "heroSubtitle": "በኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ትምህርት መንፈሳዊ እድገትን ማሳደግ።",
         "getStarted": "የሰንበት ትምህርት ቤታችንን ይቀላቀሉ",
         "features": {
@@ -68,13 +68,42 @@
         }
     },
     "signin": {
-        "title": "እንኳን በደህና መጡ",
-        "subtitle": "እባክዎ ወደ መለያዎ ይግቡ",
-        "email": "ኢሜይል",
-        "password": "የይለፍ ቃል",
+        "title": "ይግቡ (Sign In)",
+        "subtitle": "ለመቀጠል መለያዎን ያስገቡ",
+        "email": "ኢሜይል (Email)",
+        "password": "የይለፍ ቃል (Password)",
         "button": "ይግቡ",
+        "rememberMe": "አስታውሰኝ (Remember me)",
         "noAccount": "መለያ የለዎትም?",
+        "createOne": "አዲስ ይፍጠሩ (Create one)",
         "signup": "ይመዝገቡ",
+        "forgotPassword": "የይለፍ ቃል ረስተዋል?",
+        "forgotPasswordPage": {
+            "title": "የይለፍ ቃል መልሶ ማግኛ",
+            "subtitle": "የመለያዎን ኢሜይል ያስገቡ፣ ባለ 6 አሃዝ የማረጋገጫ ኮድ እንልክልዎታለን።",
+            "emailPlaceholder": "ኢሜይልዎን እዚህ ያስገቡ",
+            "submit": "ኮድ ላክ",
+            "backToLogin": "ወደ መግቢያ ተመለስ",
+            "success": "የማረጋገጫ ኮድ ወደ ኢሜይልዎ ተልኳል።",
+            "error": "ኢሜይሉ አልተገኘም ወይም የሆነ ስህተት ተፈጥሯል።"
+        },
+        "verifyOTPPage": {
+            "title": "ኮድ ያረጋግጡ",
+            "subtitle": "ወደ ኢሜይልዎ የተላከውን ባለ 6 አሃዝ ኮድ ያስገቡ።",
+            "otpPlaceholder": "000000",
+            "submit": "ኮድ አረጋግጥ",
+            "resend": "ኮዱን ደግመህ ላክ",
+            "error": "የገቡት ኮድ ትክክል አይደለም ወይም ጊዜው አልፎበታል።"
+        },
+        "resetPasswordPage": {
+            "title": "አዲስ የይለፍ ቃል ይፍጠሩ",
+            "newPassword": "አዲስ የይለፍ ቃል",
+            "confirmPassword": "የይለፍ ቃልዎን ያረጋግጡ",
+            "submit": "የይለፍ ቃል ቀይር",
+            "success": "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል! አሁን መግባት ይችላሉ።",
+            "error": "ሊንኩ ወይም ኮዱ ጊዜው አልፎበታል። እባክዎን እንደገና ይሞክሩ።",
+            "mismatch": "የይለፍ ቃሎች አይዛመዱም።"
+        },
         "pendingError": "አስተዳዳሪው እስኪፈቅድልዎ ድረስ በትዕግስት መጠበቅ አለብዎት",
         "rejectedError": "በአስተዳዳሪው ውድቅ ተደርገዋል፣ ስለዚህ መግባት አይችሉም"
     },

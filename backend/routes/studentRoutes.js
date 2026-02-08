@@ -10,7 +10,10 @@ const {
     updateStudentProfile,
     importStudents,
     deleteAllStudents,
-    deleteStudent
+    deleteStudent,
+    forgotPassword,
+    verifyOTP,
+    resetPassword
 } = require('../controllers/studentController');
 const { protect, admin } = require('../middleware/authMiddleware');
 const upload = require('../middleware/multer');
@@ -18,6 +21,9 @@ const upload = require('../middleware/multer');
 // Students
 router.post('/register', registerStudent);
 router.post('/login', loginStudent);
+router.post('/forgot-password', forgotPassword);
+router.post('/verify-otp', verifyOTP);
+router.post('/reset-password', resetPassword);
 router.post('/import', protect, admin, upload.single('file'), importStudents);
 router.delete('/all', protect, admin, deleteAllStudents);
 // Profile

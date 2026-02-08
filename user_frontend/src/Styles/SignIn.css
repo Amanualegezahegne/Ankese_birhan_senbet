@@ -1,49 +1,195 @@
-/* Sign In Page */
-.signin-card {
-    max-width: 500px;
-    margin: 0 auto;
-    background: var(--card-bg);
+/* Sign In Container */
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
     padding: 2rem;
+    background-color: transparent;
+}
+
+.signin-card {
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    padding: 3rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    text-align: center;
+}
+
+/* Header */
+.signin-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.75rem;
+}
+
+.signin-header p {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-bottom: 2rem;
+}
+
+/* Form */
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    box-shadow: 0 4px 12px var(--shadow-color);
-    opacity: 0;
-    animation: slideUp 0.6s ease-out forwards;
+    font-size: 1rem;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
 }
 
-.form-group {
-    margin-bottom: 1rem;
-    text-align: left;
+.input-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+.input-group input::placeholder {
+    color: #999999;
+}
+
+/* Password Toggle */
+.password-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.25rem;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: #333333;
+}
+
+/* Options */
+.signin-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #444444;
+}
+
+.remember-me input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.forgot-link {
+    font-size: 0.9rem;
+    color: #3b82f6;
+    text-decoration: none;
     font-weight: 500;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--input-border);
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    border-radius: 4px;
-    font-size: 1rem;
+.forgot-link:hover {
+    text-decoration: underline;
 }
 
-.submit-btn {
+/* Button */
+.signin-btn {
     width: 100%;
-    padding: 0.75rem;
-    background-color: var(--primary-color);
-    color: white;
+    padding: 0.875rem;
+    background-color: #3b82f6;
+    color: #ffffff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 0.5rem;
 }
 
-.signup-link {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--muted-text);
+.signin-btn:hover {
+    background-color: #2563eb;
+}
+
+.signin-btn:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+}
+
+/* Footer */
+.signin-footer {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: #666666;
+}
+
+.signin-footer a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signin-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Dark Mode Overrides (if needed manually, but better via variables) */
+[data-theme='dark'] .signin-card {
+    background: #2d2d2d;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .signin-header h1 {
+    color: #e0e0e0;
+}
+
+[data-theme='dark'] .signin-header p {
+    color: #b0b0b0;
+}
+
+[data-theme='dark'] .input-group input {
+    background-color: #3a3a3a;
+    border-color: #444444;
+    color: #ffffff;
+}
+
+[data-theme='dark'] .remember-me {
+    color: #b0b0b0;
+}
+
+[data-theme='dark'] .signin-footer {
+    color: #b0b0b0;
 }

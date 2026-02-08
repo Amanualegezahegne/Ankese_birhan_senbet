@@ -8,6 +8,8 @@ import '../Styles/Alert.css';
 const SignIn = ({ setAuthState }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { t } = useTranslation();
@@ -19,7 +21,7 @@ const SignIn = ({ setAuthState }) => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post('http://localhost:5000/api/students/login', { email, password });
+            const response = await axios.post('http://localhost:5000/api/students/login', { email, password, rememberMe });
             if (response.data.success) {
                 localStorage.setItem('studentToken', response.data.token);
                 localStorage.setItem('studentInfo', JSON.stringify(response.data.student));
@@ -28,28 +30,24 @@ const SignIn = ({ setAuthState }) => {
             }
         } catch (error) {
             let errorMessage = error.response?.data?.message || 'Invalid email or password';
-
-            // Map backend messages to localized keys
             if (errorMessage === 'Your account is pending approval') {
                 errorMessage = t('signin.pendingError');
             } else if (errorMessage === 'Your account has been rejected') {
                 errorMessage = t('signin.rejectedError');
             }
-
-            setStatus({
-                type: 'error',
-                message: errorMessage
-            });
+            setStatus({ type: 'error', message: errorMessage });
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="page-container signin-page">
+        <div className="signin-container">
             <div className="signin-card">
-                <h2>{t('signin.title')}</h2>
-                <p>{t('signin.subtitle')}</p>
+                <header className="signin-header">
+                    <h1>{t('signin.title')}</h1>
+                    <p>{t('signin.subtitle')}</p>
+                </header>
 
                 {status.message && (
                     <div className={`alert alert-${status.type}`}>
@@ -57,34 +55,59 @@ const SignIn = ({ setAuthState }) => {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">{t('signin.email')}</label>
+                <form onSubmit={handleSubmit} className="signin-form">
+                    <div className="input-group">
                         <input
                             type="email"
-                            id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            placeholder="name@example.com"
+                            placeholder={t('signin.email')}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">{t('signin.password')}</label>
+
+                    <div className="input-group password-group">
                         <input
-                            type="password"
-                            id="password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            placeholder="********"
+                            placeholder={t('signin.password')}
                         />
+                        <button
+                            type="button"
+                            className="password-toggle"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label="Toggle password visibility"
+                        >
+                            {showPassword ? "👁️" : "👁️‍🗨️"}
+                        </button>
                     </div>
-                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
+
+                    <div className="signin-options">
+                        <label className="remember-me">
+                            <input
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                            />
+                            <span>{t('signin.rememberMe')}</span>
+                        </label>
+                        <Link to="/forgot-password" title={t('signin.forgotPassword')} className="forgot-link">
+                            {t('signin.forgotPassword')}
+                        </Link>
+                    </div>
+
+                    <button type="submit" className="signin-btn" disabled={isSubmitting}>
                         {isSubmitting ? t('signin.button') + '...' : t('signin.button')}
                     </button>
                 </form>
-                <p className="signup-link">{t('signin.noAccount')} <Link to="/signup">{t('signin.signup')}</Link></p>
+
+                <footer className="signin-footer">
+                    <p>
+                        {t('signin.noAccount')} <Link to="/signup">{t('signin.createOne')}</Link>
+                    </p>
+                </footer>
             </div>
         </div>
     );

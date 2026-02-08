@@ -22,7 +22,7 @@
         "error": "Failed to load news updates."
     },
     "home": {
-        "heroTitle": "Welcome to Ankese Birhan",
+        "heroTitle": "Welcome to Ankese Birhan Sunday School",
         "heroSubtitle": "Nurturing spiritual growth through the teachings of the Orthodox Church.",
         "getStarted": "Join Our Sunday School",
         "features": {
@@ -68,13 +68,42 @@
         }
     },
     "signin": {
-        "title": "Welcome Back",
-        "subtitle": "Please sign in to your account",
+        "title": "Sign In",
+        "subtitle": "Enter your credentials to continue",
         "email": "Email",
         "password": "Password",
         "button": "Sign In",
+        "rememberMe": "Remember me",
         "noAccount": "Don't have an account?",
+        "createOne": "Create one",
         "signup": "Sign up",
+        "forgotPassword": "Forgot password?",
+        "forgotPasswordPage": {
+            "title": "Forgot Password",
+            "subtitle": "Enter your email address and we'll send you a 6-digit verification code.",
+            "emailPlaceholder": "Enter your email",
+            "submit": "Send Code",
+            "backToLogin": "Back to login",
+            "success": "A verification code has been sent to your email.",
+            "error": "Email not found or something went wrong."
+        },
+        "verifyOTPPage": {
+            "title": "Verify Code",
+            "subtitle": "Enter the 6-digit code sent to your email.",
+            "otpPlaceholder": "000000",
+            "submit": "Verify OTP",
+            "resend": "Resend Code",
+            "error": "Invalid or expired OTP. Please try again."
+        },
+        "resetPasswordPage": {
+            "title": "Reset Password",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm New Password",
+            "submit": "Update Password",
+            "success": "Your password has been reset successfully! You can now sign in.",
+            "error": "The reset link or code is invalid or has expired.",
+            "mismatch": "Passwords do not match."
+        },
         "pendingError": "your need to be patient till the admin approves you",
         "rejectedError": "You are rejected by the admin so that you can't login"
     },
