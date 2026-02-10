@@ -15,7 +15,7 @@ const {
     verifyOTP,
     resetPassword
 } = require('../controllers/studentController');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect, admin, teacher } = require('../middleware/authMiddleware');
 const upload = require('../middleware/multer');
 
 // Students
@@ -30,7 +30,7 @@ router.delete('/all', protect, admin, deleteAllStudents);
 router.get('/profile', protect, getStudentProfile);
 router.put('/profile', protect, updateStudentProfile);
 
-router.route('/').get(protect, admin, getAllStudents);
+router.route('/').get(protect, teacher, getAllStudents);
 router.route('/:id')
     .get(protect, admin, getStudentById)
     .delete(protect, admin, deleteStudent);

@@ -6,6 +6,7 @@ import '../Styles/Attendance.css';
 const Attendance = () => {
     const { t } = useTranslation();
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [activeTab, setActiveTab] = useState('student');
     const [students, setStudents] = useState([]);
     const [attendanceData, setAttendanceData] = useState({});
     const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ const Attendance = () => {
 
     useEffect(() => {
         fetchStudentsAndAttendance();
-    }, [date]);
+    }, [date, activeTab]);
 
     const fetchStudentsAndAttendance = async () => {
         try {
@@ -22,9 +23,9 @@ const Attendance = () => {
             const adminToken = localStorage.getItem('adminToken');
             const config = { headers: { Authorization: `Bearer ${adminToken}` } };
 
-            // Fetch approved students
-            const studentsRes = await axios.get('http://localhost:5000/api/students', config);
-            const approvedStudents = studentsRes.data.data.filter(s => s.status === 'Approved');
+            // Fetch approved members based on active tab
+            const response = await axios.get(`http://localhost:5000/api/students?role=${activeTab}`, config);
+            const approvedStudents = response.data.data.filter(s => s.status === 'Approved');
             setStudents(approvedStudents);
 
             // Fetch attendance for the specific date
@@ -97,6 +98,39 @@ const Attendance = () => {
                         onChange={(e) => setDate(e.target.value)}
                     />
                 </div>
+            </div>
+
+            <div className="attendance-tabs" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+                <button
+                    className={`tab-btn ${activeTab === 'student' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('student')}
+                    style={{
+                        padding: '10px 20px',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        backgroundColor: activeTab === 'student' ? '#007bff' : '#f0f0f0',
+                        color: activeTab === 'student' ? 'white' : '#333',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {t('admin.navbar.users') || 'Students'}
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === 'teacher' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('teacher')}
+                    style={{
+                        padding: '10px 20px',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        backgroundColor: activeTab === 'teacher' ? '#007bff' : '#f0f0f0',
+                        color: activeTab === 'teacher' ? 'white' : '#333',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {t('admin.teachermanagement.title') || 'Teachers'}
+                </button>
             </div>
 
             {message.text && (

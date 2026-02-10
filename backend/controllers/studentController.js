@@ -28,19 +28,22 @@ const registerStudent = async (req, res) => {
     }
 };
 
-// @desc    Get all students
+// @desc    Get all students (or teachers based on role query)
 // @route   GET /api/students
 // @access  Private (Admin Only)
 const getAllStudents = async (req, res) => {
     try {
-        const students = await Student.find().sort({ createdAt: -1 });
+        const { role } = req.query;
+        const query = role ? { role } : {}; // If role is provided, filter by it
+
+        const students = await Student.find(query).sort({ createdAt: -1 });
         res.status(200).json({
             success: true,
             count: students.length,
             data: students
         });
     } catch (error) {
-        console.error('Fetch Students Error:', error.message);
+        console.error('Fetch Students/Teachers Error:', error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -110,7 +113,8 @@ const loginStudent = async (req, res) => {
                 student: {
                     id: student._id,
                     name: student.name,
-                    email: student.email
+                    email: student.email,
+                    role: student.role
                 }
             });
         } else {
@@ -177,7 +181,8 @@ const updateStudentProfile = async (req, res) => {
                 data: {
                     id: updatedStudent._id,
                     name: updatedStudent.name,
-                    email: updatedStudent.email
+                    email: updatedStudent.email,
+                    role: updatedStudent.role
                 }
             });
         } else {

@@ -11,6 +11,7 @@ import VerifyOTP from './pages/VerifyOTP';
 import ResetPassword from './pages/ResetPassword';
 import News from './pages/News';
 import Profile from './Pages/Profile';
+import GradeReport from './Pages/GradeReport';
 import './App.css';
 
 // Protected Route Component for Students
@@ -61,6 +62,12 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/grades" element={
+              <ProtectedRoute>
+                <GradeReport />
               </ProtectedRoute>
             } />
           </Routes>

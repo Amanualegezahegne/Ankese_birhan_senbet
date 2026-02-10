@@ -11,6 +11,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [sex, setSex] = useState('');
+    const [role, setRole] = useState('student');
     const [nationalId, setNationalId] = useState('');
     const [dob, setDob] = useState('');
     const [hasServed, setHasServed] = useState('');
@@ -44,6 +45,7 @@ const SignUp = () => {
                 email,
                 phone,
                 sex,
+                role,
                 nationalId,
                 dob,
                 hasServed,
@@ -60,6 +62,7 @@ const SignUp = () => {
                 setEmail('');
                 setPhone('');
                 setSex('');
+                setRole('student');
                 setNationalId('');
                 setDob('');
                 setHasServed('');
@@ -90,6 +93,21 @@ const SignUp = () => {
                 )}
 
                 <form onSubmit={handleSubmit} className="reference-form">
+                    <div className="reference-row">
+                        <div className="form-group reference-group full-width">
+                            <label htmlFor="role" className="reference-label">{t('signup.role')}</label>
+                            <select
+                                id="role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                                className="form-select"
+                            >
+                                <option value="student">{t('signup.student')}</option>
+                                <option value="teacher">{t('signup.teacher')}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div className="reference-row">
                         <div className="form-group reference-group">
                             <label htmlFor="name" className="reference-label">{t('signup.name')}</label>

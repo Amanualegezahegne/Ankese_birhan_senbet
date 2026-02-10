@@ -57,6 +57,11 @@ const studentSchema = new mongoose.Schema({
         enum: ['Pending', 'Approved', 'Rejected'],
         default: 'Pending'
     },
+    role: {
+        type: String,
+        enum: ['student', 'teacher'],
+        default: 'student'
+    },
     resetOTP: String,
     resetOTPExpires: Date
 }, {

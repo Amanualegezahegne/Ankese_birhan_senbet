@@ -53,6 +53,9 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated }) => 
           <>
             <Link to="/news" onClick={() => setIsOpen(false)}>{t('navbar.news')}</Link>
             <Link to="/profile" onClick={() => setIsOpen(false)}>{t('navbar.profile')}</Link>
+            {JSON.parse(localStorage.getItem('studentInfo'))?.role === 'teacher' && (
+              <Link to="/grades" onClick={() => setIsOpen(false)}>{t('navbar.gradeReport')}</Link>
+            )}
           </>
         )}
 

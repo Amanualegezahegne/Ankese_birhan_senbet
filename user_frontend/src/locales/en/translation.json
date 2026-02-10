@@ -7,7 +7,8 @@
         "news": "News",
         "profile": "Profile",
         "signIn": "Sign In",
-        "logout": "Logout"
+        "logout": "Logout",
+        "gradeReport": "Grade Report"
     },
     "news": {
         "title": "Latest News & Information",
@@ -114,6 +115,10 @@
         "email": "Email (ኢሜይል)",
         "phone": "Phone Number (ስልክ ቁጥር)",
         "sex": "Sex (ጾታ)",
+        "role": "Register As",
+        "selectRole": "Select Role",
+        "student": "Student",
+        "teacher": "Teacher",
         "selectSex": "Select Sex (ጾታ ይምረጡ)",
         "male": "Male (ወንድ)",
         "female": "Female (ሴት)",
@@ -156,5 +161,34 @@
         "updateError": "Failed to update profile",
         "passwordSuccess": "Password changed successfully!",
         "passwordError": "Failed to change password"
+    },
+    "gradeReport": {
+        "title": "Grade Report Management",
+        "selectStudent": "Select Student",
+        "loading": "Loading...",
+        "addGradeFor": "Add Grade for",
+        "editGradeFor": "Edit Grade for",
+        "course": "Course",
+        "score": "Score",
+        "semester": "Semester",
+        "year": "Year",
+        "comment": "Comment (Optional)",
+        "action": "Action",
+        "semester1": "1st Semester",
+        "semester2": "2nd Semester",
+        "updateBtn": "Update Grade",
+        "addBtn": "Add Grade",
+        "cancelBtn": "Cancel",
+        "editBtn": "Edit",
+        "noGrades": "No grades found for this student.",
+        "selectPrompt": "Select a student to view or manage grades",
+        "confirmDelete": "Are you sure you want to delete this grade?",
+        "successAdd": "Grade added successfully",
+        "successUpdate": "Grade updated successfully",
+        "successDelete": "Grade deleted successfully",
+        "errorFetchStudents": "Failed to fetch students",
+        "errorFetchGrades": "Failed to fetch grades",
+        "errorSave": "Failed to save grade",
+        "errorDelete": "Failed to delete grade"
     }
 }

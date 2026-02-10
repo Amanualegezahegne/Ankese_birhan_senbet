@@ -7,7 +7,8 @@
         "news": "ዜናዎች",
         "profile": "ፕሮፋይል",
         "signIn": "ይግቡ",
-        "logout": "ውጣ"
+        "logout": "ውጣ",
+        "gradeReport": "የውጤት መግለጫ"
     },
     "news": {
         "title": "የቅርብ ጊዜ ዜናዎች እና መረጃዎች",
@@ -114,6 +115,10 @@
         "email": "ኢሜይል (Email)",
         "phone": "ስልክ ቁጥር (Phone Number)",
         "sex": "ጾታ (Sex)",
+        "role": "ይመዝገቡ እንደ (Register As)",
+        "selectRole": "ሚና ይምረጡ (Select Role)",
+        "student": "ተማሪ (Student)",
+        "teacher": "መምህር (Teacher)",
         "selectSex": "ጾታ ይምረጡ (Select Sex)",
         "male": "ወንድ (Male)",
         "female": "ሴት (Female)",
@@ -156,5 +161,34 @@
         "updateError": "ፕሮፋይልዎን ማስተካከል አልተቻለም",
         "passwordSuccess": "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል!",
         "passwordError": "የይለፍ ቃል መቀየር አልተቻለም"
+    },
+    "gradeReport": {
+        "title": "የውጤት መግለጫ አስተዳደር",
+        "selectStudent": "ተማሪ ይምረጡ",
+        "loading": "በመጫን ላይ...",
+        "addGradeFor": "ውጤት አስገባ ለ",
+        "editGradeFor": "ውጤት አሻሽል ለ",
+        "course": "የትምህርት አይነት",
+        "score": "ውጤት",
+        "semester": "ሴሚስተር",
+        "year": "ዓመት",
+        "comment": "አስተያየት (ካለ)",
+        "action": "ተግባር",
+        "semester1": "1ኛ ሴሚስተር",
+        "semester2": "2ኛ ሴሚስተር",
+        "updateBtn": "ውጤት አሻሽል",
+        "addBtn": "ውጤት ጨምር",
+        "cancelBtn": "ሰርዝ",
+        "editBtn": "አርም",
+        "noGrades": "ለዚህ ተማሪ ምንም ውጤት አልተገኘም።",
+        "selectPrompt": "ውጤት ለማየት ወይም ለማስተዳደር ተማሪ ይምረጡ",
+        "confirmDelete": "ይህንን ውጤት መሰረዝ ይፈልጋሉ?",
+        "successAdd": "ውጤት በተሳካ ሁኔታ ተጨምሯል",
+        "successUpdate": "ውጤት በተሳካ ሁኔታ ተሻሽሏል",
+        "successDelete": "ውጤት በተሳካ ሁኔታ ተሰርዟል",
+        "errorFetchStudents": "ተማሪዎችን ማምጣት አልተቻለም",
+        "errorFetchGrades": "ውጤቶችን ማምጣት አልተቻለም",
+        "errorSave": "ውጤት ማስቀመጥ አልተቻለም",
+        "errorDelete": "ውጤት መሰረዝ አልተቻለም"
     }
 }

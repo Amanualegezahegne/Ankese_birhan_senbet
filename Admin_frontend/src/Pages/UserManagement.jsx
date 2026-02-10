@@ -24,7 +24,7 @@ const UserManagement = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('adminToken');
-            const response = await axios.get('http://localhost:5000/api/students', {
+            const response = await axios.get('http://localhost:5000/api/students?role=student', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -164,7 +164,7 @@ const UserManagement = () => {
         <div className="user-management-page">
             <div className="page-header">
                 <div>
-                    <h1>{t('admin.usermanagement.title') || 'User Management'}</h1>
+                    <h1>{t('admin.usermanagement.title') || 'Student Management'}</h1>
                     <p>{t('admin.usermanagement.subtitle') || 'Manage Sunday School registrations'}</p>
                 </div>
                 <div className="header-actions">
@@ -243,9 +243,21 @@ const UserManagement = () => {
                                         <td>{student.christianName}</td>
                                         <td>{formatDate(student.createdAt)}</td>
                                         <td>
-                                            <span className={`status-badge status-${student.status.toLowerCase()}`}>
-                                                {student.status}
-                                            </span>
+                                            <div className="status-cell-container">
+                                                <span className={`status-badge status-${student.status.toLowerCase()}`}>
+                                                    {student.status}
+                                                </span>
+                                                <select
+                                                    value={student.status}
+                                                    onChange={(e) => handleStatusUpdate(student._id, e.target.value)}
+                                                    className="status-selector-mini"
+                                                    title={t('admin.usermanagement.table.status')}
+                                                >
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Approved">Approved</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                </select>
+                                            </div>
                                         </td>
                                         <td className="actions-cell">
                                             <div className="action-row">
@@ -262,15 +274,6 @@ const UserManagement = () => {
                                                 >
                                                     <span className="trash-icon">🗑️</span>
                                                 </button>
-                                                <select
-                                                    value={student.status}
-                                                    onChange={(e) => handleStatusUpdate(student._id, e.target.value)}
-                                                    className="status-selector"
-                                                >
-                                                    <option value="Pending">Pending</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Rejected">Rejected</option>
-                                                </select>
                                             </div>
                                         </td>
                                     </tr>

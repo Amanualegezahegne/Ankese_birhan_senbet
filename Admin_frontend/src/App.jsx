@@ -6,9 +6,12 @@ import Home from './Pages/Home';
 import Contact from './Pages/Contact';
 import Messages from './Pages/Messages';
 import UserManagement from './Pages/UserManagement';
+import TeacherManagement from './Pages/TeacherManagement';
 import NewsManager from './Pages/NewsManager';
-import Profile from './Pages/Profile';
+import Settings from './Pages/Settings';
 import Attendance from './Pages/Attendance';
+import CourseManagement from './Pages/CourseManagement';
+import Results from './Pages/Results';
 import SignIn from './Pages/SignIn';
 import './App.css';
 
@@ -49,7 +52,7 @@ function App() {
           handleLogout={handleLogout}
         />
         <div className={`admin-main-layout ${isAuthenticated ? 'has-sidebar' : ''}`}>
-          {isAuthenticated && <Sidebar />}
+          {isAuthenticated && <Sidebar handleLogout={handleLogout} />}
           <div className="admin-content">
             <Routes>
               <Route path="/signin" element={
@@ -74,6 +77,12 @@ function App() {
                 </ProtectedRoute>
               } />
 
+              <Route path="/teachers" element={
+                <ProtectedRoute>
+                  <TeacherManagement />
+                </ProtectedRoute>
+              } />
+
               <Route path="/contact" element={
                 <ProtectedRoute>
                   <Contact />
@@ -92,9 +101,21 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              <Route path="/profile" element={
+              <Route path="/courses" element={
                 <ProtectedRoute>
-                  <Profile />
+                  <CourseManagement />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/results" element={
+                <ProtectedRoute>
+                  <Results />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <Settings theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               } />
 
