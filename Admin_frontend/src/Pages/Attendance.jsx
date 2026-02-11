@@ -20,7 +20,7 @@ const Attendance = () => {
     const fetchStudentsAndAttendance = async () => {
         try {
             setLoading(true);
-            const adminToken = localStorage.getItem('adminToken');
+            const adminToken = sessionStorage.getItem('adminToken');
             const config = { headers: { Authorization: `Bearer ${adminToken}` } };
 
             // Fetch approved members based on active tab
@@ -59,7 +59,7 @@ const Attendance = () => {
     const saveAttendance = async () => {
         try {
             setSaving(true);
-            const adminToken = localStorage.getItem('adminToken');
+            const adminToken = sessionStorage.getItem('adminToken');
             const config = { headers: { Authorization: `Bearer ${adminToken}` } };
 
             const records = Object.keys(attendanceData).map(studentId => ({
@@ -114,7 +114,7 @@ const Attendance = () => {
                         fontWeight: 'bold'
                     }}
                 >
-                    {t('admin.navbar.users') || 'Students'}
+                    {t('admin.attendance.studentTab') || 'Student Attendance'}
                 </button>
                 <button
                     className={`tab-btn ${activeTab === 'teacher' ? 'active' : ''}`}
@@ -129,7 +129,7 @@ const Attendance = () => {
                         fontWeight: 'bold'
                     }}
                 >
-                    {t('admin.teachermanagement.title') || 'Teachers'}
+                    {t('admin.attendance.teacherTab') || 'Teacher Attendance'}
                 </button>
             </div>
 

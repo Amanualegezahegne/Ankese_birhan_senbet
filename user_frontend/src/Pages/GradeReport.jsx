@@ -127,7 +127,7 @@ const GradeReport = () => {
                 const payload = {
                     studentId,
                     score: gradeData.score,
-                    comment: gradeData.comment,
+                    // comment removed
                     ...filters
                 };
 
@@ -243,7 +243,7 @@ const GradeReport = () => {
                             <th style={{ width: '50px' }}>#</th>
                             <th>Student Name</th>
                             <th style={{ width: '150px' }}>{t('gradeReport.score')}</th>
-                            <th>{t('gradeReport.comment')}</th>
+                            {/* Comment column removed */}
                         </tr>
                     </thead>
                     <tbody>
@@ -266,20 +266,12 @@ const GradeReport = () => {
                                                 style={{ width: '100%', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
                                             />
                                         </td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={grade.comment || ''}
-                                                onChange={(e) => handleGradeChange(student._id, 'comment', e.target.value)}
-                                                style={{ width: '100%', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
-                                                placeholder="Optional"
-                                            />
-                                        </td>
+                                        {/* Comment input removed */}
                                     </tr>
                                 );
                             })
                         ) : (
-                            <tr><td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>No students found</td></tr>
+                            <tr><td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>No students found</td></tr>
                         )}
                     </tbody>
                 </table>

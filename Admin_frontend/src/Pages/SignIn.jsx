@@ -30,9 +30,9 @@ const SignIn = () => {
             });
 
             if (response.data.success) {
-                // Store token and user data
-                localStorage.setItem('adminToken', response.data.token);
-                localStorage.setItem('adminUser', JSON.stringify(response.data.user));
+                // Store token and user data in sessionStorage for session-only persistence
+                sessionStorage.setItem('adminToken', response.data.token);
+                sessionStorage.setItem('adminUser', JSON.stringify(response.data.user));
 
                 setStatus({
                     type: 'success',

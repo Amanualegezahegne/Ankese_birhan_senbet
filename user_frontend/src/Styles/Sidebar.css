@@ -1,0 +1,118 @@
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #000000;
+    /* Black background */
+    color: #ffffff;
+    /* White text */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-right: 1px solid #333;
+    /* Dark border */
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-links li {
+    margin-bottom: 1rem;
+}
+
+.sidebar-links a {
+    text-decoration: none;
+    color: #b3b3b3;
+    /* Light grey for inactive */
+    font-size: 1.1rem;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.sidebar-links a:hover {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.sidebar-links a.active {
+    background-color: #ffffff;
+    /* White background for active */
+    color: #000000;
+    /* Black text for active */
+    font-weight: bold;
+}
+
+.sidebar-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* Add a hamburger button for main content when sidebar is closed (optional, can reuse Navbar's) */
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 999;
+    background: #000000;
+    /* Black background */
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}

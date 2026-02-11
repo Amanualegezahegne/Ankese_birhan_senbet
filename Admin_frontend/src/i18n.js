@@ -219,6 +219,8 @@ const resources = {
                     subtitle: "Record and track student attendance",
                     markAttendance: "Mark Attendance",
                     date: "Select Date",
+                    studentTab: "Student Attendance",
+                    teacherTab: "Teacher Attendance",
                     studentName: "Student Name",
                     christianName: "Christian Name",
                     status: "Status",
@@ -261,7 +263,13 @@ const resources = {
                     successSave: "All grades saved successfully",
                     studentName: "Student Name",
                     noStudents: "No students found",
-                    loading: "Loading..."
+                    loading: "Loading...",
+                    passingScore: "Passing Score",
+                    statusColumn: "Status (Pass/Fail)",
+                    statusColumn: "Status (Pass/Fail)",
+                    pass: "Pass",
+                    fail: "Fail",
+                    downloadCSV: "Download Result"
                 }
             }
         }
@@ -483,6 +491,8 @@ const resources = {
                     subtitle: "የተማሪዎችን ክትትል ይመዝግቡ እና ይከታተሉ",
                     markAttendance: "ክትትል ይሙሉ",
                     date: "ቀን ይምረጡ",
+                    studentTab: 'የተማሪዎች አቴንዳንስ',
+                    teacherTab: 'የመምህራን አቴንዳንስ',
                     studentName: "የተማሪ ስም",
                     christianName: "ክርስትና ስም",
                     status: "ሁኔታ",
@@ -521,11 +531,17 @@ const resources = {
                     errorFetchStudents: "የተማሪዎችን ዝርዝር ማግኘት አልተቻለም",
                     errorFetchGrades: "ውጤቶችን መጫን አልተቻለም",
                     errorSave: "ውጤቶችን ማስቀመጥ አልተቻለም",
-                    saveAll: "ሁሉንም አስቀምጥ",
+                    saveAll: "ሁሉንም ውጤት አስቀምጥ",
                     successSave: "ሁሉም ውጤቶች በተሳካ ሁኔታ ተቀምጠዋል",
                     studentName: "የተማሪ ስም",
                     noStudents: "ምንም ተማሪ አልተገኘም",
-                    loading: "በመጫን ላይ..."
+                    loading: "በመጫን ላይ...",
+                    passingScore: "የማለፊያ ነጥብ",
+                    statusColumn: "ሁኔታ (አልፏል/ወድቋል)",
+                    statusColumn: "ሁኔታ (አልፏል/ወድቋል)",
+                    pass: "አልፏል",
+                    fail: "ወድቋል",
+                    downloadCSV: "ውጤት አውርድ"
                 }
             }
         }

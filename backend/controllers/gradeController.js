@@ -6,7 +6,7 @@ const Student = require('../models/Student');
 // @access  Private (Teacher/Admin)
 const addGrade = async (req, res) => {
     try {
-        const { studentId, subject, score, semester, year, comment } = req.body;
+        const { studentId, course, score, semester, year, status } = req.body;
 
         // Verify student exists and is actually a student
         const student = await Student.findById(studentId);
@@ -17,11 +17,11 @@ const addGrade = async (req, res) => {
         const grade = await Grade.create({
             student: studentId,
             teacher: req.user._id, // Assumes req.user is set by auth middleware
-            subject,
+            course,
             score,
             semester,
             year,
-            comment
+            status
         });
 
         res.status(201).json({
@@ -123,13 +123,13 @@ const deleteGrade = async (req, res) => {
 // @access  Private (Teacher/Admin)
 const getGradesByFilter = async (req, res) => {
     try {
-        const { subject, semester, year } = req.query;
+        const { course, semester, year } = req.query;
 
-        if (!subject || !semester || !year) {
-            return res.status(400).json({ success: false, message: 'Please provide subject, semester, and year' });
+        if (!course || !semester || !year) {
+            return res.status(400).json({ success: false, message: 'Please provide course, semester, and year' });
         }
 
-        const grades = await Grade.find({ subject, semester, year })
+        const grades = await Grade.find({ course, semester, year })
             .populate('student', 'name email id')
             .populate('teacher', 'name email');
 

@@ -17,13 +17,13 @@ import './App.css';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('adminToken');
+  const isAuthenticated = sessionStorage.getItem('adminToken');
   return isAuthenticated ? children : <Navigate to="/signin" />;
 };
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'dark');
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
+  const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('adminToken'));
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -36,8 +36,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    sessionStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminUser');
     setIsAuthenticated(false);
     window.location.href = '/signin';
   };

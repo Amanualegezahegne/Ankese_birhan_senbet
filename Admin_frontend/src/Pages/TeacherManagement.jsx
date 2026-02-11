@@ -23,7 +23,7 @@ const TeacherManagement = () => {
     const fetchTeachers = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const response = await axios.get('http://localhost:5000/api/students?role=teacher', {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -54,7 +54,7 @@ const TeacherManagement = () => {
             const response = await axios.post('http://localhost:5000/api/students/import', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
                 }
             });
 
@@ -105,7 +105,7 @@ const TeacherManagement = () => {
             setTeacherToDelete(null);
             setLoading(true);
 
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const response = await axios.delete(`http://localhost:5000/api/students/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -126,7 +126,7 @@ const TeacherManagement = () => {
 
     const handleStatusUpdate = async (id, newStatus) => {
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const response = await axios.put(`http://localhost:5000/api/students/${id}/status`, { status: newStatus }, {
                 headers: {
                     'Authorization': `Bearer ${token}`

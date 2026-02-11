@@ -27,8 +27,9 @@ const gradeSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a year']
     },
-    comment: {
-        type: String
+    status: {
+        type: String,
+        default: '-'
     },
     createdAt: {
         type: Date,

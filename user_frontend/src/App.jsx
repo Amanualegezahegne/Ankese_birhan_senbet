@@ -20,9 +20,17 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/signin" />;
 };
 
+import Sidebar from './components/Sidebar'; // Import Sidebar
+
+// ... inside App component ...
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('studentToken'));
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default open for desktop if desired, or false
+
+  // Check if user is teacher
+  const userInfo = JSON.parse(localStorage.getItem('studentInfo'));
+  const isTeacher = isAuthenticated && userInfo?.role === 'teacher';
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -42,7 +50,25 @@ function App() {
           isAuthenticated={isAuthenticated}
           setIsAuthenticated={setIsAuthenticated}
         />
-        <main>
+
+        {isTeacher && (
+          <>
+            <button
+              className="sidebar-toggle"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              style={{ position: 'fixed', top: '80px', left: '20px', zIndex: 99 }}
+            >
+              ☰ Menu
+            </button>
+            <Sidebar
+              isOpen={isSidebarOpen}
+              toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+              setIsAuthenticated={setIsAuthenticated}
+            />
+          </>
+        )}
+
+        <main style={{ marginLeft: isTeacher && isSidebarOpen ? '250px' : '0', transition: 'margin 0.3s' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />

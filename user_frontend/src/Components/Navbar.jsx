@@ -51,11 +51,28 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated }) => 
 
         {isAuthenticated && (
           <>
-            <Link to="/news" onClick={() => setIsOpen(false)}>{t('navbar.news')}</Link>
-            <Link to="/profile" onClick={() => setIsOpen(false)}>{t('navbar.profile')}</Link>
-            {JSON.parse(localStorage.getItem('studentInfo'))?.role === 'teacher' && (
-              <Link to="/grades" onClick={() => setIsOpen(false)}>{t('navbar.gradeReport')}</Link>
+            {/* Show these only if NOT a teacher */}
+            {JSON.parse(localStorage.getItem('studentInfo'))?.role !== 'teacher' && (
+              <>
+                <Link to="/news" onClick={() => setIsOpen(false)}>{t('navbar.news')}</Link>
+                <Link to="/profile" onClick={() => setIsOpen(false)}>{t('navbar.profile')}</Link>
+              </>
             )}
+
+            {/* Grade Report is usually for teachers in your request, but you said "remove from navbar", 
+               so I will hide it here for teachers too, as it will be in Sidebar. 
+               Students don't access GradeReport here? 
+               Wait, previously logic was: teacher -> grades. 
+               Now: teacher -> hide from navbar (move to sidebar).
+            */}
+            {/* If student needs to see grades? Usually students see grades. 
+                But the previous code only showed it for teachers? 
+                "JSON.parse(...)?.role === 'teacher' && <Link to="/grades"..."
+                So previously ONLY teachers saw grades in Navbar.
+                Now we remove it from Navbar for teachers.
+                So NO ONE sees grades in Navbar now? 
+                (Students might access it differently or not implemented here yet).
+             */}
           </>
         )}
 

@@ -20,6 +20,8 @@ const Results = () => {
 
     const [dirtyRows, setDirtyRows] = useState(new Set());
 
+    const [passingScore, setPassingScore] = useState(50);
+
     useEffect(() => {
         fetchStudents();
         fetchCourses();
@@ -117,10 +119,13 @@ const Results = () => {
                 const gradeData = gradesMap[studentId];
                 if (!gradeData || (!gradeData.score && gradeData.score !== 0)) return null;
 
+                const scoreVal = Number(gradeData.score);
+                const statusVal = scoreVal >= passingScore ? 'Pass' : 'Fail';
+
                 const payload = {
                     studentId,
-                    score: gradeData.score,
-                    comment: gradeData.comment,
+                    score: scoreVal,
+                    status: statusVal,
                     ...filters
                 };
 
@@ -147,6 +152,52 @@ const Results = () => {
         }
     };
 
+    const handleDownloadCSV = () => {
+        if (!students.length) return;
+
+        const headers = [
+            t('admin.results.studentName') || 'Student Name',
+            t('admin.results.score') || 'Score',
+            t('admin.results.statusColumn') || 'Status'
+        ];
+
+        const rows = students.map(student => {
+            const grade = gradesMap[student._id] || {};
+            let statusVal = grade.status || '-';
+            if (grade.score !== undefined && grade.score !== '') {
+                statusVal = Number(grade.score) >= passingScore ? 'Pass' : 'Fail';
+            }
+
+            // Translate status for CSV if needed, or keep as English/Code
+            // Let's use the code for consistency or translated if preferred. 
+            // Using translated values for the report:
+            const statusDisplay = statusVal === 'Pass' ? (t('admin.results.pass') || 'Pass')
+                : statusVal === 'Fail' ? (t('admin.results.fail') || 'Fail')
+                    : '-';
+
+            return [
+                `"${student.name}"`, // Quote name to handle commas
+                grade.score || '',
+                statusDisplay
+            ];
+        });
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+
+        // Add BOM for Excel verification of UTF-8
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `Results_${filters.course}_${filters.year}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="user-management-page" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -154,11 +205,16 @@ const Results = () => {
                     <h1>{t('admin.results.title')}</h1>
                     <p className="subtitle">{t('admin.results.subtitle')}</p>
                 </div>
-                {dirtyRows.size > 0 && (
-                    <button onClick={handleSaveAll} className="save-all-btn">
-                        {t('admin.results.saveAll') || 'Save All'} ({dirtyRows.size})
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button onClick={handleDownloadCSV} className="save-all-btn" style={{ backgroundColor: '#28a745' }}>
+                        {t('admin.results.downloadCSV') || 'Download Result'}
                     </button>
-                )}
+                    {dirtyRows.size > 0 && (
+                        <button onClick={handleSaveAll} className="save-all-btn">
+                            {t('admin.results.saveAll') || 'Save All'} ({dirtyRows.size})
+                        </button>
+                    )}
+                </div>
             </div>
 
             {status.message && <div className={`alert alert-${status.type}`}>{status.message}</div>}
@@ -192,6 +248,15 @@ const Results = () => {
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#ffd700' }}>{t('admin.results.passingScore')}</label>
+                    <input
+                        type="number"
+                        value={passingScore}
+                        onChange={(e) => setPassingScore(Number(e.target.value))}
+                        style={{ width: '100%', padding: '0.5rem', border: '2px solid #ffd700', borderRadius: '4px' }}
+                    />
+                </div>
             </div>
 
             <div className="table-wrapper">
@@ -201,13 +266,20 @@ const Results = () => {
                             <th style={{ width: '50px' }}>#</th>
                             <th>{t('admin.results.studentName') || 'Student Name'}</th>
                             <th style={{ width: '150px' }}>{t('admin.results.score')}</th>
-                            <th>{t('admin.results.comment')}</th>
+                            <th>{t('admin.results.statusColumn')}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {students.map((student, index) => {
                             const grade = gradesMap[student._id] || {};
                             const isDirty = dirtyRows.has(student._id);
+
+                            // Calculate provisional status if score exists, else verify stored status
+                            let currentStatus = grade.status || '-';
+                            if (grade.score !== undefined && grade.score !== '') {
+                                currentStatus = Number(grade.score) >= passingScore ? 'Pass' : 'Fail';
+                            }
+
                             return (
                                 <tr key={student._id}>
                                     <td>{index + 1}</td>
@@ -221,13 +293,15 @@ const Results = () => {
                                         />
                                     </td>
                                     <td>
-                                        <input
-                                            type="text"
-                                            value={grade.comment || ''}
-                                            onChange={(e) => handleGradeChange(student._id, 'comment', e.target.value)}
-                                            style={{ width: '100%', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
-                                            placeholder="Comment"
-                                        />
+                                        <span style={{
+                                            padding: '0.25rem 0.5rem',
+                                            borderRadius: '4px',
+                                            fontWeight: 'bold',
+                                            backgroundColor: currentStatus === 'Pass' ? '#d4edda' : (currentStatus === 'Fail' ? '#f8d7da' : '#e2e3e5'),
+                                            color: currentStatus === 'Pass' ? '#155724' : (currentStatus === 'Fail' ? '#721c24' : '#383d41')
+                                        }}>
+                                            {currentStatus === 'Pass' ? t('admin.results.pass') : (currentStatus === 'Fail' ? t('admin.results.fail') : '-')}
+                                        </span>
                                     </td>
                                 </tr>
                             );

@@ -37,7 +37,7 @@ const CourseManagement = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -73,7 +73,7 @@ const CourseManagement = () => {
         if (!window.confirm(t('admin.coursemanagement.confirmDelete'))) return;
 
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             await axios.delete(`http://localhost:5000/api/courses/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });

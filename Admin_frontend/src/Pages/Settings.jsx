@@ -20,7 +20,7 @@ const Settings = ({ theme, toggleTheme }) => {
 
     const fetchProfile = async () => {
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const res = await axios.get('http://localhost:5000/api/auth/profile', {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -38,7 +38,7 @@ const Settings = ({ theme, toggleTheme }) => {
         e.preventDefault();
         setMessage({ type: '', text: '' });
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const res = await axios.put('http://localhost:5000/api/auth/profile',
                 { email: admin.email },
                 { headers: { Authorization: `Bearer ${token}` } }
@@ -61,7 +61,7 @@ const Settings = ({ theme, toggleTheme }) => {
         }
 
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const res = await axios.put('http://localhost:5000/api/auth/profile',
                 {
                     currentPassword: passwords.currentPassword,

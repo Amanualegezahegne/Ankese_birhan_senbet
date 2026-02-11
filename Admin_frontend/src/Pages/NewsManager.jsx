@@ -54,7 +54,7 @@ const NewsManager = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token'); // Admins use 'token'
+        const token = sessionStorage.getItem('adminToken'); // Admins use 'adminToken'
 
         const payload = {
             title: { en: formData.titleEn, am: formData.titleAm },
@@ -99,7 +99,7 @@ const NewsManager = () => {
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this news item?')) return;
 
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('adminToken');
         try {
             await axios.delete(`http://localhost:5000/api/news/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
