@@ -1,38 +1,196 @@
-/* About Page */
 .about-page {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-bottom: 4rem;
+    overflow-x: hidden;
 }
 
-.about-content {
-    max-width: 900px;
-    margin: 0 auto;
-    line-height: 1.8;
-    padding: 3rem;
-    background: var(--card-bg);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px var(--shadow-color);
-    border-top: 5px solid var(--secondary-color);
+/* Hero Section */
+.about-hero {
+    height: 60vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/images/church_hero.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 4rem;
 }
 
-.about-content h2 {
-    color: var(--primary-color);
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+.about-hero-content {
     text-align: center;
+    z-index: 2;
+    color: white;
 }
 
-.about-content h3 {
-    color: var(--primary-color);
-    font-size: 1.8rem;
-    margin-top: 2.5rem;
+.about-hero-content h1 {
+    font-size: 4rem;
+    font-weight: 800;
     margin-bottom: 1rem;
-    border-bottom: 2px solid var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.accent-line {
+    width: 80px;
+    height: 4px;
+    background: #8B0000;
+    margin: 0 auto;
+}
+
+/* Section Layouts */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.about-section {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 8rem;
+}
+
+.about-section.reverse {
+    flex-direction: row-reverse;
+}
+
+.section-text {
+    flex: 1;
+}
+
+.section-text h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    position: relative;
     display: inline-block;
 }
 
-.about-content p {
-    font-size: 1.1rem;
-    color: var(--muted-text);
-    margin-bottom: 1.5rem;
+.section-text h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: #8B0000;
+}
+
+.section-text p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+.section-image {
+    flex: 1;
+}
+
+.about-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.5s ease;
+}
+
+.about-img:hover {
+    transform: scale(1.02);
+}
+
+/* Values Grid */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 6rem;
+}
+
+.value-card {
+    padding: 3rem 2rem;
+    background: #fff;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.value-card.highlight {
+    background: #000;
+    color: #fff;
+}
+
+.value-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.value-card.highlight h3 {
+    color: #fff;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 1s ease-out;
+}
+
+.animate-pop-in {
+    animation: popIn 0.8s cubic-bezier(0.26, 0.53, 0.74, 1.48);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 900px) {
+    .about-section {
+        flex-direction: column !important;
+        gap: 2rem;
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .section-text h2::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .about-hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .image-placeholder {
+        height: 250px;
+    }
 }

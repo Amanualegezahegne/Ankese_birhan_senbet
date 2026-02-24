@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -21,9 +22,11 @@ const ProtectedRoute = ({ children }) => {
 };
 
 import Sidebar from './components/Sidebar'; // Import Sidebar
+import Footer from './components/Footer';
 
 // ... inside App component ...
 function App() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('studentToken'));
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default open for desktop if desired, or false
@@ -52,23 +55,14 @@ function App() {
         />
 
         {isTeacher && (
-          <>
-            <button
-              className="sidebar-toggle"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              style={{ position: 'fixed', top: '80px', left: '20px', zIndex: 99 }}
-            >
-              ☰ Menu
-            </button>
-            <Sidebar
-              isOpen={isSidebarOpen}
-              toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-              setIsAuthenticated={setIsAuthenticated}
-            />
-          </>
+          <Sidebar
+            isOpen={isSidebarOpen}
+            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            setIsAuthenticated={setIsAuthenticated}
+          />
         )}
 
-        <main style={{ marginLeft: isTeacher && isSidebarOpen ? '250px' : '0', transition: 'margin 0.3s' }}>
+        <main className={`main-content ${isTeacher ? 'sidebar-open' : ''}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -98,6 +92,7 @@ function App() {
             } />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );

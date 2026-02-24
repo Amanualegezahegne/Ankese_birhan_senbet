@@ -8,7 +8,9 @@
         "profile": "ፕሮፋይል",
         "signIn": "ይግቡ",
         "logout": "ውጣ",
-        "gradeReport": "የውጤት መግለጫ"
+        "gradeReport": "የውጤት መግለጫ",
+        "menu": "ዝርዝር",
+        "close": "ዝጋ"
     },
     "news": {
         "title": "የቅርብ ጊዜ ዜናዎች እና መረጃዎች",
@@ -190,5 +192,20 @@
         "errorFetchGrades": "ውጤቶችን ማምጣት አልተቻለም",
         "errorSave": "ውጤት ማስቀመጥ አልተቻለም",
         "errorDelete": "ውጤት መሰረዝ አልተቻለም"
+    },
+    "subscription": {
+        "title": "ለዜና መጽሔታችን ይመዝገቡ",
+        "subtitle": "የቅርብ ጊዜ ዜናዎችን እና መንፈሳዊ ዝመናዎችን በቀጥታ በኢሜልዎ ያግኙ።",
+        "placeholder": "የኢሜል አድራሻዎን ያስገቡ",
+        "button": "ይመዝገቡ",
+        "success": "በተሳካ ሁኔታ ተመዝግበዋል!",
+        "error": "ምዝገባው አልተሳካም። እባክዎ እንደገና ይሞክሩ።",
+        "alreadySubscribed": "አስቀድመው ተመዝግበዋል!"
+    },
+    "footer": {
+        "about": "ስለ እኛ",
+        "links": "ፈጣን ሊንኮች",
+        "contact": "የእውቂያ መረጃ",
+        "rights": "መብቱ በህግ የተጠበቀ ነው።"
     }
 }

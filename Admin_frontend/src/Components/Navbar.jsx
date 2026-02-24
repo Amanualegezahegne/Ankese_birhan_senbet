@@ -43,7 +43,7 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
             {/* Links */}
             <div className={`navbar-links ${isOpen ? 'active' : ''}`}>
                 <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.home')}</Link>
-                <Link to="/" onClick={() => setIsOpen(false)}>{t('admin.navbar.about')}</Link>
+                <Link to="/about" onClick={() => setIsOpen(false)}>{t('admin.navbar.about')}</Link>
                 <Link to="/contact" onClick={() => setIsOpen(false)}>{t('admin.navbar.contact')}</Link>
 
                 <button

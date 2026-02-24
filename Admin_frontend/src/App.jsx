@@ -12,6 +12,7 @@ import Settings from './Pages/Settings';
 import Attendance from './Pages/Attendance';
 import CourseManagement from './Pages/CourseManagement';
 import Results from './Pages/Results';
+import About from './Pages/About';
 import SignIn from './Pages/SignIn';
 import './App.css';
 
@@ -57,6 +58,12 @@ function App() {
             <Routes>
               <Route path="/signin" element={
                 isAuthenticated ? <Navigate to="/" /> : <SignIn />
+              } />
+
+              <Route path="/about" element={
+                <ProtectedRoute>
+                  <About />
+                </ProtectedRoute>
               } />
 
               <Route path="/" element={

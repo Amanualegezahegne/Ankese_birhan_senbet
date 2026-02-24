@@ -8,7 +8,9 @@
         "profile": "Profile",
         "signIn": "Sign In",
         "logout": "Logout",
-        "gradeReport": "Grade Report"
+        "gradeReport": "Grade Report",
+        "menu": "Menu",
+        "close": "Close"
     },
     "news": {
         "title": "Latest News & Information",
@@ -190,5 +192,20 @@
         "errorFetchGrades": "Failed to fetch grades",
         "errorSave": "Failed to save grade",
         "errorDelete": "Failed to delete grade"
+    },
+    "subscription": {
+        "title": "Subscribe to Our Newsletter",
+        "subtitle": "Get the latest news and spiritual updates directly in your inbox.",
+        "placeholder": "Enter your email address",
+        "button": "Subscribe",
+        "success": "Check your inbox! You've successfully subscribed.",
+        "error": "Failed to subscribe. Please try again.",
+        "alreadySubscribed": "You are already subscribed!"
+    },
+    "footer": {
+        "about": "About Us",
+        "links": "Quick Links",
+        "contact": "Contact info",
+        "rights": "All rights reserved."
     }
 }

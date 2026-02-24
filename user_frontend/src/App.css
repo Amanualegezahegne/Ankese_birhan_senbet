@@ -1,1 +1,29 @@
 /* Cleared default Vite styles */
+
+.app-main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    transition: margin-left 0.3s ease-in-out;
+    width: 100%;
+}
+
+/* Desktop Sidebar behavior */
+@media (min-width: 769px) {
+    .main-content.sidebar-open {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+    }
+}
+
+/* Mobile Sidebar behavior - persistent mini sidebar (70px) */
+@media (max-width: 768px) {
+    .main-content.sidebar-open {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+    }
+}

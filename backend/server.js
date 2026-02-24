@@ -40,6 +40,7 @@ app.use('/api/news', require('./routes/newsRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/grades', require('./routes/gradeRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
+app.use('/api/subscribers', require('./routes/subscriberRoutes'));
 
 // TODO: Add your routes here
 // app.use('/api/users', require('./routes/userRoutes'));

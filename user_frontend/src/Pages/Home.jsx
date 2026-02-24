@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import '../styles/Home.css';
 import churchHero from '../assets/images/church_hero.png';
+import Subscription from '../components/Subscription';
 
 const Home = () => {
     const { t } = useTranslation();
@@ -34,6 +35,7 @@ const Home = () => {
                         <p>{t('home.features.community.desc')}</p>
                     </div>
                 </section>
+                <Subscription />
             </div>
         </div>
     );
