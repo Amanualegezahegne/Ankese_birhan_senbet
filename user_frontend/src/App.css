@@ -10,6 +10,9 @@
     flex: 1;
     transition: margin-left 0.3s ease-in-out;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
 }
 
 /* Desktop Sidebar behavior */

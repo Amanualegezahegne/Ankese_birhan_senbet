@@ -40,7 +40,7 @@ const Profile = () => {
                 }
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                setStatus({ type: 'error', message: t('profile.loadError') || 'Failed to load profile' });
+                setStatus({ type: 'error', message: t('profile.loadError') });
             } finally {
                 setLoading(false);
             }

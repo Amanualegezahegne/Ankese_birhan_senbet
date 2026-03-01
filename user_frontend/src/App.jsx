@@ -91,8 +91,8 @@ function App() {
               </ProtectedRoute>
             } />
           </Routes>
+          <Footer />
         </main>
-        <Footer />
       </div>
     </Router>
   );

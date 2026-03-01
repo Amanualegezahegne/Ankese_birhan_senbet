@@ -61,7 +61,7 @@ const GradeReport = () => {
     // Load grades based on filters
     const loadGrades = async () => {
         if (!filters.course || !filters.semester || !filters.year) {
-            setStatus({ type: 'warning', message: 'Please provide Course, Semester and Year' });
+            setStatus({ type: 'warning', message: t('gradeReport.selectPrompt') });
             return;
         }
 
@@ -83,7 +83,7 @@ const GradeReport = () => {
                 });
                 setGradesMap(newMap);
                 setDirtyRows(new Set()); // Clear dirty state
-                setStatus({ type: 'success', message: 'Grades loaded successfully' });
+                setStatus({ type: 'success', message: t('gradeReport.loadSuccess') });
             }
         } catch (error) {
             console.error('Error loading grades:', error);
@@ -111,7 +111,7 @@ const GradeReport = () => {
     const handleSaveAll = async () => {
         if (dirtyRows.size === 0) return;
 
-        if (!window.confirm(`Are you sure you want to save grades for ${dirtyRows.size} students?`)) {
+        if (!window.confirm(t('gradeReport.confirmSaveAll', { count: dirtyRows.size }))) {
             return;
         }
 
@@ -148,17 +148,17 @@ const GradeReport = () => {
             const successfulUpdates = results.filter(r => r && r.data.success);
 
             if (successfulUpdates.length === dirtyRows.size) {
-                setStatus({ type: 'success', message: 'All grades saved successfully' });
+                setStatus({ type: 'success', message: t('gradeReport.saveSuccess') });
                 setDirtyRows(new Set());
                 // Refresh data to ensure sync
                 loadGrades();
             } else {
-                setStatus({ type: 'warning', message: `Saved ${successfulUpdates.length} out of ${dirtyRows.size} grades. Please check for errors.` });
+                setStatus({ type: 'warning', message: t('gradeReport.partialSave', { success: successfulUpdates.length, total: dirtyRows.size }) });
             }
 
         } catch (error) {
             console.error('Error saving grades:', error);
-            setStatus({ type: 'error', message: 'Error occurred while saving grades' });
+            setStatus({ type: 'error', message: t('gradeReport.errorSave') });
         } finally {
             setLoading(false);
         }
@@ -184,7 +184,7 @@ const GradeReport = () => {
                         onClick={handleSaveAll}
                         className="save-all-btn"
                     >
-                        Save All Changes ({dirtyRows.size})
+                        {t('gradeReport.saveAll')} ({dirtyRows.size})
                     </button>
                 )}
             </div>
@@ -204,7 +204,7 @@ const GradeReport = () => {
                         onChange={(e) => setFilters({ ...filters, course: e.target.value })}
                         style={{ width: '100%', padding: '0.5rem' }}
                     >
-                        <option value="">Select Course</option>
+                        <option value="">{t('gradeReport.selectCourse')}</option>
                         {courses.map(course => (
                             <option key={course._id} value={course.title}>{course.title}</option>
                         ))}
@@ -241,7 +241,7 @@ const GradeReport = () => {
                     <thead>
                         <tr>
                             <th style={{ width: '50px' }}>#</th>
-                            <th>Student Name</th>
+                            <th>{t('gradeReport.studentName')}</th>
                             <th style={{ width: '150px' }}>{t('gradeReport.score')}</th>
                             {/* Comment column removed */}
                         </tr>
@@ -271,13 +271,13 @@ const GradeReport = () => {
                                 );
                             })
                         ) : (
-                            <tr><td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>No students found</td></tr>
+                            <tr><td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>{t('gradeReport.noStudents')}</td></tr>
                         )}
                     </tbody>
                 </table>
             </div>
 
-            {loading && <p style={{ textAlign: 'center', marginTop: '1rem' }}>Loading...</p>}
+            {loading && <p style={{ textAlign: 'center', marginTop: '1rem' }}>{t('gradeReport.loading')}</p>}
         </div>
     );
 };
