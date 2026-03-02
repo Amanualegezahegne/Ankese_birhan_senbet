@@ -92,7 +92,9 @@
     width: 100%;
     height: 400px;
     object-fit: cover;
+    object-position: center 20%;
     border-radius: 20px;
+
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.5s ease;
@@ -210,6 +212,14 @@
 .event-board-card:hover .overlay-content p {
     transform: translateY(0);
 }
+
+.event-board-card:hover .board-card-img {
+    transform: scale(1.1);
+}
+
+
+
+
 
 .gallery-mini-controls {
     position: absolute;
@@ -389,5 +399,39 @@
 
     .image-placeholder {
         height: 250px;
+    }
+}
+
+/* Large Screens Optimization */
+@media (min-width: 1200px) {
+    .about-container {
+        max-width: 1400px;
+    }
+
+    .about-img {
+        height: 650px;
+        /* Increased from 400px for portrait images */
+    }
+
+    .about-section {
+        gap: 6rem;
+    }
+
+    .section-text h2 {
+        font-size: 3rem;
+    }
+
+    .section-text p {
+        font-size: 1.25rem;
+    }
+}
+
+@media (min-width: 1800px) {
+    .about-container {
+        max-width: 1600px;
+    }
+
+    .about-img {
+        height: 750px;
     }
 }

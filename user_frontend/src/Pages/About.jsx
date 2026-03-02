@@ -3,6 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { FaPrayingHands, FaBookOpen, FaUsers, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import '../Styles/About.css';
 import journeyImg from '../assets/images/journey.jpg';
+import domeImg from '../assets/images/DSC02172.JPG';
+import visionImg from '../assets/images/Screenshot 2026-03-02 210710.png';
+
+
+
+
+
+
+
 
 // Event Images
 import event1 from '../assets/images/events/building-school/event1.jpg';
@@ -23,6 +32,8 @@ const About = () => {
     const eventImages = [event1, event2, event3, event4, event5];
     const uraelImages = [urael1, urael2, urael3];
 
+
+
     const nextImage = () => {
         setCurrentImageIndex((prev) => (prev + 1) % eventImages.length);
     };
@@ -38,6 +49,8 @@ const About = () => {
     const prevUrael = () => {
         setUraelImageIndex((prev) => (prev - 1 + uraelImages.length) % uraelImages.length);
     };
+
+
 
     return (
         <div className="about-page">
@@ -67,11 +80,14 @@ const About = () => {
                 <section className="about-section mission-section reverse">
                     <div className="section-image animate-pop-in">
                         <img
-                            src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&q=80&w=800"
+                            src={domeImg}
                             alt="Our Mission"
                             className="about-img"
                         />
+
+
                     </div>
+
                     <div className="section-text animate-slide-left">
                         <h2>{t('about.missionTitle')}</h2>
                         <p>{t('about.missionDesc')}</p>
@@ -81,16 +97,21 @@ const About = () => {
                 <section className="about-section vision-section">
                     <div className="section-image animate-pop-in">
                         <img
-                            src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=800"
+                            src={visionImg}
                             alt="Our Vision"
                             className="about-img"
                         />
                     </div>
+
                     <div className="section-text animate-slide-right">
                         <h2>{t('about.visionTitle')}</h2>
                         <p>{t('about.visionDesc')}</p>
                     </div>
                 </section>
+
+
+
+
 
                 <section className="events-board-section">
                     <h2 className="section-title">{t('about.events.sectionTitle')}</h2>
