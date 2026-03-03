@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../Styles/SignIn.css';
 import '../Styles/Alert.css';
@@ -97,21 +97,37 @@ const SignIn = () => {
                             : (isRegistering ? 'Create Account' : t('admin.signin.button'))}
                     </button>
 
-                    <button
-                        type="button"
-                        className="toggle-auth-btn"
-                        onClick={() => setIsRegistering(!isRegistering)}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'var(--secondary-color)',
-                            marginTop: '1rem',
-                            cursor: 'pointer',
-                            textDecoration: 'underline'
-                        }}
-                    >
-                        {isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register First Admin'}
-                    </button>
+                    <div className="auth-links" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+                        <Link
+                            to="/forgot-password"
+                            className="forgot-password-link"
+                            style={{
+                                color: 'var(--secondary-color)',
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                                textAlign: 'center',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            {t('admin.signin.forgotPassword') || 'Forgot Password?'}
+                        </Link>
+
+                        <button
+                            type="button"
+                            className="toggle-auth-btn"
+                            onClick={() => setIsRegistering(!isRegistering)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--secondary-color)',
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            {isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register First Admin'}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

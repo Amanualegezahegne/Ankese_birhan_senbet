@@ -60,6 +60,29 @@
     font-size: 1.4rem;
 }
 
+.icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.notification-dot {
+    position: absolute;
+    top: -2px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background-color: #ff4444;
+    border-radius: 50%;
+    border: 2px solid var(--nav-bg);
+}
+
+@media (max-width: 768px) {
+    .notification-dot {
+        right: -2px;
+    }
+}
+
 .sidebar-footer {
     padding: 1.5rem;
     border-top: 1px solid var(--nav-border);

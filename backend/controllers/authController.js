@@ -1,5 +1,9 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Register a new admin (one-time setup or via internal tools)
 // @route   POST /api/auth/register
@@ -135,4 +139,138 @@ const updateAdminProfile = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getAdminProfile, updateAdminProfile };
+// @desc    Forgot password (OTP)
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User with this email not found' });
+        }
+
+        // Create 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Hash OTP and set to field
+        user.resetOTP = crypto
+            .createHash('sha256')
+            .update(otp)
+            .digest('hex');
+
+        // Set expire (10 minutes)
+        user.resetOTPExpires = Date.now() + 10 * 60 * 1000;
+
+        await user.save({ validateBeforeSave: false });
+
+        const message = `
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
+                <h2 style="color: #007bff;">Admin Password Reset Request</h2>
+                <p>Hello,</p>
+                <p>You requested a password reset for the Admin panel. Please use the following 6-digit code to verify your account:</p>
+                <div style="background: #f8f9fa; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #333; margin: 20px 0;">
+                    ${otp}
+                </div>
+                <p>This code is valid for <strong>10 minutes</strong>. If you did not request this, please ignore this email.</p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #777;">Ankese Birhan Sunday School Management System</p>
+            </div>
+        `;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'Password Reset OTP',
+                message
+            });
+
+            res.status(200).json({
+                success: true,
+                message: 'OTP sent to your email successfully.'
+            });
+        } catch (err) {
+            console.error('Email sending failed:', err);
+            user.resetOTP = undefined;
+            user.resetOTPExpires = undefined;
+            await user.save({ validateBeforeSave: false });
+            return res.status(500).json({ success: false, message: 'Email could not be sent. Please check your credentials.' });
+        }
+    } catch (error) {
+        console.error('Forgot Password Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Verify OTP
+// @route   POST /api/auth/verify-otp
+// @access  Public
+const verifyOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const hashedOTP = crypto
+            .createHash('sha256')
+            .update(otp)
+            .digest('hex');
+
+        const user = await User.findOne({
+            email,
+            resetOTP: hashedOTP,
+            resetOTPExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'OTP verified successfully'
+        });
+    } catch (error) {
+        console.error('Verify OTP Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Reset password with OTP
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+    try {
+        const { email, otp, password } = req.body;
+
+        const hashedOTP = crypto
+            .createHash('sha256')
+            .update(otp)
+            .digest('hex');
+
+        const user = await User.findOne({
+            email,
+            resetOTP: hashedOTP,
+            resetOTPExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Token invalid or expired. Please start over.' });
+        }
+
+        // Set new password
+        user.password = password;
+        user.resetOTP = undefined;
+        user.resetOTPExpires = undefined;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Password reset successful'
+        });
+    } catch (error) {
+        console.error('Reset Password Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { register, login, getAdminProfile, updateAdminProfile, forgotPassword, verifyOTP, resetPassword };

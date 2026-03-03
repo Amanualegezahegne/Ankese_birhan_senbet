@@ -92,8 +92,29 @@ const markAsRead = async (req, res) => {
     }
 };
 
+// @desc    Get unread messages count
+// @route   GET /api/messages/unread-count
+// @access  Private (Admin only)
+const getUnreadCount = async (req, res) => {
+    try {
+        const count = await Message.countDocuments({ isRead: false });
+        res.status(200).json({
+            success: true,
+            count
+        });
+    } catch (error) {
+        console.error('Error fetching unread count:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch unread count',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     createMessage,
     getAllMessages,
+    getUnreadCount,
     markAsRead
 };

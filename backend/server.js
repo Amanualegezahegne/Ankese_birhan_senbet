@@ -12,6 +12,7 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
+console.log('--- ADMIN AUTH SYSTEM V2 ACTIVE ---');
 
 // Middleware
 app.use(cors());

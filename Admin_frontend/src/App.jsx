@@ -14,6 +14,9 @@ import CourseManagement from './Pages/CourseManagement';
 import Results from './Pages/Results';
 import About from './Pages/About';
 import SignIn from './Pages/SignIn';
+import ForgotPassword from './Pages/ForgotPassword';
+import VerifyOTP from './Pages/VerifyOTP';
+import ResetPassword from './Pages/ResetPassword';
 import './App.css';
 
 // Protected Route Component
@@ -59,6 +62,10 @@ function App() {
               <Route path="/signin" element={
                 isAuthenticated ? <Navigate to="/" /> : <SignIn />
               } />
+
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/verify-otp" element={<VerifyOTP />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               <Route path="/about" element={
                 <ProtectedRoute>

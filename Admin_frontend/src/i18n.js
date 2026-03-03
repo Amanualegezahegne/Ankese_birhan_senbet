@@ -48,7 +48,33 @@ const resources = {
                     title: "Admin Sign In",
                     email: "Email",
                     password: "Password",
-                    button: "Sign In"
+                    button: "Sign In",
+                    forgotPassword: "Forgot Password?",
+                    forgotPasswordPage: {
+                        title: "Forgot Password",
+                        subtitle: "Enter your email to receive a reset code",
+                        emailPlaceholder: "Enter your email",
+                        submit: "Send Code",
+                        backToLogin: "Back to Sign In",
+                        success: "OTP sent to your email successfully.",
+                        error: "Failed to send OTP."
+                    },
+                    verifyOTPPage: {
+                        title: "Verify OTP",
+                        subtitle: "Enter the 6-digit code sent to",
+                        otpPlaceholder: "Enter code",
+                        submit: "Verify",
+                        error: "Invalid or expired OTP."
+                    },
+                    resetPasswordPage: {
+                        title: "Reset Password",
+                        newPassword: "New Password",
+                        confirmPassword: "Confirm Password",
+                        submit: "Reset Password",
+                        mismatch: "Passwords do not match.",
+                        success: "Password reset successful!",
+                        error: "Failed to reset password."
+                    }
                 },
                 settings: {
                     title: "Settings",
@@ -320,7 +346,33 @@ const resources = {
                     title: "የአስተዳዳሪ መግቢያ",
                     email: "ኢሜይል",
                     password: "የይለፍ ቃል",
-                    button: "ይግቡ"
+                    button: "ይግቡ",
+                    forgotPassword: "የይለፍ ቃል ረስተዋል?",
+                    forgotPasswordPage: {
+                        title: "የይለፍ ቃል ረስተዋል",
+                        subtitle: "የመመለሻ ኮድ ለመቀበል ኢሜይልዎን ያስገቡ",
+                        emailPlaceholder: "ኢሜይልዎን ያስገቡ",
+                        submit: "ኮድ ላክ",
+                        backToLogin: "ወደ መግቢያ ተመለስ",
+                        success: "የማረጋገጫ ኮድ ወደ ኢሜይልዎ ተልኳል።",
+                        error: "ኮድ መላክ አልተሳካም።"
+                    },
+                    verifyOTPPage: {
+                        title: "ኮዱን ያረጋግጡ",
+                        subtitle: "ወደዚህ የተላከውን ባለ 6 አሃዝ ኮድ ያስገቡ",
+                        otpPlaceholder: "ኮዱን ያስገቡ",
+                        submit: "አረጋግጥ",
+                        error: "የተሳሳተ ወይም ጊዜው ያለፈበት ኮድ።"
+                    },
+                    resetPasswordPage: {
+                        title: "አዲስ የይለፍ ቃል",
+                        newPassword: "አዲስ የይለፍ ቃል",
+                        confirmPassword: "የይለፍ ቃሉን ያረጋግጡ",
+                        submit: "የይለፍ ቃል ቀይር",
+                        mismatch: "የይለፍ ቃላቱ አይዛመዱም።",
+                        success: "የይለፍ ቃል በተሳካ ሁኔታ ተቀይሯል!",
+                        error: "የይለፍ ቃል መቀየር አልተሳካም።"
+                    }
                 },
                 settings: {
                     title: "ቅንብሮች",

@@ -1,10 +1,36 @@
-import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import '../Styles/Sidebar.css';
 
 const Sidebar = ({ handleLogout }) => {
     const { t } = useTranslation();
+    const [unreadCount, setUnreadCount] = useState(0);
+    const location = useLocation();
+
+    useEffect(() => {
+        fetchUnreadCount();
+        const interval = setInterval(fetchUnreadCount, 30000); // 30 seconds
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        // Refresh count when navigating (e.g., coming back from Messages page)
+        fetchUnreadCount();
+    }, [location]);
+
+    const fetchUnreadCount = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/messages/unread-count');
+            if (response.data.success) {
+                setUnreadCount(response.data.count);
+            }
+        } catch (error) {
+            console.error('Error fetching unread count:', error);
+        }
+    };
 
     return (
         <aside className="admin-sidebar">
@@ -46,7 +72,10 @@ const Sidebar = ({ handleLogout }) => {
                     <span className="label">{t('admin.navbar.settings')}</span>
                 </NavLink>
                 <NavLink to="/messages" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-                    <FaEnvelope className="icon" />
+                    <div className="icon-wrapper">
+                        <FaEnvelope className="icon" />
+                        {unreadCount > 0 && <span className="notification-dot"></span>}
+                    </div>
                     <span className="label">{t('admin.navbar.messages') || 'Messages'}</span>
                 </NavLink>
 
