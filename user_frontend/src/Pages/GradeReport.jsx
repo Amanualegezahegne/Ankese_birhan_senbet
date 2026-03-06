@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import '../Styles/GradeReport.css';
 import '../Styles/Alert.css';
@@ -30,7 +30,7 @@ const GradeReport = () => {
     const fetchStudents = async () => {
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.get('http://localhost:5000/api/students?role=student', {
+            const response = await api.get('/students?role=student', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.success) {
@@ -46,7 +46,7 @@ const GradeReport = () => {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/courses');
+            const response = await api.get('/courses');
             if (response.data.success) {
                 setCourses(response.data.data);
                 if (response.data.data.length > 0) {
@@ -69,7 +69,7 @@ const GradeReport = () => {
         try {
             const token = localStorage.getItem('studentToken');
             const query = new URLSearchParams(filters).toString();
-            const response = await axios.get(`http://localhost:5000/api/grades?${query}`, {
+            const response = await api.get(`/grades?${query}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -132,11 +132,11 @@ const GradeReport = () => {
                 };
 
                 if (gradeData._id) {
-                    return axios.put(`http://localhost:5000/api/grades/${gradeData._id}`, payload, {
+                    return api.put(`/grades/${gradeData._id}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 } else {
-                    return axios.post('http://localhost:5000/api/grades', payload, {
+                    return api.post('/grades', payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 }

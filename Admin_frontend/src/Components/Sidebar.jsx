@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Sidebar.css';
 
 const Sidebar = ({ handleLogout }) => {
@@ -23,7 +23,7 @@ const Sidebar = ({ handleLogout }) => {
 
     const fetchUnreadCount = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/messages/unread-count');
+            const response = await api.get('/messages/unread-count');
             if (response.data.success) {
                 setUnreadCount(response.data.count);
             }

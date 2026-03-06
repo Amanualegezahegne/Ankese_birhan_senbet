@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Attendance.css';
 
 const Attendance = () => {
@@ -24,12 +24,12 @@ const Attendance = () => {
             const config = { headers: { Authorization: `Bearer ${adminToken}` } };
 
             // Fetch approved members based on active tab
-            const response = await axios.get(`http://localhost:5000/api/students?role=${activeTab}`, config);
+            const response = await api.get(`/students?role=${activeTab}`, config);
             const approvedStudents = response.data.data.filter(s => s.status === 'Approved');
             setStudents(approvedStudents);
 
             // Fetch attendance for the specific date
-            const attendanceRes = await axios.get(`http://localhost:5000/api/attendance/date/${date}`, config);
+            const attendanceRes = await api.get(`/attendance/date/${date}`, config);
 
             const existingData = {};
             attendanceRes.data.data.forEach(record => {
@@ -67,7 +67,7 @@ const Attendance = () => {
                 status: attendanceData[studentId]
             }));
 
-            await axios.post('http://localhost:5000/api/attendance', {
+            await api.post('/attendance', {
                 date,
                 records
             }, config);

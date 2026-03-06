@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import '../Styles/Profile.css';
 
@@ -21,7 +21,7 @@ const Profile = () => {
     const fetchProfile = async () => {
         try {
             const token = sessionStorage.getItem('adminToken');
-            const res = await axios.get('http://localhost:5000/api/auth/profile', {
+            const res = await api.get('/auth/profile', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -39,7 +39,7 @@ const Profile = () => {
         setMessage({ type: '', text: '' });
         try {
             const token = sessionStorage.getItem('adminToken');
-            const res = await axios.put('http://localhost:5000/api/auth/profile',
+            const res = await api.put('/auth/profile',
                 { email: admin.email },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -62,7 +62,7 @@ const Profile = () => {
 
         try {
             const token = sessionStorage.getItem('adminToken');
-            const res = await axios.put('http://localhost:5000/api/auth/profile',
+            const res = await api.put('/auth/profile',
                 {
                     currentPassword: passwords.currentPassword,
                     password: passwords.newPassword

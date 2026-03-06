@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/SignIn.css';
 
 const VerifyOTP = () => {
@@ -24,7 +24,7 @@ const VerifyOTP = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/verify-otp', { email, otp });
+            const response = await api.post('/auth/verify-otp', { email, otp });
             if (response.data.success) {
                 navigate('/reset-password', { state: { email, otp } });
             }

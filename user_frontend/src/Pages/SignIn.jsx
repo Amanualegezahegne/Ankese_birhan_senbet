@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/SignIn.css';
 import '../Styles/Alert.css';
 
@@ -21,7 +21,7 @@ const SignIn = ({ setAuthState }) => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post('http://localhost:5000/api/students/login', { email, password, rememberMe });
+            const response = await api.post('/students/login', { email, password, rememberMe });
             if (response.data.success) {
                 localStorage.setItem('studentToken', response.data.token);
                 localStorage.setItem('studentInfo', JSON.stringify(response.data.student));

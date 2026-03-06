@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/SignIn.css';
 
 const ResetPassword = () => {
@@ -30,7 +30,7 @@ const ResetPassword = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/auth/reset-password`, {
+            const response = await api.post(`/auth/reset-password`, {
                 email,
                 otp,
                 password

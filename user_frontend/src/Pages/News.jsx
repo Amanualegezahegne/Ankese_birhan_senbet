@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/News.css';
 
 const News = () => {
@@ -12,7 +12,7 @@ const News = () => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/news');
+                const response = await api.get('/news');
                 if (response.data.success) {
                     setNews(response.data.data);
                 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import '../Styles/UserManagement.css'; // Reusing table and card styles
@@ -19,7 +19,7 @@ const CourseManagement = () => {
     const fetchCourses = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/courses');
+            const response = await api.get('/courses');
             if (response.data.success) {
                 setCourses(response.data.data);
             }
@@ -43,13 +43,13 @@ const CourseManagement = () => {
             };
 
             if (editingId) {
-                const response = await axios.put(`http://localhost:5000/api/courses/${editingId}`, formData, config);
+                const response = await api.put(`/courses/${editingId}`, formData, config);
                 if (response.data.success) {
                     setStatus({ type: 'success', message: t('admin.coursemanagement.successUpdate') });
                     setEditingId(null);
                 }
             } else {
-                const response = await axios.post('http://localhost:5000/api/courses', formData, config);
+                const response = await api.post('/courses', formData, config);
                 if (response.data.success) {
                     setStatus({ type: 'success', message: t('admin.coursemanagement.successAdd') });
                 }
@@ -74,7 +74,7 @@ const CourseManagement = () => {
 
         try {
             const token = sessionStorage.getItem('adminToken');
-            await axios.delete(`http://localhost:5000/api/courses/${id}`, {
+            await api.delete(`/courses/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatus({ type: 'success', message: t('admin.coursemanagement.successDelete') });

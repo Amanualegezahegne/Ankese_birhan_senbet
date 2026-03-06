@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/SignUp.css';
 import '../Styles/Alert.css';
 
@@ -53,7 +53,7 @@ const SignUp = () => {
                 password
             };
 
-            const response = await axios.post('http://localhost:5000/api/students/register', formData);
+            const response = await api.post('/students/register', formData);
 
             if (response.data.success) {
                 setStatus({ type: 'success', message: t('signup.successMessage') || 'Registration successful! We will contact you soon.' });

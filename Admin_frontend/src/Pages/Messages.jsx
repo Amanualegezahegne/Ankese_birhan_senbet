@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Messages.css';
 import '../Styles/Alert.css';
 
@@ -17,7 +17,7 @@ const Messages = () => {
     const fetchMessages = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:5000/api/messages');
+            const response = await api.get('/messages');
             if (response.data.success) {
                 setMessages(response.data.data);
             }
@@ -31,7 +31,7 @@ const Messages = () => {
 
     const markAsRead = async (id) => {
         try {
-            const response = await axios.put(`http://localhost:5000/api/messages/${id}/read`);
+            const response = await api.put(`/messages/${id}/read`);
             if (response.data.success) {
                 setMessages(messages.map(msg =>
                     msg._id === id ? { ...msg, isRead: true } : msg

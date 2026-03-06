@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Profile.css';
 import '../Styles/Alert.css';
 
@@ -24,7 +24,7 @@ const Profile = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('studentToken');
-                const response = await axios.get('http://localhost:5000/api/students/profile', {
+                const response = await api.get('/students/profile', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -60,7 +60,7 @@ const Profile = () => {
 
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.put('http://localhost:5000/api/students/profile', {
+            const response = await api.put('/students/profile', {
                 name: formData.name,
                 email: formData.email,
                 christianName: formData.christianName,
@@ -91,7 +91,7 @@ const Profile = () => {
 
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.put('http://localhost:5000/api/students/profile', {
+            const response = await api.put('/students/profile', {
                 currentPassword: formData.currentPassword,
                 password: formData.newPassword
             }, {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Contact.css';
 import '../Styles/Alert.css';
 
@@ -27,7 +27,7 @@ const Contact = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post('http://localhost:5000/api/messages', {
+            const response = await api.post('/messages', {
                 ...formData,
                 source: 'user'
             });

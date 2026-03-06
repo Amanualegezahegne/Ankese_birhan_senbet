@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/UserManagement.css';
 import '../Styles/Alert.css';
 
@@ -24,7 +24,7 @@ const TeacherManagement = () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.get('http://localhost:5000/api/students?role=teacher', {
+            const response = await api.get('/students?role=teacher', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -51,7 +51,7 @@ const TeacherManagement = () => {
             setImporting(true);
             setStatus({ type: 'info', message: t('admin.teachermanagement.import.uploading') });
 
-            const response = await axios.post('http://localhost:5000/api/students/import', formData, {
+            const response = await api.post('/students/import', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
@@ -106,7 +106,7 @@ const TeacherManagement = () => {
             setLoading(true);
 
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.delete(`http://localhost:5000/api/students/${id}`, {
+            const response = await api.delete(`/students/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -127,7 +127,7 @@ const TeacherManagement = () => {
     const handleStatusUpdate = async (id, newStatus) => {
         try {
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.put(`http://localhost:5000/api/students/${id}/status`, { status: newStatus }, {
+            const response = await api.put(`/students/${id}/status`, { status: newStatus }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

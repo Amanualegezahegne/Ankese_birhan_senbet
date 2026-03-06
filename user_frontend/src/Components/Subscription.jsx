@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/Subscription.css';
 
 const Subscription = () => {
@@ -15,7 +15,7 @@ const Subscription = () => {
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post('http://localhost:5000/api/subscribers', { email });
+            const response = await api.post('/subscribers', { email });
             if (response.data.success) {
                 setStatus({ type: 'success', message: t('subscription.success') });
                 setEmail('');

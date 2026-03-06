@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/NewsManager.css';
 
 const NewsManager = () => {
@@ -20,7 +20,7 @@ const NewsManager = () => {
 
     const fetchNews = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/news');
+            const response = await api.get('/news');
             if (response.data.success) {
                 setNews(response.data.data);
             }
@@ -65,12 +65,12 @@ const NewsManager = () => {
 
         try {
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/news/${currentNewsId}`, payload, {
+                await api.put(`/news/${currentNewsId}`, payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setStatus({ type: 'success', message: 'News updated successfully!' });
             } else {
-                await axios.post('http://localhost:5000/api/news', payload, {
+                await api.post('/news', payload, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setStatus({ type: 'success', message: 'News created successfully!' });
@@ -101,7 +101,7 @@ const NewsManager = () => {
 
         const token = sessionStorage.getItem('adminToken');
         try {
-            await axios.delete(`http://localhost:5000/api/news/${id}`, {
+            await api.delete(`/news/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatus({ type: 'success', message: 'News deleted!' });

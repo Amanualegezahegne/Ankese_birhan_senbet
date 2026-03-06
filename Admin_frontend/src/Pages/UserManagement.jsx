@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/UserManagement.css';
 import '../Styles/Alert.css';
 
@@ -24,7 +24,7 @@ const UserManagement = () => {
         try {
             setLoading(true);
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.get('http://localhost:5000/api/students?role=student', {
+            const response = await api.get('/students?role=student', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -51,7 +51,7 @@ const UserManagement = () => {
             setImporting(true);
             setStatus({ type: 'info', message: t('admin.usermanagement.import.uploading') });
 
-            const response = await axios.post('http://localhost:5000/api/students/import', formData, {
+            const response = await api.post('/students/import', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
@@ -82,7 +82,7 @@ const UserManagement = () => {
             setShowDeleteAllModal(false);
             setLoading(true);
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.delete('http://localhost:5000/api/students/all', {
+            const response = await api.delete('/students/all', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -110,7 +110,7 @@ const UserManagement = () => {
             setLoading(true);
 
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.delete(`http://localhost:5000/api/students/${id}`, {
+            const response = await api.delete(`/students/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -131,7 +131,7 @@ const UserManagement = () => {
     const handleStatusUpdate = async (id, newStatus) => {
         try {
             const token = sessionStorage.getItem('adminToken');
-            const response = await axios.put(`http://localhost:5000/api/students/${id}/status`, { status: newStatus }, {
+            const response = await api.put(`/students/${id}/status`, { status: newStatus }, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

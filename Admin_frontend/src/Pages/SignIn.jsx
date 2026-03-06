@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import '../Styles/SignIn.css';
 import '../Styles/Alert.css';
 
@@ -24,7 +24,7 @@ const SignIn = () => {
         const endpoint = isRegistering ? 'register' : 'login';
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, {
+            const response = await api.post(`/auth/${endpoint}`, {
                 email,
                 password
             });
