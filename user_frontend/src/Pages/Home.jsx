@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import '../Styles/Home.css';
 import churchHero from '../assets/images/church_hero.png';
 
 
 const Home = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     return (
         <div className="home-page">
@@ -12,7 +14,7 @@ const Home = () => {
                 <div className="hero-content">
                     <h1 className="animate-slide-up">{t('home.heroTitle')}</h1>
                     <p className="animate-slide-up">{t('home.heroSubtitle')}</p>
-                    <button onClick={() => window.location.href = '/signup'} className="cta-button animate-slide-up">
+                    <button onClick={() => navigate('/signup')} className="cta-button animate-slide-up">
                         {t('home.getStarted')}
                     </button>
                 </div>
