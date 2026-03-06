@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
-import ForgotPassword from './pages/ForgotPassword';
-import VerifyOTP from './pages/VerifyOTP';
-import ResetPassword from './pages/ResetPassword';
-import News from './pages/News';
+import Navbar from './Components/Navbar';
+import Home from './Pages/Home';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
+import SignIn from './Pages/SignIn';
+import SignUp from './Pages/SignUp';
+import ForgotPassword from './Pages/ForgotPassword';
+import VerifyOTP from './Pages/VerifyOTP';
+import ResetPassword from './Pages/ResetPassword';
+import News from './Pages/News';
 import Profile from './Pages/Profile';
 import GradeReport from './Pages/GradeReport';
 import './App.css';
@@ -21,8 +21,8 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/signin" />;
 };
 
-import Sidebar from './components/Sidebar'; // Import Sidebar
-import Footer from './components/Footer';
+import Sidebar from './Components/Sidebar'; // Import Sidebar
+import Footer from './Components/Footer';
 
 // ... inside App component ...
 function App() {
