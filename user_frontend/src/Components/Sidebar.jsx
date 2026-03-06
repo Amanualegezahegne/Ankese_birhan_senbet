@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt } from 'react-icons/fa';
-import '../styles/Sidebar.css';
+import '../Styles/Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
     const { t } = useTranslation();

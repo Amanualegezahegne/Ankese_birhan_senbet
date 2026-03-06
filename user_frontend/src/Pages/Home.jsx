@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import '../styles/Home.css';
+import '../Styles/Home.css';
 import churchHero from '../assets/images/church_hero.png';
 
 

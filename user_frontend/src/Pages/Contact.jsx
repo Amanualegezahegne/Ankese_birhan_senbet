@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import '../styles/Contact.css';
-import '../styles/Alert.css';
+import '../Styles/Contact.css';
+import '../Styles/Alert.css';
 
 const Contact = () => {
     const { t } = useTranslation();
