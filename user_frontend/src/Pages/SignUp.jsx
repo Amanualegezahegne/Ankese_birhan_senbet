@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/SignUp.css';
 import '../Styles/Alert.css';
@@ -263,7 +264,7 @@ const SignUp = () => {
                                     className="password-toggle"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
-                                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                                 </button>
                             </div>
                         </div>
@@ -285,7 +286,7 @@ const SignUp = () => {
                                     className="password-toggle"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 >
-                                    {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                                    {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                                 </button>
                             </div>
                         </div>

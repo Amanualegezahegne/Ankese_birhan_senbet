@@ -81,7 +81,7 @@
 .section-text p {
     font-size: 1.15rem;
     line-height: 1.8;
-    color: #cccccc;
+    color: #000000;
 }
 
 .section-image {
@@ -176,13 +176,20 @@
             rgba(0, 0, 0, 0.6) 50%,
             rgba(212, 175, 55, 0.1) 100%);
     display: flex;
-    align-items: flex-end;
-    padding: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateY(20px);
     pointer-events: none;
     z-index: 5;
+    box-sizing: border-box;
+}
+
+.overlay-content {
+    width: 100%;
 }
 
 .event-board-card:hover .event-overlay {
@@ -193,19 +200,20 @@
 
 .overlay-content h3 {
     color: var(--secondary-color);
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
     font-weight: 700;
-    transform: translateY(20px);
+    transform: translateY(10px);
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s;
 }
 
 .overlay-content p {
     color: #e0e0e0;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    transform: translateY(30px);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    transform: translateY(15px);
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s;
+    overflow-wrap: break-word;
 }
 
 .event-board-card:hover .overlay-content h3,

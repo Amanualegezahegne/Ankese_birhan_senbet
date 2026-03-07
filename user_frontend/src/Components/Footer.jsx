@@ -25,7 +25,7 @@ const Footer = () => {
                 </div>
                 <div className="footer-section">
                     <h4>{t('footer.contact')}</h4>
-                    <p>📧 info@ankesebirhan.org</p>
+                    <p>📧 ankesebirhan22@gmail.com</p>
                     <p>📞 +251 911 000000</p>
                     <p>📍 Addis Ababa, Ethiopia</p>
                 </div>

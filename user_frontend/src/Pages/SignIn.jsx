@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/SignIn.css';
 import '../Styles/Alert.css';
@@ -80,7 +81,7 @@ const SignIn = ({ setAuthState }) => {
                             onClick={() => setShowPassword(!showPassword)}
                             aria-label="Toggle password visibility"
                         >
-                            {showPassword ? "👁️" : "👁️‍🗨️"}
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
 
