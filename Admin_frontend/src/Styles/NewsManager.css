@@ -43,6 +43,28 @@
     box-shadow: 0 10px 30px var(--shadow-color);
     border: 1px solid var(--nav-border);
     transition: all 0.3s ease;
+    overflow-x: auto;
+    /* Allow table to scroll */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    min-width: 500px;
+}
+
+th {
+    text-align: left;
+    padding: 1.2rem 1rem;
+    background-color: var(--nav-bg);
+    border-bottom: 2px solid var(--nav-border);
+    color: #ffffff;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .input-grid {
@@ -133,22 +155,17 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+.image-preview-container {
     margin-top: 1rem;
+    text-align: center;
 }
 
-th {
-    text-align: left;
-    padding: 1.2rem 1rem;
-    background-color: var(--nav-bg);
-    border-bottom: 2px solid var(--nav-border);
-    color: #ffffff;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--secondary-color);
 }
 
 td {
@@ -235,7 +252,47 @@ td {
 }
 
 @media (max-width: 1024px) {
+    .news-manager {
+        padding: 1rem;
+    }
+
     .manager-content {
         grid-template-columns: 1fr;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: span 1;
+    }
+
+    .news-form-card,
+    .news-list-card {
+        padding: 1.5rem;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        width: 100%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        display: none;
+        /* Hide Content snippet on mobile */
     }
 }

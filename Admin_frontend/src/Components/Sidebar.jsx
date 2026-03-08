@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Sidebar.css';
 
-const Sidebar = ({ handleLogout }) => {
+const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
     const { t } = useTranslation();
     const [unreadCount, setUnreadCount] = useState(0);
     const location = useLocation();
@@ -33,45 +33,46 @@ const Sidebar = ({ handleLogout }) => {
     };
 
     return (
-        <aside className="admin-sidebar">
+        <aside className={`admin-sidebar ${isOpen ? 'show' : ''}`}>
             <div className="sidebar-header">
                 <h3>Management</h3>
+                <button className="sidebar-close-btn" onClick={toggleSidebar}>&times;</button>
             </div>
             <nav className="sidebar-nav">
-                <NavLink to="/users" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/users" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaUsers className="icon" />
                     <span className="label">{t('admin.navbar.users') || 'Students'}</span>
                 </NavLink>
 
-                <NavLink to="/teachers" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/teachers" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.teachermanagement.title') || 'Teachers'}</span>
                 </NavLink>
 
-                <NavLink to="/attendance" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/attendance" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaClipboardCheck className="icon" />
                     <span className="label">{t('admin.navbar.attendance')}</span>
                 </NavLink>
 
-                <NavLink to="/courses" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/courses" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaBookOpen className="icon" />
                     <span className="label">{t('admin.navbar.courses') || 'Courses'}</span>
                 </NavLink>
 
-                <NavLink to="/results" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/results" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.navbar.results') || 'Results'}</span>
                 </NavLink>
 
-                <NavLink to="/news" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/news" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaInfoCircle className="icon" />
                     <span className="label">{t('admin.navbar.news')}</span>
                 </NavLink>
-                <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/settings" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaCog className="icon" />
                     <span className="label">{t('admin.navbar.settings')}</span>
                 </NavLink>
-                <NavLink to="/messages" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/messages" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <div className="icon-wrapper">
                         <FaEnvelope className="icon" />
                         {unreadCount > 0 && <span className="notification-dot"></span>}

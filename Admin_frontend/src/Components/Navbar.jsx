@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import '../Styles/Navbar.css';
 
-const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
+const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout, toggleSidebar, isSidebarOpen }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { t, i18n } = useTranslation();
 
@@ -18,6 +19,17 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
 
     return (
         <nav className="navbar">
+            {/* Sidebar Toggle for Mobile */}
+            {isAuthenticated && (
+                <button
+                    className="sidebar-toggle-btn"
+                    onClick={toggleSidebar}
+                    aria-label="Toggle Sidebar"
+                >
+                    {isSidebarOpen ? <FaArrowLeft /> : <FaArrowRight />}
+                </button>
+            )}
+
             {/* Brand */}
             <div className="navbar-brand">
                 <Link
@@ -29,7 +41,7 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout }) => {
                 </Link>
             </div>
 
-            {/* Hamburger */}
+            {/* Hamburger for mobile navbar links */}
             <button
                 className="hamburger"
                 onClick={toggleMenu}

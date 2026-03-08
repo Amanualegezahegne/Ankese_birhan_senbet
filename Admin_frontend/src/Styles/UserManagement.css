@@ -556,3 +556,65 @@
     border-color: #334155;
     background-color: #0f172a;
 }
+
+/* Responsiveness for User Management */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .filter-group,
+    .status-filter {
+        width: 100%;
+    }
+
+    .import-btn,
+    .delete-all-btn {
+        width: 100%;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .management-table th,
+    .management-table td {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .action-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .management-table th:nth-child(3),
+    .management-table td:nth-child(3) {
+        display: none;
+        /* Hide Reg Date on very small screens to save space */
+    }
+}

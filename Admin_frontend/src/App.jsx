@@ -28,6 +28,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('adminTheme') || 'dark');
   const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('adminToken'));
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -37,6 +38,10 @@ function App() {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('adminTheme', newTheme);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const handleLogout = () => {
@@ -54,10 +59,18 @@ function App() {
           toggleTheme={toggleTheme}
           isAuthenticated={isAuthenticated}
           handleLogout={handleLogout}
+          toggleSidebar={toggleSidebar}
+          isSidebarOpen={isSidebarOpen}
         />
         <div className={`admin-main-layout ${isAuthenticated ? 'has-sidebar' : ''}`}>
-          {isAuthenticated && <Sidebar handleLogout={handleLogout} />}
-          <div className="admin-content">
+          {isAuthenticated && (
+            <Sidebar
+              handleLogout={handleLogout}
+              isOpen={isSidebarOpen}
+              toggleSidebar={toggleSidebar}
+            />
+          )}
+          <div className="admin-content" onClick={() => isSidebarOpen && setIsSidebarOpen(false)}>
             <Routes>
               <Route path="/signin" element={
                 isAuthenticated ? <Navigate to="/" /> : <SignIn />

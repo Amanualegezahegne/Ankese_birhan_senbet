@@ -98,18 +98,20 @@
     }
 
     .sidebar-header h3,
+    .sidebar-nav .label,
     .sidebar-footer {
         display: none;
     }
 
     .nav-item {
         justify-content: center;
-        padding: 1.5rem 0;
+        padding: 1rem;
         position: relative;
     }
 
-    .nav-item .icon {
+    .icon {
         margin-right: 0;
+        font-size: 1.5rem;
     }
 
     .nav-item .label {
@@ -137,4 +139,78 @@
         visibility: visible;
         transform: translateX(0);
     }
+}
+
+@media (max-width: 600px) {
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        /* Full width on mobile when open */
+        z-index: 2001;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100vh;
+    }
+
+    .admin-sidebar.show {
+        transform: translateX(0);
+        box-shadow: 10px 0 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+    }
+
+    .sidebar-header h3,
+    .sidebar-nav .label,
+    .sidebar-footer {
+        display: block;
+    }
+
+    .sidebar-close-btn {
+        display: flex;
+        background: none;
+        border: none;
+        color: var(--secondary-color);
+        font-size: 2.2rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        transition: transform 0.2s ease;
+    }
+
+    .sidebar-close-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .nav-item {
+        justify-content: flex-start;
+        padding: 1rem 1.5rem;
+    }
+
+    .nav-item .icon {
+        margin-right: 1.2rem;
+        font-size: 1.3rem;
+    }
+
+    .nav-item .label {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        background: none;
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+}
+
+.sidebar-close-btn {
+    display: none;
 }

@@ -13,6 +13,36 @@
     width: 100%;
 }
 
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--nav-text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 1.5rem;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    transform: scale(1.1);
+    color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle-btn {
+        display: flex;
+    }
+}
+
 .navbar-brand a {
     font-size: 1.6rem;
     font-weight: 800;

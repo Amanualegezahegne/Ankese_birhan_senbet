@@ -45,7 +45,10 @@ const News = () => {
                         <div key={item._id} className="news-card">
                             <div className="news-card-image">
                                 {item.imageUrl ? (
-                                    <img src={item.imageUrl} alt={item.title[currentLang]} />
+                                    <img
+                                        src={item.imageUrl.startsWith('http') ? item.imageUrl : `${new URL(api.defaults.baseURL).origin}${item.imageUrl}`}
+                                        alt={item.title[currentLang]}
+                                    />
                                 ) : (
                                     <div className="placeholder-image">
                                         <i className="fas fa-church"></i>

@@ -41,6 +41,26 @@
   --nav-border: #333333;
 }
 
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--nav-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a02d;
+  /* Slightly darker gold */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -71,6 +91,7 @@ body {
 .admin-main-layout.has-sidebar {
   padding-left: 260px;
   /* Sidebar width */
+  transition: padding 0.3s ease;
 }
 
 .admin-content {
@@ -79,9 +100,15 @@ body {
   width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-main-layout.has-sidebar {
     padding-left: 70px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-main-layout.has-sidebar {
+    padding-left: 0;
   }
 }
 

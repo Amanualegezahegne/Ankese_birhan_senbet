@@ -8,13 +8,15 @@ const NewsManager = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentNewsId, setCurrentNewsId] = useState(null);
     const [status, setStatus] = useState({ type: '', message: '' });
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState('');
 
     const [formData, setFormData] = useState({
         titleEn: '',
         titleAm: '',
         contentEn: '',
         contentAm: '',
-        category: 'church',
+        category: 'Church',
         imageUrl: ''
     });
 
@@ -39,39 +41,67 @@ const NewsManager = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+            // Clear URL if file is selected
+            setFormData({ ...formData, imageUrl: '' });
+        }
+    };
+
     const resetForm = () => {
         setFormData({
             titleEn: '',
             titleAm: '',
             contentEn: '',
             contentAm: '',
-            category: 'church',
+            category: 'Church',
             imageUrl: ''
         });
         setIsEditing(false);
         setCurrentNewsId(null);
+        setSelectedFile(null);
+        setImagePreview('');
+        // Reset file input manually if needed
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) fileInput.value = '';
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = sessionStorage.getItem('adminToken'); // Admins use 'adminToken'
+        const token = sessionStorage.getItem('adminToken');
 
-        const payload = {
-            title: { en: formData.titleEn, am: formData.titleAm },
-            content: { en: formData.contentEn, am: formData.contentAm },
-            category: formData.category,
-            imageUrl: formData.imageUrl
-        };
+        const formDataObj = new FormData();
+        formDataObj.append('title', JSON.stringify({ en: formData.titleEn, am: formData.titleAm }));
+        formDataObj.append('content', JSON.stringify({ en: formData.contentEn, am: formData.contentAm }));
+        formDataObj.append('category', formData.category);
+
+        if (selectedFile) {
+            formDataObj.append('image', selectedFile);
+        } else {
+            formDataObj.append('imageUrl', formData.imageUrl);
+        }
 
         try {
             if (isEditing) {
-                await api.put(`/news/${currentNewsId}`, payload, {
-                    headers: { Authorization: `Bearer ${token}` }
+                await api.put(`/news/${currentNewsId}`, formDataObj, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
                 setStatus({ type: 'success', message: 'News updated successfully!' });
             } else {
-                await api.post('/news', payload, {
-                    headers: { Authorization: `Bearer ${token}` }
+                await api.post('/news', formDataObj, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
                 });
                 setStatus({ type: 'success', message: 'News created successfully!' });
             }
@@ -93,6 +123,8 @@ const NewsManager = () => {
         });
         setIsEditing(true);
         setCurrentNewsId(item._id);
+        setImagePreview(item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${new URL(api.defaults.baseURL).origin}${item.imageUrl}`) : '');
+        setSelectedFile(null);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -141,16 +173,26 @@ const NewsManager = () => {
                         <div className="field">
                             <label>Category</label>
                             <select name="category" value={formData.category} onChange={handleInputChange}>
-                                <option value="church">Church</option>
-                                <option value="school">School</option>
-                                <option value="holiday">Holiday</option>
-                                <option value="service">Service</option>
+                                <option value="Church">Church</option>
+                                <option value="School">School</option>
+                                <option value="Holiday">Holiday</option>
+                                <option value="Service">Service</option>
                             </select>
                         </div>
                         <div className="field">
                             <label>Image URL</label>
-                            <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleInputChange} />
+                            <input type="text" name="imageUrl" value={formData.imageUrl} onChange={handleInputChange} disabled={!!selectedFile} placeholder="Or paste URL here..." />
                         </div>
+                        <div className="field">
+                            <label>Upload Image</label>
+                            <input type="file" accept="image/*" onChange={handleFileChange} />
+                        </div>
+                        {(imagePreview || formData.imageUrl) && (
+                            <div className="field full image-preview-container">
+                                <label>Image Preview</label>
+                                <img src={imagePreview || (formData.imageUrl.startsWith('http') ? formData.imageUrl : `${new URL(api.defaults.baseURL).origin}${formData.imageUrl}`)} alt="Preview" className="image-preview" />
+                            </div>
+                        )}
                     </div>
                     <div className="actions">
                         <button type="submit" className="save-btn">{isEditing ? 'Update' : 'Post'}</button>
@@ -173,7 +215,7 @@ const NewsManager = () => {
                                 {news.map(item => (
                                     <tr key={item._id}>
                                         <td>{item.title.en}</td>
-                                        <td><span className={`tag ${item.category}`}>{item.category}</span></td>
+                                        <td><span className={`tag ${item.category.toLowerCase()}`}>{item.category}</span></td>
                                         <td>
                                             <button onClick={() => handleEdit(item)} className="edit-link">Edit</button>
                                             <button onClick={() => handleDelete(item._id)} className="delete-link">Delete</button>

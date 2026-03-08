@@ -148,6 +148,8 @@ const Attendance = () => {
                             <thead>
                                 <tr>
                                     <th>{t('admin.attendance.studentName')}</th>
+                                    <th>{t('admin.usermanagement.details.sex') || 'Sex'}</th>
+                                    <th>{t('admin.usermanagement.details.nationalId') || 'ID'}</th>
                                     <th>{t('admin.attendance.status')}</th>
                                 </tr>
                             </thead>
@@ -158,6 +160,8 @@ const Attendance = () => {
                                             <strong>{student.name}</strong>
                                             <span className="christian-name">{student.christianName}</span>
                                         </td>
+                                        <td>{student.sex}</td>
+                                        <td>{student.nationalId || 'N/A'}</td>
                                         <td>
                                             <div className="status-toggle">
                                                 <button
