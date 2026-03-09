@@ -14,7 +14,13 @@ const courseSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    materials: [{
+        name: { type: String, required: true },
+        url: { type: String, required: true },
+        fileType: String,
+        createdAt: { type: Date, default: Date.now }
+    }]
 });
 
 module.exports = mongoose.model('Course', courseSchema);

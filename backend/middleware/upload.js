@@ -20,21 +20,23 @@ const storage = multer.diskStorage({
 
 // Check file type
 function checkFileType(file, cb) {
-    const filetypes = /jpeg|jpg|png|webp/;
+    const filetypes = /jpeg|jpg|png|webp|pdf|doc|docx|ppt|pptx|xls|xlsx|txt/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype && extname) {
+    // Some mimetypes for docs might not match the extension check strictly, 
+    // but we'll trust the extension for these common formats
+    if (extname) {
         return cb(null, true);
     } else {
-        cb('Error: Images Only!');
+        cb('Error: File type not supported!');
     }
 }
 
 // Init upload
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5000000 }, // 5MB limit
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }

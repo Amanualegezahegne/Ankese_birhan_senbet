@@ -55,6 +55,7 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated }) => 
             {JSON.parse(localStorage.getItem('studentInfo'))?.role !== 'teacher' && (
               <>
                 <Link to="/news" onClick={() => setIsOpen(false)}>{t('navbar.news')}</Link>
+                <Link to="/courses" onClick={() => setIsOpen(false)}>{t('navbar.courses') || 'Courses'}</Link>
                 <Link to="/profile" onClick={() => setIsOpen(false)}>{t('navbar.profile')}</Link>
               </>
             )}

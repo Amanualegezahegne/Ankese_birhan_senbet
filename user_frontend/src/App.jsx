@@ -13,6 +13,7 @@ import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
 import Profile from './Pages/Profile';
 import GradeReport from './Pages/GradeReport';
+import Courses from './Pages/Courses';
 import './App.css';
 
 // Protected Route Component for Students
@@ -88,6 +89,12 @@ function App() {
             <Route path="/grades" element={
               <ProtectedRoute>
                 <GradeReport />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/courses" element={
+              <ProtectedRoute>
+                <Courses />
               </ProtectedRoute>
             } />
           </Routes>

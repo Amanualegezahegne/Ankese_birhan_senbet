@@ -225,7 +225,7 @@ const UserManagement = () => {
                 <div className="loading-state">Loading students...</div>
             ) : (
                 <div className="table-wrapper">
-                    <table className="management-table">
+                    <table className="management-table user-table">
                         <thead>
                             <tr>
                                 <th>{t('admin.usermanagement.table.name') || 'Name'}</th>

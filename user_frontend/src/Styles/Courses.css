@@ -1,0 +1,187 @@
+.courses-page {
+    min-height: 100vh;
+    padding-bottom: 4rem;
+    background-color: var(--page-bg);
+}
+
+.courses-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.courses-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.courses-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.course-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--nav-border);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.course-icon {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.course-card h3 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+}
+
+.course-description {
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.materials-section {
+    border-top: 1px solid var(--nav-border);
+    padding-top: 1.5rem;
+}
+
+.materials-section h4 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.materials-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+}
+
+.material-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--nav-bg);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--nav-border);
+}
+
+.material-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    overflow: hidden;
+}
+
+.file-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.file-icon.pdf {
+    color: #f40b0b;
+}
+
+.file-icon.word {
+    color: #2b579a;
+}
+
+.file-icon.ppt {
+    color: #d24726;
+}
+
+.file-icon.excel {
+    color: #217346;
+}
+
+.material-name {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.download-link {
+    color: var(--secondary-color);
+    font-size: 1rem;
+    transition: color 0.2s;
+    padding: 0.2rem;
+}
+
+.download-link:hover {
+    color: var(--primary-color);
+}
+
+.no-materials,
+.no-courses {
+    text-align: center;
+    padding: 1rem;
+    color: #888;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.courses-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .courses-header {
+        padding: 3rem 1rem;
+    }
+
+    .courses-header h1 {
+        font-size: 2rem;
+    }
+}

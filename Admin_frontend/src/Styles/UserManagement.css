@@ -612,8 +612,8 @@
 
 @media (max-width: 480px) {
 
-    .management-table th:nth-child(3),
-    .management-table td:nth-child(3) {
+    .user-table th:nth-child(3),
+    .user-table td:nth-child(3) {
         display: none;
         /* Hide Reg Date on very small screens to save space */
     }

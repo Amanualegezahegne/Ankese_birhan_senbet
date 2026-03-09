@@ -6,6 +6,7 @@
         "contact": "Contact",
         "news": "News",
         "profile": "Profile",
+        "courses": "Courses",
         "signIn": "Sign In",
         "logout": "Logout",
         "gradeReport": "Grade Report",
@@ -23,6 +24,16 @@
         "noNews": "No news updates found.",
         "loading": "Loading updates...",
         "error": "Failed to load news updates."
+    },
+    "courses": {
+        "title": "Course Materials",
+        "subtitle": "Access lessons, notes, and educational resources",
+        "materials": "Available Materials",
+        "noMaterials": "No materials available for this course yet.",
+        "noCourses": "No courses found.",
+        "download": "Download File",
+        "loading": "Loading courses...",
+        "error": "Failed to load courses. Please try again later."
     },
     "home": {
         "heroTitle": "Welcome to Ankese Birhan Sunday School",

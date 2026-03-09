@@ -29,7 +29,7 @@ const Results = () => {
 
     const fetchStudents = async () => {
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const response = await api.get('/students?role=student', {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -62,7 +62,7 @@ const Results = () => {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const query = new URLSearchParams(filters).toString();
             const response = await api.get(`/grades?${query}`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -114,7 +114,7 @@ const Results = () => {
         setLoading(true);
         setStatus({ type: '', message: '' });
         try {
-            const token = localStorage.getItem('adminToken');
+            const token = sessionStorage.getItem('adminToken');
             const promises = Array.from(dirtyRows).map(async (studentId) => {
                 const gradeData = gradesMap[studentId];
                 if (!gradeData || (!gradeData.score && gradeData.score !== 0)) return null;
@@ -134,7 +134,7 @@ const Results = () => {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 } else {
-                    return api.post('/api/grades', payload, {
+                    return api.post('/grades', payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 }
