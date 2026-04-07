@@ -55,7 +55,7 @@ const Contact = () => {
             <div className="contact-content">
                 <div className="contact-info">
                     <h3>{t('contact.getInTouch')}</h3>
-                    <p><strong>Email:</strong> support@brandname.com</p>
+                    <p><strong>Email:</strong> ankesebirhan22@gmail.com</p>
                     <p><strong>Phone:</strong> +251 9 111 111 11</p>
                     <p><strong>Address:</strong> Addis Ababa ,KOLFE KERANYO, ANFO AROUND 105 BUS STOP </p>
                 </div>
