@@ -1,9 +1,11 @@
--- Setup Script for Ankese Birhan Sunday School Management System
--- Run this in your Supabase SQL Editor
+-- Initial Setup for Ankese Birhan Sunday School Management System
+-- Ensure ID generation is correct even if tables exist
+ALTER TABLE IF EXISTS users ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE IF EXISTS students ALTER COLUMN id SET DEFAULT gen_random_uuid();
 
 -- 1. Users Table (Admins)
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT auth.uid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role TEXT DEFAULT 'admin' CHECK (role IN ('admin')),
