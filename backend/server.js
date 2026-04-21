@@ -1,8 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 
 // Load environment variables
 dotenv.config();
@@ -10,7 +9,7 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Connect to MongoDB
+// Connect to Supabase
 connectDB();
 console.log('--- ADMIN AUTH SYSTEM V2 ACTIVE ---');
 

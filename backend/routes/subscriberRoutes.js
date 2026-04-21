@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Subscriber = require('../models/Subscriber');
+const { supabase } = require('../config/db');
 
 // @desc    Subscribe to newsletter
 // @route   POST /api/subscribers
@@ -17,7 +17,12 @@ router.post('/', async (req, res) => {
         }
 
         // Check if already subscribed
-        const existingSubscriber = await Subscriber.findOne({ email });
+        const { data: existingSubscriber } = await supabase
+            .from('subscribers')
+            .select('id')
+            .eq('email', email)
+            .single();
+
         if (existingSubscriber) {
             return res.status(400).json({
                 success: false,
@@ -25,7 +30,13 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const subscriber = await Subscriber.create({ email });
+        const { data: subscriber, error } = await supabase
+            .from('subscribers')
+            .insert([{ email }])
+            .select()
+            .single();
+
+        if (error) throw error;
 
         res.status(201).json({
             success: true,
@@ -41,18 +52,25 @@ router.post('/', async (req, res) => {
     }
 });
 
-// @desc    Get all subscribers (Admin use cases later)
+// @desc    Get all subscribers
 // @route   GET /api/subscribers
-// @access  Admin (placeholder for now)
+// @access  Admin
 router.get('/', async (req, res) => {
     try {
-        const subscribers = await Subscriber.find().sort('-subscribedAt');
+        const { data: subscribers, error } = await supabase
+            .from('subscribers')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
         res.status(200).json({
             success: true,
             count: subscribers.length,
             data: subscribers
         });
     } catch (err) {
+        console.error('Fetch subscribers error:', err);
         res.status(500).json({
             success: false,
             message: 'Server Error'

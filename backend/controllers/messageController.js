@@ -1,11 +1,11 @@
-const Message = require('../models/Message');
+const { supabase } = require('../config/db');
 
 // @desc    Create a new message
 // @route   POST /api/messages
 // @access  Public
 const createMessage = async (req, res) => {
     try {
-        const { name, email, message, source } = req.body;
+        const { name, email, message, subject, source } = req.body;
 
         // Validate required fields
         if (!name || !email || !message) {
@@ -15,13 +15,21 @@ const createMessage = async (req, res) => {
             });
         }
 
-        // Create message
-        const newMessage = await Message.create({
-            name,
-            email,
-            message,
-            source: source || 'user'
-        });
+        // Create message in Supabase
+        const { data: newMessage, error } = await supabase
+            .from('messages')
+            .insert([{
+                name,
+                email,
+                message,
+                subject: subject || null,
+                is_read: false,
+                source: source || 'user'
+            }])
+            .select()
+            .single();
+
+        if (error) throw error;
 
         res.status(201).json({
             success: true,
@@ -40,10 +48,15 @@ const createMessage = async (req, res) => {
 
 // @desc    Get all messages
 // @route   GET /api/messages
-// @access  Private (Admin only - TODO: Add auth)
+// @access  Private (Admin only)
 const getAllMessages = async (req, res) => {
     try {
-        const messages = await Message.find().sort({ createdAt: -1 });
+        const { data: messages, error } = await supabase
+            .from('messages')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
 
         res.status(200).json({
             success: true,
@@ -62,20 +75,19 @@ const getAllMessages = async (req, res) => {
 
 // @desc    Mark message as read
 // @route   PUT /api/messages/:id/read
-// @access  Private (Admin only - TODO: Add auth)
+// @access  Private (Admin only)
 const markAsRead = async (req, res) => {
     try {
-        const message = await Message.findByIdAndUpdate(
-            req.params.id,
-            { isRead: true },
-            { new: true }
-        );
+        const { data: message, error } = await supabase
+            .from('messages')
+            .update({ is_read: true })
+            .eq('id', req.params.id)
+            .select()
+            .single();
 
-        if (!message) {
-            return res.status(404).json({
-                success: false,
-                message: 'Message not found'
-            });
+        if (error) {
+            if (error.code === 'PGRST116') return res.status(404).json({ success: false, message: 'Message not found' });
+            throw error;
         }
 
         res.status(200).json({
@@ -97,10 +109,16 @@ const markAsRead = async (req, res) => {
 // @access  Private (Admin only)
 const getUnreadCount = async (req, res) => {
     try {
-        const count = await Message.countDocuments({ isRead: false });
+        const { count, error } = await supabase
+            .from('messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('is_read', false);
+
+        if (error) throw error;
+        
         res.status(200).json({
             success: true,
-            count
+            count: count || 0
         });
     } catch (error) {
         console.error('Error fetching unread count:', error);

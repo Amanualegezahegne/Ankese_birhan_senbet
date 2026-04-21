@@ -1,6 +1,7 @@
-const User = require('../models/User');
+const { supabase } = require('../config/db');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const sendEmail = require('../utils/sendEmail');
 const fs = require('fs');
 const path = require('path');
@@ -12,14 +13,29 @@ const register = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const userExists = await User.findOne({ email });
+        const { data: userExists } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', email)
+            .single();
+
         if (userExists) {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
-        const user = await User.create({ email, password });
+        // Hash password manually (since Mongoose hooks are gone)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        const { data: user, error } = await supabase
+            .from('users')
+            .insert([{ email, password: hashedPassword }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
             expiresIn: '30d'
         });
 
@@ -27,7 +43,7 @@ const register = async (req, res) => {
             success: true,
             token,
             user: {
-                id: user._id,
+                id: user.id,
                 email: user.email,
                 role: user.role
             }
@@ -45,10 +61,14 @@ const login = async (req, res) => {
         const { email, password } = req.body;
 
         // Check for user email
-        const user = await User.findOne({ email }).select('+password');
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .single();
 
-        if (user && (await user.matchPassword(password))) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
                 expiresIn: '30d'
             });
 
@@ -56,7 +76,7 @@ const login = async (req, res) => {
                 success: true,
                 token,
                 user: {
-                    id: user._id,
+                    id: user.id,
                     email: user.email,
                     role: user.role
                 }
@@ -74,12 +94,17 @@ const login = async (req, res) => {
 // @access  Private/Admin
 const getAdminProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', req.user.id)
+            .single();
+
         if (user) {
             res.json({
                 success: true,
                 user: {
-                    id: user._id,
+                    id: user.id,
                     email: user.email,
                     role: user.role
                 }
@@ -97,43 +122,58 @@ const getAdminProfile = async (req, res) => {
 // @access  Private/Admin
 const updateAdminProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select('+password');
+        const { data: user, error: fetchError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', req.user.id)
+            .single();
 
-        if (user) {
-            // Verify current password if password is being changed
-            if (req.body.password) {
-                if (!req.body.currentPassword) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Please provide current password to update password'
-                    });
-                }
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
 
-                const isMatch = await user.matchPassword(req.body.currentPassword);
-                if (!isMatch) {
-                    return res.status(401).json({
-                        success: false,
-                        message: 'Incorrect current password'
-                    });
-                }
-                user.password = req.body.password;
+        const updates = {};
+        
+        // Verify current password if password is being changed
+        if (req.body.password) {
+            if (!req.body.currentPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Please provide current password to update password'
+                });
             }
 
-            user.email = req.body.email || user.email;
-
-            const updatedUser = await user.save();
-
-            res.json({
-                success: true,
-                user: {
-                    id: updatedUser._id,
-                    email: updatedUser.email,
-                    role: updatedUser.role
-                }
-            });
-        } else {
-            res.status(404).json({ success: false, message: 'User not found' });
+            const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Incorrect current password'
+                });
+            }
+            
+            const salt = await bcrypt.genSalt(10);
+            updates.password = await bcrypt.hash(req.body.password, salt);
         }
+
+        if (req.body.email) updates.email = req.body.email;
+
+        const { data: updatedUser, error: updateError } = await supabase
+            .from('users')
+            .update(updates)
+            .eq('id', user.id)
+            .select()
+            .single();
+
+        if (updateError) throw updateError;
+
+        res.json({
+            success: true,
+            user: {
+                id: updatedUser.id,
+                email: updatedUser.email,
+                role: updatedUser.role
+            }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -144,7 +184,11 @@ const updateAdminProfile = async (req, res) => {
 // @access  Public
 const forgotPassword = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const { data: user, error: fetchError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', req.body.email)
+            .single();
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User with this email not found' });
@@ -154,15 +198,20 @@ const forgotPassword = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         // Hash OTP and set to field
-        user.resetOTP = crypto
+        const hashedOTP = crypto
             .createHash('sha256')
             .update(otp)
             .digest('hex');
 
         // Set expire (10 minutes)
-        user.resetOTPExpires = Date.now() + 10 * 60 * 1000;
+        const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-        await user.save({ validateBeforeSave: false });
+        const { error: updateError } = await supabase
+            .from('users')
+            .update({ reset_otp: hashedOTP, reset_otp_expires: expires })
+            .eq('id', user.id);
+
+        if (updateError) throw updateError;
 
         const message = `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
@@ -191,9 +240,10 @@ const forgotPassword = async (req, res) => {
             });
         } catch (err) {
             console.error('Email sending failed:', err);
-            user.resetOTP = undefined;
-            user.resetOTPExpires = undefined;
-            await user.save({ validateBeforeSave: false });
+            await supabase
+                .from('users')
+                .update({ reset_otp: null, reset_otp_expires: null })
+                .eq('id', user.id);
             return res.status(500).json({ success: false, message: 'Email could not be sent. Please check your credentials.' });
         }
     } catch (error) {
@@ -214,13 +264,15 @@ const verifyOTP = async (req, res) => {
             .update(otp)
             .digest('hex');
 
-        const user = await User.findOne({
-            email,
-            resetOTP: hashedOTP,
-            resetOTPExpires: { $gt: Date.now() }
-        });
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .eq('reset_otp', hashedOTP)
+            .gt('reset_otp_expires', new Date().toISOString())
+            .single();
 
-        if (!user) {
+        if (!user || error) {
             return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
         }
 
@@ -246,22 +298,32 @@ const resetPassword = async (req, res) => {
             .update(otp)
             .digest('hex');
 
-        const user = await User.findOne({
-            email,
-            resetOTP: hashedOTP,
-            resetOTPExpires: { $gt: Date.now() }
-        });
+        const { data: user, error: fetchError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .eq('reset_otp', hashedOTP)
+            .gt('reset_otp_expires', new Date().toISOString())
+            .single();
 
-        if (!user) {
+        if (!user || fetchError) {
             return res.status(400).json({ success: false, message: 'Token invalid or expired. Please start over.' });
         }
 
         // Set new password
-        user.password = password;
-        user.resetOTP = undefined;
-        user.resetOTPExpires = undefined;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        await user.save();
+        const { error: updateError } = await supabase
+            .from('users')
+            .update({ 
+                password: hashedPassword, 
+                reset_otp: null, 
+                reset_otp_expires: null 
+            })
+            .eq('id', user.id);
+
+        if (updateError) throw updateError;
 
         res.status(200).json({
             success: true,

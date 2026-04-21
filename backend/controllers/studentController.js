@@ -1,21 +1,42 @@
-const Student = require('../models/Student');
+const { supabase } = require('../config/db');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('../utils/sendEmail');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const XLSX = require('xlsx');
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Register a new student
 // @route   POST /api/students/register
 // @access  Public
 const registerStudent = async (req, res) => {
     try {
-        console.log('Registration Payload:', req.body);
-        const studentExists = await Student.findOne({ email: req.body.email });
+        const { email, password } = req.body;
+        
+        const { data: studentExists } = await supabase
+            .from('students')
+            .select('id')
+            .eq('email', email)
+            .single();
+
         if (studentExists) {
-            console.log('Student exists for email:', req.body.email);
             return res.status(400).json({ success: false, message: 'Student with this email already exists' });
         }
 
-        const student = await Student.create(req.body);
-        console.log('Student registered successfully:', student.email);
+        // Hash password manually
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const studentData = { ...req.body, password: hashedPassword };
+
+        const { data: student, error } = await supabase
+            .from('students')
+            .insert([studentData])
+            .select()
+            .single();
+
+        if (error) throw error;
 
         res.status(201).json({
             success: true,
@@ -23,7 +44,7 @@ const registerStudent = async (req, res) => {
             data: student
         });
     } catch (error) {
-        console.error('Registration Error Details:', error);
+        console.error('Registration Error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -34,9 +55,16 @@ const registerStudent = async (req, res) => {
 const getAllStudents = async (req, res) => {
     try {
         const { role } = req.query;
-        const query = role ? { role } : {}; // If role is provided, filter by it
+        let query = supabase.from('students').select('*').order('created_at', { ascending: false });
 
-        const students = await Student.find(query).sort({ createdAt: -1 });
+        if (role) {
+            query = query.eq('role', role);
+        }
+
+        const { data: students, error } = await query;
+
+        if (error) throw error;
+
         res.status(200).json({
             success: true,
             count: students.length,
@@ -53,10 +81,16 @@ const getAllStudents = async (req, res) => {
 // @access  Private (Admin Only)
 const getStudentById = async (req, res) => {
     try {
-        const student = await Student.findById(req.params.id);
-        if (!student) {
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (!student || error) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
+
         res.status(200).json({ success: true, data: student });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -69,13 +103,14 @@ const getStudentById = async (req, res) => {
 const updateStudentStatus = async (req, res) => {
     try {
         const { status } = req.body;
-        const student = await Student.findByIdAndUpdate(
-            req.params.id,
-            { status },
-            { new: true, runValidators: true }
-        );
+        const { data: student, error } = await supabase
+            .from('students')
+            .update({ status })
+            .eq('id', req.params.id)
+            .select()
+            .single();
 
-        if (!student) {
+        if (!student || error) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
 
@@ -92,9 +127,13 @@ const loginStudent = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const student = await Student.findOne({ email }).select('+password');
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('*')
+            .eq('email', email)
+            .single();
 
-        if (student && (await student.matchPassword(password))) {
+        if (student && (await bcrypt.compare(password, student.password))) {
             // Check status
             if (student.status === 'Pending') {
                 return res.status(403).json({ success: false, message: 'Your account is pending approval' });
@@ -103,7 +142,7 @@ const loginStudent = async (req, res) => {
                 return res.status(403).json({ success: false, message: 'Your account has been rejected' });
             }
 
-            const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ id: student.id }, process.env.JWT_SECRET, {
                 expiresIn: '30d'
             });
 
@@ -111,7 +150,7 @@ const loginStudent = async (req, res) => {
                 success: true,
                 token,
                 student: {
-                    id: student._id,
+                    id: student.id,
                     name: student.name,
                     email: student.email,
                     role: student.role
@@ -130,7 +169,12 @@ const loginStudent = async (req, res) => {
 // @access  Private (Authenticated Student)
 const getStudentProfile = async (req, res) => {
     try {
-        const student = await Student.findById(req.user._id);
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('*')
+            .eq('id', req.user.id)
+            .single();
+
         if (student) {
             res.json({
                 success: true,
@@ -149,52 +193,59 @@ const getStudentProfile = async (req, res) => {
 // @access  Private (Authenticated Student)
 const updateStudentProfile = async (req, res) => {
     try {
-        // Need to select password explicitly to verify it
-        const student = await Student.findById(req.user._id).select('+password');
+        const { data: student, error: fetchError } = await supabase
+            .from('students')
+            .select('*')
+            .eq('id', req.user.id)
+            .single();
 
-        if (student) {
-            // Check if password change is requested
-            if (req.body.password) {
-                const { currentPassword } = req.body;
+        if (!student || fetchError) {
+            return res.status(404).json({ success: false, message: 'Student not found' });
+        }
 
-                if (!currentPassword) {
-                    return res.status(400).json({ success: false, message: 'Current password is required to change password' });
-                }
+        const updates = { ...req.body };
+        
+        // Check if password change is requested
+        if (req.body.password) {
+            const { currentPassword } = req.body;
 
-                const isMatch = await student.matchPassword(currentPassword);
-                if (!isMatch) {
-                    return res.status(401).json({ success: false, message: 'Invalid current password' });
-                }
-
-                student.password = req.body.password;
+            if (!currentPassword) {
+                return res.status(400).json({ success: false, message: 'Current password is required to change password' });
             }
 
-            student.name = req.body.name || student.name;
-            student.email = req.body.email || student.email;
-            student.christianName = req.body.christianName || student.christianName;
-            student.phone = req.body.phone || student.phone;
+            const isMatch = await bcrypt.compare(currentPassword, student.password);
+            if (!isMatch) {
+                return res.status(401).json({ success: false, message: 'Invalid current password' });
+            }
 
-            const updatedStudent = await student.save();
-
-            res.json({
-                success: true,
-                data: {
-                    id: updatedStudent._id,
-                    name: updatedStudent.name,
-                    email: updatedStudent.email,
-                    role: updatedStudent.role
-                }
-            });
+            const salt = await bcrypt.genSalt(10);
+            updates.password = await bcrypt.hash(req.body.password, salt);
         } else {
-            res.status(404).json({ success: false, message: 'Student not found' });
+            delete updates.password;
         }
+
+        const { data: updatedStudent, error: updateError } = await supabase
+            .from('students')
+            .update(updates)
+            .eq('id', student.id)
+            .select()
+            .single();
+
+        if (updateError) throw updateError;
+
+        res.json({
+            success: true,
+            data: {
+                id: updatedStudent.id,
+                name: updatedStudent.name,
+                email: updatedStudent.email,
+                role: updatedStudent.role
+            }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
-const XLSX = require('xlsx');
-const fs = require('fs');
 
 // @desc    Import students from Excel/CSV
 // @route   POST /api/students/import
@@ -216,26 +267,28 @@ const importStudents = async (req, res) => {
             return res.status(400).json({ success: false, message: 'File is empty' });
         }
 
+        const { data: existingStudents } = await supabase.from('students').select('email');
+        const existingEmails = new Set(existingStudents.map(s => s.email));
+
         const studentsToInsert = [];
         const errors = [];
-        const existingEmails = new Set((await Student.find({}, 'email')).map(s => s.email));
+        const salt = await bcrypt.genSalt(10);
+        const defaultHashedPassword = await bcrypt.hash('student123', salt);
 
         for (const row of data) {
-            // Basic mapping - case insensitive header checks could be added here
             const studentData = {
                 name: row.Name || row.name || row['Full Name'],
-                christianName: row['Christian Name'] || row.christianName || row['ክርስትና ስም'],
+                christian_name: row['Christian Name'] || row.christianName || row['ክርስትና ስም'],
                 email: row.Email || row.email || row['ኢሜይል'],
                 phone: row.Phone || row.phone || row['ስልክ'],
                 sex: row.Sex || row.sex || row['ጾታ'],
-                nationalId: row['National ID'] || row.nationalId || row['መታወቂያ'],
+                national_id: row['National ID'] || row.nationalId || row['መታወቂያ'],
                 dob: row.DOB || row.dob || row['የትውልድ ቀን'],
-                password: 'student123', // Default password
+                password: defaultHashedPassword,
                 status: 'Approved',
-                hasServed: row.hasServed || 'no'
+                has_served: row.hasServed || row.has_served || 'no'
             };
 
-            // Basic validation
             if (!studentData.name || !studentData.email) {
                 errors.push(`Row missing name or email: ${JSON.stringify(row)}`);
                 continue;
@@ -251,13 +304,10 @@ const importStudents = async (req, res) => {
         }
 
         if (studentsToInsert.length > 0) {
-            // Using a loop with create to ensure pre-save hooks (like password hashing) run
-            for (const student of studentsToInsert) {
-                await Student.create(student);
-            }
+            const { error } = await supabase.from('students').insert(studentsToInsert);
+            if (error) throw error;
         }
 
-        // Clean up file
         fs.unlinkSync(filePath);
 
         res.status(200).json({
@@ -279,7 +329,8 @@ const importStudents = async (req, res) => {
 // @access  Private (Admin Only)
 const deleteAllStudents = async (req, res) => {
     try {
-        await Student.deleteMany({});
+        const { error } = await supabase.from('students').delete().neq('role', 'admin'); // Safely delete only non-admins if role mixed
+        if (error) throw error;
         res.status(200).json({ success: true, message: 'All students deleted successfully.' });
     } catch (error) {
         console.error('Delete All Error:', error);
@@ -292,8 +343,14 @@ const deleteAllStudents = async (req, res) => {
 // @access  Private (Admin Only)
 const deleteStudent = async (req, res) => {
     try {
-        const student = await Student.findByIdAndDelete(req.params.id);
-        if (!student) {
+        const { data: student, error } = await supabase
+            .from('students')
+            .delete()
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (!student || error) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
         res.status(200).json({ success: true, message: 'Student deleted successfully' });
@@ -303,32 +360,29 @@ const deleteStudent = async (req, res) => {
     }
 };
 
-const crypto = require('crypto');
-
 // @desc    Forgot password (OTP)
 // @route   POST /api/students/forgot-password
 // @access  Public
 const forgotPassword = async (req, res) => {
     try {
-        const student = await Student.findOne({ email: req.body.email });
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('*')
+            .eq('email', req.body.email)
+            .single();
 
-        if (!student) {
+        if (!student || error) {
             return res.status(404).json({ success: false, message: 'Student with this email not found' });
         }
 
-        // Create 6-digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
+        const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-        // Hash OTP and set to field
-        student.resetOTP = crypto
-            .createHash('sha256')
-            .update(otp)
-            .digest('hex');
-
-        // Set expire (10 minutes)
-        student.resetOTPExpires = Date.now() + 10 * 60 * 1000;
-
-        await student.save({ validateBeforeSave: false });
+        await supabase
+            .from('students')
+            .update({ reset_otp: hashedOTP, reset_otp_expires: expires })
+            .eq('id', student.id);
 
         const message = `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 5px;">
@@ -345,25 +399,13 @@ const forgotPassword = async (req, res) => {
         `;
 
         try {
-            await sendEmail({
-                email: student.email,
-                subject: 'Password Reset OTP',
-                message
-            });
-
-            res.status(200).json({
-                success: true,
-                message: 'OTP sent to your email successfully.'
-            });
+            await sendEmail({ email: student.email, subject: 'Password Reset OTP', message });
+            res.status(200).json({ success: true, message: 'OTP sent to your email successfully.' });
         } catch (err) {
-            console.error('Email sending failed:', err);
-            student.resetOTP = undefined;
-            student.resetOTPExpires = undefined;
-            await student.save({ validateBeforeSave: false });
-            return res.status(500).json({ success: false, message: 'Email could not be sent. Please check your credentials.' });
+            await supabase.from('students').update({ reset_otp: null, reset_otp_expires: null }).eq('id', student.id);
+            return res.status(500).json({ success: false, message: 'Email could not be sent.' });
         }
     } catch (error) {
-        console.error('Forgot Password Error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -374,28 +416,22 @@ const forgotPassword = async (req, res) => {
 const verifyOTP = async (req, res) => {
     try {
         const { email, otp } = req.body;
+        const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
 
-        const hashedOTP = crypto
-            .createHash('sha256')
-            .update(otp)
-            .digest('hex');
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('id')
+            .eq('email', email)
+            .eq('reset_otp', hashedOTP)
+            .gt('reset_otp_expires', new Date().toISOString())
+            .single();
 
-        const student = await Student.findOne({
-            email,
-            resetOTP: hashedOTP,
-            resetOTPExpires: { $gt: Date.now() }
-        });
-
-        if (!student) {
+        if (!student || error) {
             return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
         }
 
-        res.status(200).json({
-            success: true,
-            message: 'OTP verified successfully'
-        });
+        res.status(200).json({ success: true, message: 'OTP verified successfully' });
     } catch (error) {
-        console.error('Verify OTP Error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -406,35 +442,30 @@ const verifyOTP = async (req, res) => {
 const resetPassword = async (req, res) => {
     try {
         const { email, otp, password } = req.body;
+        const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
 
-        const hashedOTP = crypto
-            .createHash('sha256')
-            .update(otp)
-            .digest('hex');
+        const { data: student, error } = await supabase
+            .from('students')
+            .select('id')
+            .eq('email', email)
+            .eq('reset_otp', hashedOTP)
+            .gt('reset_otp_expires', new Date().toISOString())
+            .single();
 
-        const student = await Student.findOne({
-            email,
-            resetOTP: hashedOTP,
-            resetOTPExpires: { $gt: Date.now() }
-        });
-
-        if (!student) {
-            return res.status(400).json({ success: false, message: 'Token invalid or expired. Please start over.' });
+        if (!student || error) {
+            return res.status(400).json({ success: false, message: 'Token invalid or expired.' });
         }
 
-        // Set new password
-        student.password = password;
-        student.resetOTP = undefined;
-        student.resetOTPExpires = undefined;
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        await student.save();
+        await supabase
+            .from('students')
+            .update({ password: hashedPassword, reset_otp: null, reset_otp_expires: null })
+            .eq('id', student.id);
 
-        res.status(200).json({
-            success: true,
-            message: 'Password reset successful'
-        });
+        res.status(200).json({ success: true, message: 'Password reset successful' });
     } catch (error) {
-        console.error('Reset Password Error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };

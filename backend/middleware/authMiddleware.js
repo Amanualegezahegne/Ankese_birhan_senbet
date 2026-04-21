@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student');
-const User = require('../models/User');
+const { supabase } = require('../config/db');
 
 const protect = async (req, res, next) => {
     let token;
@@ -13,20 +12,32 @@ const protect = async (req, res, next) => {
             // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            // Get user from the token - Check both Student and Admin (User) models
-            let user = await Student.findById(decoded.id).select('-password');
-            if (!user) {
-                user = await User.findById(decoded.id).select('-password');
+            // Get user from the token - Check both students and users (Admin) tables
+            let { data: user, error } = await supabase
+                .from('students')
+                .select('*')
+                .eq('id', decoded.id)
+                .single();
+
+            if (!user || error) {
+                const { data: adminUser, error: adminError } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', decoded.id)
+                    .single();
+                
+                if (adminUser) user = adminUser;
             }
 
             if (!user) {
                 return res.status(401).json({ success: false, message: 'Not authorized, user not found' });
             }
 
+            delete user.password;
             req.user = user;
             next();
         } catch (error) {
-            console.error(error);
+            console.error('Auth error:', error);
             res.status(401).json({ success: false, message: 'Not authorized, token failed' });
         }
     }

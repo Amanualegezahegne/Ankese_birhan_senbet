@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+user_frontend/node_modules/
+
+# Environment Variables
+.env
+backend/.env
+user_frontend/.env
+
+# Local settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Agent skills and state
+.agents/
+skills-lock.json
+build/
+dist/

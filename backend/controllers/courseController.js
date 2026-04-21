@@ -1,18 +1,26 @@
-const Course = require('../models/Course');
+const { supabase } = require('../config/db');
 const path = require('path');
+const fs = require('fs');
 
 // @desc    Get all courses
 // @route   GET /api/courses
 // @access  Public
 exports.getCourses = async (req, res) => {
     try {
-        const courses = await Course.find().sort({ title: 1 });
+        const { data: courses, error } = await supabase
+            .from('courses')
+            .select('*')
+            .order('title', { ascending: true });
+
+        if (error) throw error;
+
         res.status(200).json({
             success: true,
             count: courses.length,
             data: courses
         });
     } catch (error) {
+        console.error('Error fetching courses:', error);
         res.status(500).json({
             success: false,
             error: 'Server Error'
@@ -30,24 +38,37 @@ exports.createCourse = async (req, res) => {
         // If a file was uploaded during creation, add it to materials
         if (req.file) {
             courseData.materials = [{
+                id: crypto.randomUUID(),
                 name: req.body.materialName || req.file.originalname,
                 url: `/uploads/${req.file.filename}`,
                 fileType: path.extname(req.file.originalname).substring(1)
             }];
+        } else {
+            courseData.materials = [];
         }
 
-        const course = await Course.create(courseData);
+        const { data: course, error } = await supabase
+            .from('courses')
+            .insert([courseData])
+            .select()
+            .single();
+
+        if (error) {
+            if (error.code === '23505') { // Unique violation
+                return res.status(400).json({
+                    success: false,
+                    error: 'Course title already exists'
+                });
+            }
+            throw error;
+        }
+
         res.status(201).json({
             success: true,
             data: course
         });
     } catch (error) {
-        if (error.code === 11000) {
-            return res.status(400).json({
-                success: false,
-                error: 'Course title already exists'
-            });
-        }
+        console.error('Error creating course:', error);
         res.status(400).json({
             success: false,
             error: error.message
@@ -60,16 +81,16 @@ exports.createCourse = async (req, res) => {
 // @access  Private/Admin
 exports.updateCourse = async (req, res) => {
     try {
-        const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
+        const { data: course, error } = await supabase
+            .from('courses')
+            .update(req.body)
+            .eq('id', req.params.id)
+            .select()
+            .single();
 
-        if (!course) {
-            return res.status(404).json({
-                success: false,
-                error: 'Course not found'
-            });
+        if (error) {
+            if (error.code === 'PGRST116') return res.status(404).json({ success: false, error: 'Course not found' });
+            throw error;
         }
 
         res.status(200).json({
@@ -77,6 +98,7 @@ exports.updateCourse = async (req, res) => {
             data: course
         });
     } catch (error) {
+        console.error('Error updating course:', error);
         res.status(400).json({
             success: false,
             error: error.message
@@ -89,22 +111,32 @@ exports.updateCourse = async (req, res) => {
 // @access  Private/Admin
 exports.deleteCourse = async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
+        const { data: course, error } = await supabase
+            .from('courses')
+            .delete()
+            .eq('id', req.params.id)
+            .select()
+            .single();
 
-        if (!course) {
-            return res.status(404).json({
-                success: false,
-                error: 'Course not found'
-            });
+        if (error) {
+            if (error.code === 'PGRST116') return res.status(404).json({ success: false, error: 'Course not found' });
+            throw error;
         }
 
-        await course.deleteOne();
+        // Optional: Clean up material files from filesystem
+        if (course.materials && Array.isArray(course.materials)) {
+            course.materials.forEach(mat => {
+                const filePath = path.join(__dirname, '..', mat.url);
+                if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+            });
+        }
 
         res.status(200).json({
             success: true,
             data: {}
         });
     } catch (error) {
+        console.error('Error deleting course:', error);
         res.status(500).json({
             success: false,
             error: error.message
@@ -121,25 +153,40 @@ exports.uploadMaterial = async (req, res) => {
             return res.status(400).json({ success: false, error: 'Please upload a file' });
         }
 
-        const course = await Course.findById(req.params.id);
-        if (!course) {
+        const { data: course, error: fetchError } = await supabase
+            .from('courses')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (!course || fetchError) {
             return res.status(404).json({ success: false, error: 'Course not found' });
         }
 
         const newMaterial = {
+            id: require('crypto').randomUUID(),
             name: req.body.name || req.file.originalname,
             url: `/uploads/${req.file.filename}`,
             fileType: path.extname(req.file.originalname).substring(1)
         };
 
-        course.materials.push(newMaterial);
-        await course.save();
+        const materials = [...(course.materials || []), newMaterial];
+
+        const { data: updatedCourse, error: updateError } = await supabase
+            .from('courses')
+            .update({ materials })
+            .eq('id', course.id)
+            .select()
+            .single();
+
+        if (updateError) throw updateError;
 
         res.status(200).json({
             success: true,
-            data: course.materials[course.materials.length - 1]
+            data: newMaterial
         });
     } catch (error) {
+        console.error('Error uploading material:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
@@ -149,30 +196,44 @@ exports.uploadMaterial = async (req, res) => {
 // @access  Private/Admin
 exports.deleteMaterial = async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
-        if (!course) {
+        const { data: course, error: fetchError } = await supabase
+            .from('courses')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (!course || fetchError) {
             return res.status(404).json({ success: false, error: 'Course not found' });
         }
 
-        const material = course.materials.id(req.params.materialId);
-        if (!material) {
+        const materialIndex = course.materials.findIndex(m => m.id === req.params.materialId);
+        if (materialIndex === -1) {
             return res.status(404).json({ success: false, error: 'Material not found' });
         }
 
+        const material = course.materials[materialIndex];
+
         // Delete file from filesystem
         const filePath = path.join(__dirname, '..', material.url);
-        if (require('fs').existsSync(filePath)) {
-            require('fs').unlinkSync(filePath);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
         }
 
-        material.deleteOne();
-        await course.save();
+        const newMaterials = course.materials.filter(m => m.id !== req.params.materialId);
+
+        const { error: updateError } = await supabase
+            .from('courses')
+            .update({ materials: newMaterials })
+            .eq('id', course.id);
+
+        if (updateError) throw updateError;
 
         res.status(200).json({
             success: true,
             data: {}
         });
     } catch (error) {
+        console.error('Error deleting material:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
