@@ -13,7 +13,8 @@ const {
     deleteStudent,
     forgotPassword,
     verifyOTP,
-    resetPassword
+    resetPassword,
+    getPendingCounts
 } = require('../controllers/studentController');
 const { protect, admin, teacher } = require('../middleware/authMiddleware');
 const upload = require('../middleware/multer');
@@ -29,6 +30,8 @@ router.delete('/all', protect, admin, deleteAllStudents);
 // Profile
 router.get('/profile', protect, getStudentProfile);
 router.put('/profile', protect, updateStudentProfile);
+
+router.get('/pending/counts', protect, admin, getPendingCounts);
 
 router.route('/').get(protect, teacher, getAllStudents);
 router.route('/:id')

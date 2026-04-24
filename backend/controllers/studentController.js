@@ -7,6 +7,22 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
+// Helper function to map Supabase snake_case fields to frontend camelCase expectations
+const mapStudentForFrontend = (student) => {
+    if (!student) return student;
+    return {
+        ...student,
+        _id: student.id,
+        christianName: student.christian_name,
+        nationalId: student.national_id,
+        grade: student.grade,
+        hasServed: student.has_served,
+        previousChurch: student.previous_church,
+        createdAt: student.created_at,
+        updatedAt: student.updated_at
+    };
+};
+
 // @desc    Register a new student
 // @route   POST /api/students/register
 // @access  Public
@@ -28,7 +44,26 @@ const registerStudent = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const studentData = { ...req.body, password: hashedPassword };
+        // Map camelCase frontend fields to snake_case database columns
+        const mappedBody = { ...req.body };
+        if (mappedBody.christianName !== undefined) {
+            mappedBody.christian_name = mappedBody.christianName;
+            delete mappedBody.christianName;
+        }
+        if (mappedBody.nationalId !== undefined) {
+            mappedBody.national_id = mappedBody.nationalId;
+            delete mappedBody.nationalId;
+        }
+        if (mappedBody.hasServed !== undefined) {
+            mappedBody.has_served = mappedBody.hasServed;
+            delete mappedBody.hasServed;
+        }
+        if (mappedBody.previousChurch !== undefined) {
+            mappedBody.previous_church = mappedBody.previousChurch;
+            delete mappedBody.previousChurch;
+        }
+
+        const studentData = { ...mappedBody, password: hashedPassword };
 
         const { data: student, error } = await supabase
             .from('students')
@@ -41,7 +76,7 @@ const registerStudent = async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Registration successful!',
-            data: student
+            data: mapStudentForFrontend(student)
         });
     } catch (error) {
         console.error('Registration Error:', error);
@@ -68,10 +103,46 @@ const getAllStudents = async (req, res) => {
         res.status(200).json({
             success: true,
             count: students.length,
-            data: students
+            data: students.map(mapStudentForFrontend)
         });
     } catch (error) {
         console.error('Fetch Students/Teachers Error:', error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Get pending counts for students and teachers
+// @route   GET /api/students/pending/counts
+// @access  Private (Admin Only)
+const getPendingCounts = async (req, res) => {
+    try {
+        // Query to get all pending users and group by role
+        const { data, error } = await supabase
+            .from('students')
+            .select('role')
+            .eq('status', 'Pending');
+
+        if (error) throw error;
+
+        let studentCount = 0;
+        let teacherCount = 0;
+
+        if (data) {
+            data.forEach(user => {
+                if (user.role === 'student') studentCount++;
+                if (user.role === 'teacher') teacherCount++;
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            counts: {
+                students: studentCount,
+                teachers: teacherCount
+            }
+        });
+    } catch (error) {
+        console.error('Pending Counts Error:', error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -91,7 +162,7 @@ const getStudentById = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
 
-        res.status(200).json({ success: true, data: student });
+        res.status(200).json({ success: true, data: mapStudentForFrontend(student) });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -114,7 +185,7 @@ const updateStudentStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
 
-        res.status(200).json({ success: true, data: student });
+        res.status(200).json({ success: true, data: mapStudentForFrontend(student) });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -178,7 +249,7 @@ const getStudentProfile = async (req, res) => {
         if (student) {
             res.json({
                 success: true,
-                data: student
+                data: mapStudentForFrontend(student)
             });
         } else {
             res.status(404).json({ success: false, message: 'Student not found' });
@@ -204,6 +275,27 @@ const updateStudentProfile = async (req, res) => {
         }
 
         const updates = { ...req.body };
+        
+        // Map camelCase frontend fields to snake_case database columns
+        if (updates.christianName !== undefined) {
+            updates.christian_name = updates.christianName;
+            delete updates.christianName;
+        }
+        if (updates.nationalId !== undefined) {
+            updates.national_id = updates.nationalId;
+            delete updates.nationalId;
+        }
+        if (updates.hasServed !== undefined) {
+            updates.has_served = updates.hasServed;
+            delete updates.hasServed;
+        }
+        if (updates.grade !== undefined) {
+            // grade is already grade, but we can ensure it's kept
+        }
+        if (updates.previousChurch !== undefined) {
+            updates.previous_church = updates.previousChurch;
+            delete updates.previousChurch;
+        }
         
         // Check if password change is requested
         if (req.body.password) {
@@ -478,6 +570,7 @@ module.exports = {
     updateStudentStatus,
     getStudentProfile,
     updateStudentProfile,
+    getPendingCounts,
     importStudents,
     deleteAllStudents,
     deleteStudent,

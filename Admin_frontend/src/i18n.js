@@ -124,6 +124,7 @@ const resources = {
                     table: {
                         name: "Name",
                         christianName: "Christian Name",
+                        grade: "Grade",
                         contact: "Contact",
                         regDate: "Reg. Date",
                         status: "Status",
@@ -135,6 +136,7 @@ const resources = {
                     },
                     filter: {
                         all: "All Status",
+                        allGrades: "All Grades",
                         pending: "Pending",
                         approved: "Approved",
                         rejected: "Rejected"
@@ -143,6 +145,7 @@ const resources = {
                         title: "Student Details",
                         name: "Full Name",
                         christianName: "Christian Name",
+                        grade: "Grade",
                         email: "Email Address",
                         phone: "Phone Number",
                         sex: "Sex",
@@ -422,6 +425,7 @@ const resources = {
                     table: {
                         name: "ስም",
                         christianName: "ክርስትና ስም",
+                        grade: "ክፍል",
                         contact: "አድራሻ",
                         regDate: "የምዝገባ ቀን",
                         status: "ሁኔታ",
@@ -433,6 +437,7 @@ const resources = {
                     },
                     filter: {
                         all: "ሁሉም ሁኔታ",
+                        allGrades: "ሁሉም ክፍሎች",
                         pending: "በጥበቃ ላይ",
                         approved: "የጸደቀ",
                         rejected: "ውድቅ የተደረገ"
@@ -441,6 +446,7 @@ const resources = {
                         title: "የተማሪ ዝርዝር መረጃ",
                         name: "ሙሉ ስም",
                         christianName: "የክርስትና ስም",
+                        grade: "ክፍል",
                         email: "የኢሜይል አድራሻ",
                         phone: "ስልክ ቁጥር",
                         sex: "ጾታ",

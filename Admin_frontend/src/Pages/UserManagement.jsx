@@ -11,6 +11,7 @@ const UserManagement = () => {
     const [status, setStatus] = useState({ type: '', message: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
+    const [filterGrade, setFilterGrade] = useState('All');
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [importing, setImporting] = useState(false);
     const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
@@ -151,8 +152,9 @@ const UserManagement = () => {
             student.email.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesStatus = filterStatus === 'All' || student.status === filterStatus;
+        const matchesGrade = filterGrade === 'All' || student.grade === filterGrade;
 
-        return matchesSearch && matchesStatus;
+        return matchesSearch && matchesStatus && matchesGrade;
     });
 
     const formatDate = (dateString) => {
@@ -203,6 +205,19 @@ const UserManagement = () => {
                             <option value="Approved">{t('admin.usermanagement.filter.approved')}</option>
                             <option value="Rejected">{t('admin.usermanagement.filter.rejected')}</option>
                         </select>
+                        <select
+                            className="status-filter"
+                            value={filterGrade}
+                            onChange={(e) => setFilterGrade(e.target.value)}
+                        >
+                            <option value="All">{t('admin.usermanagement.filter.allGrades') || 'All Grades'}</option>
+                            {[...Array(12)].map((_, i) => (
+                                <option key={`filter-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                    Grade {i + 1}
+                                </option>
+                            ))}
+                            <option value="Adult">Adult / Other</option>
+                        </select>
                     </div>
                     <div className="search-bar">
                         <input
@@ -230,6 +245,7 @@ const UserManagement = () => {
                             <tr>
                                 <th>{t('admin.usermanagement.table.name') || 'Name'}</th>
                                 <th>{t('admin.usermanagement.table.christianName') || 'Christian Name'}</th>
+                                <th>{t('admin.usermanagement.table.grade') || 'Grade'}</th>
                                 <th>{t('admin.usermanagement.table.regDate') || 'Reg. Date'}</th>
                                 <th>{t('admin.usermanagement.table.status') || 'Status'}</th>
                                 <th>{t('admin.usermanagement.table.actions') || 'Actions'}</th>
@@ -241,6 +257,7 @@ const UserManagement = () => {
                                     <tr key={student._id}>
                                         <td><strong>{student.name}</strong></td>
                                         <td>{student.christianName}</td>
+                                        <td>{student.grade || 'N/A'}</td>
                                         <td>{formatDate(student.createdAt)}</td>
                                         <td>
                                             <div className="status-cell-container">
@@ -305,6 +322,10 @@ const UserManagement = () => {
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.christianName')}</label>
                                     <p>{selectedStudent.christianName}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <label>{t('admin.usermanagement.details.grade') || 'Grade'}</label>
+                                    <p>{selectedStudent.grade || 'N/A'}</p>
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.email')}</label>

@@ -12,6 +12,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [sex, setSex] = useState('');
+    const [grade, setGrade] = useState('');
     const [role, setRole] = useState('student');
     const [nationalId, setNationalId] = useState('');
     const [dob, setDob] = useState('');
@@ -46,6 +47,7 @@ const SignUp = () => {
                 email,
                 phone,
                 sex,
+                grade,
                 role,
                 nationalId,
                 dob,
@@ -63,6 +65,7 @@ const SignUp = () => {
                 setEmail('');
                 setPhone('');
                 setSex('');
+                setGrade('');
                 setRole('student');
                 setNationalId('');
                 setDob('');
@@ -178,6 +181,27 @@ const SignUp = () => {
                                 <option value="female">{t('signup.female')}</option>
                             </select>
                         </div>
+                        <div className="form-group reference-group">
+                            <label htmlFor="grade" className="reference-label">{t('signup.grade') || 'Grade'}</label>
+                            <select
+                                id="grade"
+                                value={grade}
+                                onChange={(e) => setGrade(e.target.value)}
+                                required
+                                className="form-select"
+                            >
+                                <option value="">-- {t('signup.selectOption')} --</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={`grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                        Grade {i + 1}
+                                    </option>
+                                ))}
+                                <option value="Adult">Adult / Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="reference-row">
                         <div className="form-group reference-group">
                             <label htmlFor="nationalId" className="reference-label">{t('signup.nationalId')}</label>
                             <input

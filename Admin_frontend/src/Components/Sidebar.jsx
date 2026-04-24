@@ -8,17 +8,23 @@ import '../Styles/Sidebar.css';
 const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
     const { t } = useTranslation();
     const [unreadCount, setUnreadCount] = useState(0);
+    const [pendingCounts, setPendingCounts] = useState({ students: 0, teachers: 0 });
     const location = useLocation();
 
     useEffect(() => {
         fetchUnreadCount();
-        const interval = setInterval(fetchUnreadCount, 30000); // 30 seconds
+        fetchPendingCounts();
+        const interval = setInterval(() => {
+            fetchUnreadCount();
+            fetchPendingCounts();
+        }, 30000); // 30 seconds
         return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
         // Refresh count when navigating (e.g., coming back from Messages page)
         fetchUnreadCount();
+        fetchPendingCounts();
     }, [location]);
 
     const fetchUnreadCount = async () => {
@@ -32,6 +38,17 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
         }
     };
 
+    const fetchPendingCounts = async () => {
+        try {
+            const response = await api.get('/students/pending/counts');
+            if (response.data.success) {
+                setPendingCounts(response.data.counts);
+            }
+        } catch (error) {
+            console.error('Error fetching pending counts:', error);
+        }
+    };
+
     return (
         <aside className={`admin-sidebar ${isOpen ? 'show' : ''}`}>
             <div className="sidebar-header">
@@ -42,11 +59,13 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                 <NavLink to="/users" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaUsers className="icon" />
                     <span className="label">{t('admin.navbar.users') || 'Students'}</span>
+                    {pendingCounts.students > 0 && <span className="nav-item-pin" title={`${pendingCounts.students} Pending`}></span>}
                 </NavLink>
 
                 <NavLink to="/teachers" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.teachermanagement.title') || 'Teachers'}</span>
+                    {pendingCounts.teachers > 0 && <span className="nav-item-pin" title={`${pendingCounts.teachers} Pending`}></span>}
                 </NavLink>
 
                 <NavLink to="/attendance" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>

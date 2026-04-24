@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS students (
     phone TEXT NOT NULL,
     sex TEXT NOT NULL,
     national_id TEXT NOT NULL,
+    grade TEXT NOT NULL,
     dob DATE NOT NULL,
     has_served TEXT NOT NULL,
     previous_church TEXT,
