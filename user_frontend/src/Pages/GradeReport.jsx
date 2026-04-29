@@ -16,7 +16,8 @@ const GradeReport = () => {
     const [filters, setFilters] = useState({
         course: '',
         semester: '1st',
-        year: new Date().getFullYear().toString()
+        year: new Date().getFullYear().toString(),
+        studentGrade: '' // Add student grade filter
     });
 
     const [dirtyRows, setDirtyRows] = useState(new Set()); // Track modified rows
@@ -29,8 +30,14 @@ const GradeReport = () => {
     // Fetch students (Role: Student)
     const fetchStudents = async () => {
         try {
+            setLoading(true);
             const token = localStorage.getItem('studentToken');
-            const response = await api.get('/students?role=student', {
+            let url = '/students?role=student';
+            if (filters.studentGrade) {
+                url += `&grade=${filters.studentGrade}`;
+            }
+            
+            const response = await api.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.success) {
@@ -41,6 +48,8 @@ const GradeReport = () => {
         } catch (error) {
             console.error('Error fetching students:', error);
             setStatus({ type: 'error', message: t('gradeReport.errorFetchStudents') });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -173,7 +182,12 @@ const GradeReport = () => {
         }, 800); // Debounce for 800ms
 
         return () => clearTimeout(timer);
-    }, [filters]);
+    }, [filters.course, filters.semester, filters.year]);
+
+    // Re-fetch students when grade filter changes
+    useEffect(() => {
+        fetchStudents();
+    }, [filters.studentGrade]);
 
     return (
         <div className="user-management-page" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
@@ -233,6 +247,22 @@ const GradeReport = () => {
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('signup.grade') || 'Student Grade'}</label>
+                    <select
+                        value={filters.studentGrade}
+                        onChange={(e) => setFilters({ ...filters, studentGrade: e.target.value })}
+                        style={{ width: '100%', padding: '0.5rem' }}
+                    >
+                        <option value="">{t('gradeReport.allGrades') || 'All Grades'}</option>
+                        {[...Array(12)].map((_, i) => (
+                            <option key={`grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                Grade {i + 1}
+                            </option>
+                        ))}
+                        <option value="Adult">Adult / Other</option>
+                    </select>
+                </div>
             </div>
 
             {/* Excel-like Grid */}
@@ -242,8 +272,8 @@ const GradeReport = () => {
                         <tr>
                             <th style={{ width: '50px' }}>#</th>
                             <th>{t('gradeReport.studentName')}</th>
+                            <th>{t('signup.christianName') || 'Christian Name'}</th>
                             <th style={{ width: '150px' }}>{t('gradeReport.score')}</th>
-                            {/* Comment column removed */}
                         </tr>
                     </thead>
                     <tbody>
@@ -258,15 +288,16 @@ const GradeReport = () => {
                                         <td>
                                             <strong>{student.name}</strong>
                                         </td>
+                                        <td>{student.christianName}</td>
                                         <td>
                                             <input
                                                 type="number"
                                                 value={grade.score || ''}
                                                 onChange={(e) => handleGradeChange(student._id, 'score', e.target.value)}
-                                                style={{ width: '100%', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
+                                                className="score-input"
+                                                style={{ width: '100px', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
                                             />
                                         </td>
-                                        {/* Comment input removed */}
                                     </tr>
                                 );
                             })

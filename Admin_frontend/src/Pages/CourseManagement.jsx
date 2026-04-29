@@ -8,7 +8,7 @@ const CourseManagement = () => {
     const { t } = useTranslation();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({ title: '', description: '' });
+    const [formData, setFormData] = useState({ title: '', description: '', grade: '' });
     const [editingId, setEditingId] = useState(null);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [showMaterialsModal, setShowMaterialsModal] = useState(false);
@@ -57,6 +57,7 @@ const CourseManagement = () => {
                 const data = new FormData();
                 data.append('title', formData.title);
                 data.append('description', formData.description);
+                data.append('grade', formData.grade);
                 if (creationFile) {
                     data.append('file', creationFile);
                 }
@@ -75,7 +76,7 @@ const CourseManagement = () => {
                     if (fileInput) fileInput.value = '';
                 }
             }
-            setFormData({ title: '', description: '' });
+            setFormData({ title: '', description: '', grade: '' });
             fetchCourses();
         } catch (error) {
             setStatus({ type: 'error', message: error.response?.data?.error || 'Operation failed' });
@@ -85,7 +86,11 @@ const CourseManagement = () => {
     };
 
     const handleEdit = (course) => {
-        setFormData({ title: course.title, description: course.description || '' });
+        setFormData({ 
+            title: course.title, 
+            description: course.description || '', 
+            grade: course.grade || '' 
+        });
         setEditingId(course._id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -209,6 +214,23 @@ const CourseManagement = () => {
                             style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '100px' }}
                         />
                     </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Target Grade</label>
+                        <select
+                            value={formData.grade}
+                            onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                            required
+                            style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc' }}
+                        >
+                            <option value="">Select Grade</option>
+                            {[...Array(12)].map((_, i) => (
+                                <option key={`grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                    Grade {i + 1}
+                                </option>
+                            ))}
+                            <option value="Adult">Adult / Other</option>
+                        </select>
+                    </div>
                     {!editingId && (
                         <div>
                             <label style={{ display: 'block', marginBottom: '0.5rem' }}>Initial Course Material (PDF, PPT, Word - Optional)</label>
@@ -228,7 +250,7 @@ const CourseManagement = () => {
                             <button
                                 type="button"
                                 className="delete-item-btn"
-                                onClick={() => { setEditingId(null); setFormData({ title: '', description: '' }); }}
+                                onClick={() => { setEditingId(null); setFormData({ title: '', description: '', grade: '' }); }}
                                 style={{ padding: '0.8rem 2rem', border: '1px solid #ccc', color: '#666' }}
                             >
                                 {t('admin.usermanagement.details.close')}
@@ -244,6 +266,7 @@ const CourseManagement = () => {
                     <thead>
                         <tr>
                             <th>{t('admin.coursemanagement.titleLabel')}</th>
+                            <th>Target Grade</th>
                             <th>{t('admin.coursemanagement.descLabel')}</th>
                             <th style={{ width: '120px' }}>{t('admin.usermanagement.table.actions')}</th>
                         </tr>
@@ -253,6 +276,7 @@ const CourseManagement = () => {
                             courses.map((course) => (
                                 <tr key={course._id}>
                                     <td><strong>{course.title}</strong></td>
+                                    <td><span className="status-badge status-approved" style={{ fontSize: '0.8rem' }}>{course.grade || 'General'}</span></td>
                                     <td>{course.description}</td>
                                     <td>
                                         <div className="action-row">

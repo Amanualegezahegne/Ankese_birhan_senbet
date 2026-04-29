@@ -89,11 +89,15 @@ const registerStudent = async (req, res) => {
 // @access  Private (Admin Only)
 const getAllStudents = async (req, res) => {
     try {
-        const { role } = req.query;
+        const { role, grade } = req.query;
         let query = supabase.from('students').select('*').order('created_at', { ascending: false });
 
         if (role) {
             query = query.eq('role', role);
+        }
+
+        if (grade) {
+            query = query.eq('grade', grade);
         }
 
         const { data: students, error } = await query;

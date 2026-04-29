@@ -11,6 +11,7 @@ const TeacherManagement = () => {
     const [status, setStatus] = useState({ type: '', message: '' });
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
+    const [filterGrade, setFilterGrade] = useState('All');
     const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [importing, setImporting] = useState(false);
     const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
@@ -147,8 +148,9 @@ const TeacherManagement = () => {
             teacher.email.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesStatus = filterStatus === 'All' || teacher.status === filterStatus;
+        const matchesGrade = filterGrade === 'All' || teacher.grade === filterGrade;
 
-        return matchesSearch && matchesStatus;
+        return matchesSearch && matchesStatus && matchesGrade;
     });
 
     const formatDate = (dateString) => {
@@ -201,6 +203,19 @@ const TeacherManagement = () => {
                             <option value="Approved">{t('admin.teachermanagement.filter.approved')}</option>
                             <option value="Rejected">{t('admin.teachermanagement.filter.rejected')}</option>
                         </select>
+                        <select
+                            className="status-filter"
+                            value={filterGrade}
+                            onChange={(e) => setFilterGrade(e.target.value)}
+                        >
+                            <option value="All">{t('admin.usermanagement.filter.allGrades') || 'All Grades'}</option>
+                            {[...Array(12)].map((_, i) => (
+                                <option key={`filter-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                    Grade {i + 1}
+                                </option>
+                            ))}
+                            <option value="Adult">Adult / Other</option>
+                        </select>
                     </div>
                     <div className="search-bar">
                         <input
@@ -228,6 +243,7 @@ const TeacherManagement = () => {
                             <tr>
                                 <th>{t('admin.teachermanagement.table.name') || 'Name'}</th>
                                 <th>{t('admin.teachermanagement.table.christianName') || 'Christian Name'}</th>
+                                <th>{t('admin.usermanagement.table.grade') || 'Grade'}</th>
                                 <th>{t('admin.teachermanagement.table.regDate') || 'Reg. Date'}</th>
                                 <th>{t('admin.teachermanagement.table.status') || 'Status'}</th>
                                 <th>{t('admin.teachermanagement.table.actions') || 'Actions'}</th>
@@ -239,6 +255,7 @@ const TeacherManagement = () => {
                                     <tr key={teacher._id}>
                                         <td><strong>{teacher.name}</strong></td>
                                         <td>{teacher.christianName}</td>
+                                        <td>{teacher.grade || 'N/A'}</td>
                                         <td>{formatDate(teacher.createdAt)}</td>
                                         <td>
                                             <div className="status-cell-container">

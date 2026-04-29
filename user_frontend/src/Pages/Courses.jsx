@@ -9,6 +9,9 @@ const Courses = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const studentInfo = JSON.parse(localStorage.getItem('studentInfo') || '{}');
+    const studentGrade = studentInfo.grade;
+    const isTeacher = studentInfo.role === 'teacher';
 
     useEffect(() => {
         fetchCourses();
@@ -37,6 +40,25 @@ const Courses = () => {
         return <FaFileAlt className="file-icon generic" />;
     };
 
+    const filteredCourses = courses.filter(course => {
+        // Teachers see everything
+        if (isTeacher) return true;
+        
+        // Debugging logs - only visible in developer console
+        console.log('Student Grade:', studentGrade);
+        console.log('Course Grade:', course.grade);
+
+        // If course is "General", show to everyone
+        if (!course.grade || course.grade === 'General') return true;
+        
+        // If student has no grade assigned (e.g. older account), maybe show all or show nothing?
+        // Let's show "General" materials only for students with no grade.
+        if (!studentGrade) return false;
+
+        // Otherwise, only show if it matches the student's grade
+        return course.grade === studentGrade;
+    });
+
     if (loading) return <div className="courses-loading">{t('courses.loading')}</div>;
 
     return (
@@ -52,12 +74,17 @@ const Courses = () => {
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="courses-grid">
-                    {courses.length > 0 ? (
-                        courses.map((course) => (
+                    {filteredCourses.length > 0 ? (
+                        filteredCourses.map((course) => (
                             <div key={course._id} className="course-card">
                                 <div className="course-card-header">
                                     <FaBook className="course-icon" />
                                     <h3>{course.title}</h3>
+                                    {course.grade && (
+                                        <span className="grade-badge" style={{ marginLeft: 'auto', fontSize: '0.7rem', padding: '0.2rem 0.5rem', backgroundColor: '#e2e8f0', borderRadius: '4px' }}>
+                                            {course.grade}
+                                        </span>
+                                    )}
                                 </div>
                                 <p className="course-description">{course.description}</p>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/SignUp.css';
@@ -28,6 +28,7 @@ const SignUp = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,8 +72,13 @@ const SignUp = () => {
                 setDob('');
                 setHasServed('');
                 setPreviousChurch('');
-                setPassword('');
                 setConfirmPassword('');
+                setPassword('');
+
+                // Redirect to sign in page after 3 seconds
+                setTimeout(() => {
+                    navigate('/signin');
+                }, 3000);
             }
         } catch (error) {
             console.error('Registration error:', error);

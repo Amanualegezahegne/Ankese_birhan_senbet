@@ -240,7 +240,8 @@
         "noStudents": "ምንም ተማሪ አልተገኘም",
         "loadSuccess": "ውጤቶች በተሳካ ሁኔታ ተጭነዋል",
         "saveSuccess": "ሁሉም ውጤቶች በተሳካ ሁኔታ ተቀምጠዋል",
-        "partialSave": "ከ{{total}} ውጤቶች ውስጥ {{success}} ተቀምጠዋል። እባክዎ ስህተቶችን ያረጋግጡ።"
+        "partialSave": "ከ{{total}} ውጤቶች ውስጥ {{success}} ተቀምጠዋል። እባክዎ ስህተቶችን ያረጋግጡ።",
+        "allGrades": "ሁሉም ክፍሎች"
     },
     "subscription": {
         "title": "ለዜና መጽሔታችን ይመዝገቡ",
