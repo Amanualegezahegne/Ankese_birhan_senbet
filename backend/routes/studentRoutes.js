@@ -6,6 +6,7 @@ const {
     getAllStudents,
     getStudentById,
     updateStudentStatus,
+    updateStudent,
     getStudentProfile,
     updateStudentProfile,
     importStudents,
@@ -36,6 +37,7 @@ router.get('/pending/counts', protect, admin, getPendingCounts);
 router.route('/').get(protect, teacher, getAllStudents);
 router.route('/:id')
     .get(protect, admin, getStudentById)
+    .put(protect, admin, updateStudent)
     .delete(protect, admin, deleteStudent);
 router.route('/:id/status').put(protect, admin, updateStudentStatus);
 

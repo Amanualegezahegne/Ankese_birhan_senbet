@@ -11,9 +11,11 @@ const Results = () => {
     const [gradesMap, setGradesMap] = useState({});
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
+    const [importing, setImporting] = useState(false);
 
     const [filters, setFilters] = useState({
         course: '',
+        grade: 'All',
         semester: '1st',
         year: new Date().getFullYear().toString()
     });
@@ -30,7 +32,12 @@ const Results = () => {
     const fetchStudents = async () => {
         try {
             const token = sessionStorage.getItem('adminToken');
-            const response = await api.get('/students?role=student', {
+            let url = '/students?role=student';
+            if (filters.grade && filters.grade !== 'All') {
+                url += `&grade=${encodeURIComponent(filters.grade)}`;
+            }
+            
+            const response = await api.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.success) {
@@ -42,6 +49,10 @@ const Results = () => {
             setStatus({ type: 'error', message: t('admin.results.errorFetchStudents') });
         }
     };
+
+    useEffect(() => {
+        fetchStudents();
+    }, [filters.grade]);
 
     const fetchCourses = async () => {
         try {
@@ -152,6 +163,53 @@ const Results = () => {
         }
     };
 
+    const handleImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!filters.course || !filters.semester || !filters.year) {
+            setStatus({ type: 'error', message: 'Please select course, semester and year first' });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('course', filters.course);
+        formData.append('semester', filters.semester);
+        formData.append('year', filters.year);
+        formData.append('passingScore', passingScore);
+
+        try {
+            setImporting(true);
+            setStatus({ type: 'info', message: t('admin.results.importing') });
+
+            const token = sessionStorage.getItem('adminToken');
+            const response = await api.post('/grades/import', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data.success) {
+                setStatus({
+                    type: 'success',
+                    message: t('admin.results.importSuccess', { count: response.data.count })
+                });
+                loadGrades();
+            }
+        } catch (error) {
+            console.error('Import error:', error);
+            setStatus({
+                type: 'error',
+                message: error.response?.data?.message || t('admin.results.importError')
+            });
+        } finally {
+            setImporting(false);
+            e.target.value = ''; // Reset input
+        }
+    };
+
     const handleDownloadCSV = () => {
         if (!students.length) return;
 
@@ -209,6 +267,24 @@ const Results = () => {
                     <button onClick={handleDownloadCSV} className="save-all-btn" style={{ backgroundColor: '#28a745' }}>
                         {t('admin.results.downloadCSV') || 'Download Result'}
                     </button>
+                    <div className="import-container" style={{ display: 'inline-block' }}>
+                        <input
+                            type="file"
+                            id="import-results"
+                            accept=".csv, .xlsx, .xls"
+                            onChange={handleImport}
+                            style={{ display: 'none' }}
+                            disabled={importing}
+                        />
+                        <button
+                            className="save-all-btn"
+                            style={{ backgroundColor: '#17a2b8' }}
+                            onClick={() => document.getElementById('import-results').click()}
+                            disabled={importing}
+                        >
+                            {importing ? t('admin.results.importing') : t('admin.results.import')}
+                        </button>
+                    </div>
                     {dirtyRows.size > 0 && (
                         <button onClick={handleSaveAll} className="save-all-btn">
                             {t('admin.results.saveAll') || 'Save All'} ({dirtyRows.size})
@@ -231,6 +307,22 @@ const Results = () => {
                         {courses.map(course => (
                             <option key={course._id} value={course.title}>{course.title}</option>
                         ))}
+                    </select>
+                </div>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('admin.usermanagement.table.grade') || 'Grade'}</label>
+                    <select
+                        value={filters.grade}
+                        onChange={(e) => setFilters({ ...filters, grade: e.target.value })}
+                        style={{ width: '100%', padding: '0.5rem' }}
+                    >
+                        <option value="All">{t('admin.usermanagement.filter.allGrades') || 'All Grades'}</option>
+                        {[...Array(12)].map((_, i) => (
+                            <option key={`filter-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                Grade {i + 1}
+                            </option>
+                        ))}
+                        <option value="Adult">Adult / Other</option>
                     </select>
                 </div>
                 <div>

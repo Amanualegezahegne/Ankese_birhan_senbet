@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt } from 'react-icons/fa';
+import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Sidebar.css';
@@ -81,6 +81,11 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                 <NavLink to="/results" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.navbar.results') || 'Results'}</span>
+                </NavLink>
+
+                <NavLink to="/report" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                    <FaChartBar className="icon" />
+                    <span className="label">{t('admin.navbar.report') || 'Reports'}</span>
                 </NavLink>
 
                 <NavLink to="/news" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>

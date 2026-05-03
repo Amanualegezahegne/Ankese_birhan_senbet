@@ -12,6 +12,7 @@ import Settings from './Pages/Settings';
 import Attendance from './Pages/Attendance';
 import CourseManagement from './Pages/CourseManagement';
 import Results from './Pages/Results';
+import Report from './Pages/Report';
 import About from './Pages/About';
 import SignIn from './Pages/SignIn';
 import ForgotPassword from './Pages/ForgotPassword';
@@ -137,6 +138,12 @@ function App() {
               <Route path="/results" element={
                 <ProtectedRoute>
                   <Results />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/report" element={
+                <ProtectedRoute>
+                  <Report />
                 </ProtectedRoute>
               } />
 

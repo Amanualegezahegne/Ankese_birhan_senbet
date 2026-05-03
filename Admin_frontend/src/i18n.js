@@ -18,8 +18,33 @@ const resources = {
                     profile: "Profile",
                     settings: "Settings",
                     results: "Courses and Results",
+                    report: "Reports & Analysis",
                     signIn: "Sign In",
                     logout: "Logout"
+                },
+                report: {
+                    title: "Analysis and Reports",
+                    subtitle: "Statistical analysis of student performance by grade",
+                    stats: {
+                        totalGrades: "Total Grades",
+                        overallPassRate: "Overall Pass Rate",
+                        overallAverage: "Overall Average Score",
+                        passCount: "Total Passes",
+                        failCount: "Total Fails"
+                    },
+                    table: {
+                        grade: "Grade Level",
+                        totalGrades: "Total Records",
+                        pass: "Pass",
+                        fail: "Fail",
+                        passRate: "Pass Rate",
+                        avgScore: "Average Score"
+                    },
+                    charts: {
+                        performanceByGrade: "Performance by Grade",
+                        passFailDistribution: "Pass/Fail Distribution",
+                        averageScoreByGrade: "Average Score per Grade"
+                    }
                 },
                 home: {
                     title: "Admin Dashboard",
@@ -298,7 +323,11 @@ const resources = {
                     statusColumn: "Status (Pass/Fail)",
                     pass: "Pass",
                     fail: "Fail",
-                    downloadCSV: "Download Result"
+                    downloadCSV: "Download Result",
+                    import: "Import Results",
+                    importing: "Importing grades...",
+                    importSuccess: "Successfully imported {{count}} grades!",
+                    importError: "Import failed. Please check the file format."
                 }
             }
         }
@@ -319,8 +348,33 @@ const resources = {
                     profile: "መገለጫ",
                     settings: "ቅንብሮች",
                     results: "የትምህርት ውጤቶች",
+                    report: "ሪፖርት እና ትንተና",
                     signIn: "ይግቡ",
                     logout: "ውጣ"
+                },
+                report: {
+                    title: "ትንተና እና ሪፖርቶች",
+                    subtitle: "የተማሪዎች ውጤት ስታቲስቲካዊ ትንተና በክፍል",
+                    stats: {
+                        totalGrades: "ጠቅላላ ውጤቶች",
+                        overallPassRate: "አጠቃላይ የማለፍ ምጣኔ",
+                        overallAverage: "አጠቃላይ አማካይ ውጤት",
+                        passCount: "ጠቅላላ ያለፉ",
+                        failCount: "ጠቅላላ የወደቁ"
+                    },
+                    table: {
+                        grade: "የክፍል ደረጃ",
+                        totalGrades: "ጠቅላላ መዝገቦች",
+                        pass: "ያለፉ",
+                        fail: "የወደቁ",
+                        passRate: "የማለፍ ምጣኔ",
+                        avgScore: "አማካይ ውጤት"
+                    },
+                    charts: {
+                        performanceByGrade: "ውጤት በክፍል ደረጃ",
+                        passFailDistribution: "ያለፉ እና የወደቁ ስርጭት",
+                        averageScoreByGrade: "አማካይ ውጤት በክፍል"
+                    }
                 },
                 home: {
                     title: "የአስተዳዳሪ ዳሽቦርድ",
@@ -599,7 +653,11 @@ const resources = {
                     statusColumn: "ሁኔታ (አልፏል/ወድቋል)",
                     pass: "አልፏል",
                     fail: "ወድቋል",
-                    downloadCSV: "ውጤት አውርድ"
+                    downloadCSV: "ውጤት አውርድ",
+                    import: "ውጤት አስገባ",
+                    importing: "ውጤቶችን በማስገባት ላይ...",
+                    importSuccess: "በተሳካ ሁኔታ {{count}} ውጤቶች ገብተዋል!",
+                    importError: "ማስገባት አልተቻለም። እባክዎ የፋይል ቅርጸቱን ያረጋግጡ።"
                 }
             }
         }

@@ -1,4 +1,7 @@
 const { supabase } = require('../config/db');
+const XLSX = require('xlsx');
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Add a grade
 // @route   POST /api/grades
@@ -188,10 +191,209 @@ const getGradesByFilter = async (req, res) => {
     }
 };
 
+// @desc    Get report/analysis of grades by grade level
+// @route   GET /api/grades/report
+// @access  Private (Teacher/Admin)
+const getGradesReport = async (req, res) => {
+    try {
+        const { data: grades, error } = await supabase
+            .from('grades')
+            .select(`
+                score,
+                status,
+                student:students!student_id (grade)
+            `);
+
+        if (error) throw error;
+
+        // Aggregate by grade level
+        const report = {};
+        let totalPass = 0;
+        let totalFail = 0;
+        let scoreSum = 0;
+        let scoreCount = 0;
+
+        grades.forEach(g => {
+            const gradeLevel = (g.student && g.student.grade) ? g.student.grade : 'Unknown';
+            if (!report[gradeLevel]) {
+                report[gradeLevel] = {
+                    grade: gradeLevel,
+                    totalGrades: 0,
+                    pass: 0,
+                    fail: 0,
+                    scoreSum: 0,
+                    scoreCount: 0
+                };
+            }
+
+            report[gradeLevel].totalGrades++;
+            if (g.status === 'Pass') {
+                report[gradeLevel].pass++;
+                totalPass++;
+            } else if (g.status === 'Fail') {
+                report[gradeLevel].fail++;
+                totalFail++;
+            }
+
+            if (g.score !== null && g.score !== undefined && g.score !== '') {
+                const score = Number(g.score);
+                report[gradeLevel].scoreSum += score;
+                report[gradeLevel].scoreCount++;
+                scoreSum += score;
+                scoreCount++;
+            }
+        });
+
+        const reportData = Object.values(report).map(r => ({
+            ...r,
+            averageScore: r.scoreCount > 0 ? (r.scoreSum / r.scoreCount).toFixed(2) : 0,
+            passRate: r.totalGrades > 0 ? ((r.pass / r.totalGrades) * 100).toFixed(2) : 0
+        })).sort((a, b) => {
+            // Sort by grade level numerically if possible
+            const aNum = parseInt(a.grade);
+            const bNum = parseInt(b.grade);
+            if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+            return a.grade.localeCompare(b.grade);
+        });
+
+        res.status(200).json({
+            success: true,
+            data: {
+                byGrade: reportData,
+                summary: {
+                    totalGrades: grades.length,
+                    totalPass,
+                    totalFail,
+                    overallAverage: scoreCount > 0 ? (scoreSum / scoreCount).toFixed(2) : 0,
+                    overallPassRate: grades.length > 0 ? ((totalPass / grades.length) * 100).toFixed(2) : 0
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Get Grades Report Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Import grades from Excel/CSV
+// @route   POST /api/grades/import
+// @access  Private (Teacher/Admin)
+const importGrades = async (req, res) => {
+    try {
+        const { course, semester, year, passingScore } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Please upload a file' });
+        }
+
+        if (!course || !semester || !year) {
+            if (req.file) fs.unlinkSync(req.file.path);
+            return res.status(400).json({ success: false, message: 'Please provide course, semester, and year' });
+        }
+
+        const filePath = req.file.path;
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        if (data.length === 0) {
+            fs.unlinkSync(filePath);
+            return res.status(400).json({ success: false, message: 'File is empty' });
+        }
+
+        // Fetch all students to match by email or name
+        const { data: students, error: studentError } = await supabase
+            .from('students')
+            .select('id, name, email')
+            .eq('role', 'student');
+
+        if (studentError) throw studentError;
+
+        const gradesToUpsert = [];
+        const errors = [];
+        const limit = Number(passingScore) || 50;
+
+        for (const row of data) {
+            const studentEmail = row.Email || row.email || row['ኢሜይል'];
+            const studentName = row.Name || row.name || row['Full Name'] || row['የተማሪ ስም'];
+            const score = row.Score || row.score || row['ውጤት'];
+
+            if (score === undefined || score === null) {
+                errors.push(`Row missing score: ${JSON.stringify(row)}`);
+                continue;
+            }
+
+            let student = null;
+            if (studentEmail) {
+                student = students.find(s => s.email?.toLowerCase() === studentEmail.toString().toLowerCase());
+            }
+            
+            if (!student && studentName) {
+                student = students.find(s => s.name?.toLowerCase() === studentName.toString().toLowerCase());
+            }
+
+            if (!student) {
+                errors.push(`Student not found: ${studentEmail || studentName}`);
+                continue;
+            }
+
+            const scoreVal = Number(score);
+            const statusVal = scoreVal >= limit ? 'Pass' : 'Fail';
+
+            gradesToUpsert.push({
+                student_id: student.id,
+                teacher_id: req.user.id,
+                course,
+                semester,
+                year,
+                score: scoreVal,
+                status: statusVal
+            });
+        }
+
+        if (gradesToUpsert.length > 0) {
+            // Upsert: check for existing grades for the same student/course/semester/year
+            for (const grade of gradesToUpsert) {
+                const { data: existing, error: findError } = await supabase
+                    .from('grades')
+                    .select('id')
+                    .eq('student_id', grade.student_id)
+                    .eq('course', grade.course)
+                    .eq('semester', grade.semester)
+                    .eq('year', grade.year)
+                    .maybeSingle();
+
+                if (existing) {
+                    await supabase.from('grades').update(grade).eq('id', existing.id);
+                } else {
+                    await supabase.from('grades').insert([grade]);
+                }
+            }
+        }
+
+        fs.unlinkSync(filePath);
+
+        res.status(200).json({
+            success: true,
+            message: `Successfully processed ${gradesToUpsert.length} grades.`,
+            count: gradesToUpsert.length,
+            errors: errors.length > 0 ? errors : null
+        });
+
+    } catch (error) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        console.error('Import Grades Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     addGrade,
     getGradesByStudent,
     getGradesByFilter,
+    getGradesReport,
+    importGrades,
     updateGrade,
     deleteGrade
 };

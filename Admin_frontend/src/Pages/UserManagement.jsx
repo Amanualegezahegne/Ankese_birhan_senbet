@@ -16,6 +16,8 @@ const UserManagement = () => {
     const [importing, setImporting] = useState(false);
     const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({});
 
     useEffect(() => {
         fetchStudents();
@@ -128,7 +130,6 @@ const UserManagement = () => {
             setLoading(false);
         }
     };
-
     const handleStatusUpdate = async (id, newStatus) => {
         try {
             const token = sessionStorage.getItem('adminToken');
@@ -143,6 +144,37 @@ const UserManagement = () => {
         } catch (error) {
             console.error('Error updating status:', error);
             alert('Failed to update status');
+        }
+    };
+
+    const handleEditToggle = () => {
+        if (!isEditing) {
+            setEditData({ ...selectedStudent });
+        }
+        setIsEditing(!isEditing);
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem('adminToken');
+            const response = await api.put(`/students/${selectedStudent._id}`, editData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data.success) {
+                setStatus({ type: 'success', message: 'Student details updated successfully!' });
+                setStudents(students.map(s => s._id === selectedStudent._id ? response.data.data : s));
+                setSelectedStudent(response.data.data);
+                setIsEditing(false);
+            }
+        } catch (error) {
+            console.error('Error updating student:', error);
+            setStatus({ type: 'error', message: 'Failed to update student details.' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -310,61 +342,125 @@ const UserManagement = () => {
                 <div className="modal-overlay" onClick={() => setSelectedStudent(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>{t('admin.usermanagement.details.title')}</h2>
-                            <button className="close-btn" onClick={() => setSelectedStudent(null)}>&times;</button>
+                            <h2>{isEditing ? 'Edit Student' : t('admin.usermanagement.details.title')}</h2>
+                            <button className="close-btn" onClick={() => { setSelectedStudent(null); setIsEditing(false); }}>&times;</button>
                         </div>
                         <div className="modal-body">
                             <div className="detail-grid">
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.name')}</label>
-                                    <p>{selectedStudent.name}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.name || ''} onChange={(e) => setEditData({ ...editData, name: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedStudent.name}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.christianName')}</label>
-                                    <p>{selectedStudent.christianName}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.christianName || ''} onChange={(e) => setEditData({ ...editData, christianName: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedStudent.christianName}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.grade') || 'Grade'}</label>
-                                    <p>{selectedStudent.grade || 'N/A'}</p>
+                                    {isEditing ? (
+                                        <select
+                                            value={editData.grade || ''}
+                                            onChange={(e) => setEditData({ ...editData, grade: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem' }}
+                                        >
+                                            <option value="">Select Grade</option>
+                                            {[...Array(12)].map((_, i) => (
+                                                <option key={`edit-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                                    Grade {i + 1}
+                                                </option>
+                                            ))}
+                                            <option value="Adult">Adult / Other</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedStudent.grade || 'N/A'}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.email')}</label>
-                                    <p>{selectedStudent.email}</p>
+                                    {isEditing ? (
+                                        <input type="email" value={editData.email || ''} onChange={(e) => setEditData({ ...editData, email: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedStudent.email}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.phone')}</label>
-                                    <p>{selectedStudent.phone}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.phone || ''} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedStudent.phone}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.sex')}</label>
-                                    <p>{selectedStudent.sex}</p>
+                                    {isEditing ? (
+                                        <select value={editData.sex || ''} onChange={(e) => setEditData({ ...editData, sex: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedStudent.sex}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.nationalId')}</label>
-                                    <p>{selectedStudent.nationalId}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.nationalId || ''} onChange={(e) => setEditData({ ...editData, nationalId: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedStudent.nationalId}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.dob')}</label>
-                                    <p>{formatDate(selectedStudent.dob)}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <label>{t('admin.usermanagement.details.regDate')}</label>
-                                    <p>{formatDate(selectedStudent.createdAt)}</p>
+                                    {isEditing ? (
+                                        <input type="date" value={editData.dob ? new Date(editData.dob).toISOString().split('T')[0] : ''} onChange={(e) => setEditData({ ...editData, dob: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{formatDate(selectedStudent.dob)}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.usermanagement.details.serviceStatus')}</label>
-                                    <p>{selectedStudent.hasServed === 'yes' ? 'Yes' : 'No'}</p>
+                                    {isEditing ? (
+                                        <select value={editData.hasServed || 'no'} onChange={(e) => setEditData({ ...editData, hasServed: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedStudent.hasServed === 'yes' ? 'Yes' : 'No'}</p>
+                                    )}
                                 </div>
-                                {selectedStudent.hasServed === 'yes' && (
+                                {(isEditing ? editData.hasServed === 'yes' : selectedStudent.hasServed === 'yes') && (
                                     <div className="detail-item full-width">
                                         <label>{t('admin.usermanagement.details.previousChurch')}</label>
-                                        <p>{selectedStudent.previousChurch}</p>
+                                        {isEditing ? (
+                                            <input type="text" value={editData.previousChurch || ''} onChange={(e) => setEditData({ ...editData, previousChurch: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                        ) : (
+                                            <p>{selectedStudent.previousChurch}</p>
+                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn-close" onClick={() => setSelectedStudent(null)}>
+                        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div>
+                                {isEditing ? (
+                                    <>
+                                        <button className="view-btn" onClick={handleSaveEdit} style={{ backgroundColor: '#28a745', marginRight: '10px' }}>Save Changes</button>
+                                        <button className="btn-close" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    </>
+                                ) : (
+                                    <button className="view-btn" onClick={handleEditToggle} style={{ backgroundColor: '#ffc107', color: '#000' }}>Edit Details</button>
+                                )}
+                            </div>
+                            <button className="btn-close" onClick={() => { setSelectedStudent(null); setIsEditing(false); }}>
                                 {t('admin.usermanagement.details.close')}
                             </button>
                         </div>

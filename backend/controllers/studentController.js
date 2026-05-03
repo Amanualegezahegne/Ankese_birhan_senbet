@@ -195,6 +195,63 @@ const updateStudentStatus = async (req, res) => {
     }
 };
 
+// @desc    Update student details (Admin)
+// @route   PUT /api/students/:id
+// @access  Private (Admin Only)
+const updateStudent = async (req, res) => {
+    try {
+        const updates = { ...req.body };
+        
+        // Remove internal/read-only fields that shouldn't be updated
+        delete updates._id;
+        delete updates.id;
+        delete updates.createdAt;
+        delete updates.updatedAt;
+        delete updates.role;
+        delete updates.created_at;
+        delete updates.updated_at;
+
+        // Map camelCase frontend fields to snake_case database columns
+        if (updates.christianName !== undefined) {
+            updates.christian_name = updates.christianName;
+            delete updates.christianName;
+        }
+        if (updates.nationalId !== undefined) {
+            updates.national_id = updates.nationalId;
+            delete updates.nationalId;
+        }
+        if (updates.hasServed !== undefined) {
+            updates.has_served = updates.hasServed;
+            delete updates.hasServed;
+        }
+        if (updates.previousChurch !== undefined) {
+            updates.previous_church = updates.previousChurch;
+            delete updates.previousChurch;
+        }
+
+        const { data: student, error } = await supabase
+            .from('students')
+            .update(updates)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Supabase Update Error:', error);
+            return res.status(400).json({ success: false, message: error.message });
+        }
+
+        if (!student) {
+            return res.status(404).json({ success: false, message: 'Student not found' });
+        }
+
+        res.status(200).json({ success: true, data: mapStudentForFrontend(student) });
+    } catch (error) {
+        console.error('Update Student Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // @desc    Login student
 // @route   POST /api/students/login
 // @access  Public
@@ -372,6 +429,15 @@ const importStudents = async (req, res) => {
         const defaultHashedPassword = await bcrypt.hash('student123', salt);
 
         for (const row of data) {
+            let dob = row.DOB || row.dob || row['የትውልድ ቀን'];
+            
+            // Handle Excel serial date numbers
+            if (typeof dob === 'number') {
+                // Excel dates are number of days since 1899-12-30
+                const date = new Date(Math.round((dob - 25569) * 86400 * 1000));
+                dob = date.toISOString().split('T')[0];
+            }
+
             const studentData = {
                 name: row.Name || row.name || row['Full Name'],
                 christian_name: row['Christian Name'] || row.christianName || row['ክርስትና ስም'],
@@ -379,10 +445,11 @@ const importStudents = async (req, res) => {
                 phone: row.Phone || row.phone || row['ስልክ'],
                 sex: row.Sex || row.sex || row['ጾታ'],
                 national_id: row['National ID'] || row.nationalId || row['መታወቂያ'],
-                dob: row.DOB || row.dob || row['የትውልድ ቀን'],
+                dob: dob,
                 password: defaultHashedPassword,
                 status: 'Approved',
-                has_served: row.hasServed || row.has_served || 'no'
+                has_served: row.hasServed || row.has_served || 'no',
+                grade: row.Grade || row.grade || row['ክፍል']
             };
 
             if (!studentData.name || !studentData.email) {
@@ -572,6 +639,7 @@ module.exports = {
     getAllStudents,
     getStudentById,
     updateStudentStatus,
+    updateStudent,
     getStudentProfile,
     updateStudentProfile,
     getPendingCounts,
