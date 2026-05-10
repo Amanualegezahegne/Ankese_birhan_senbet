@@ -2,6 +2,7 @@
 -- Ensure ID generation is correct even if tables exist
 ALTER TABLE IF EXISTS users ALTER COLUMN id SET DEFAULT gen_random_uuid();
 ALTER TABLE IF EXISTS students ALTER COLUMN id SET DEFAULT gen_random_uuid();
+ALTER TABLE IF EXISTS students ADD COLUMN IF NOT EXISTS course TEXT;
 
 -- 1. Users Table (Admins)
 CREATE TABLE IF NOT EXISTS users (
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS students (
     dob DATE NOT NULL,
     has_served TEXT NOT NULL,
     previous_church TEXT,
+    course TEXT,
     password TEXT NOT NULL,
     status TEXT DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
     role TEXT DEFAULT 'student' CHECK (role IN ('student', 'teacher')),
