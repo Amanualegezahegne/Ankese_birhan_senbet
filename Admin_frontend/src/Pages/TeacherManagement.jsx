@@ -12,14 +12,29 @@ const TeacherManagement = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
     const [filterGrade, setFilterGrade] = useState('All');
+    const [courses, setCourses] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [importing, setImporting] = useState(false);
     const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
     const [teacherToDelete, setTeacherToDelete] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({});
 
     useEffect(() => {
         fetchTeachers();
+        fetchCourses();
     }, []);
+
+    const fetchCourses = async () => {
+        try {
+            const response = await api.get('/courses');
+            if (response.data.success) {
+                setCourses(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+        }
+    };
 
     const fetchTeachers = async () => {
         try {
@@ -120,6 +135,37 @@ const TeacherManagement = () => {
         } catch (error) {
             console.error('Delete teacher error:', error);
             setStatus({ type: 'error', message: t('admin.teachermanagement.delete.errorSingle') });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditToggle = () => {
+        if (!isEditing) {
+            setEditData({ ...selectedTeacher });
+        }
+        setIsEditing(!isEditing);
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem('adminToken');
+            const response = await api.put(`/students/${selectedTeacher._id}`, editData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data.success) {
+                setStatus({ type: 'success', message: 'Teacher details updated successfully!' });
+                setTeachers(teachers.map(s => s._id === selectedTeacher._id ? response.data.data : s));
+                setSelectedTeacher(response.data.data);
+                setIsEditing(false);
+            }
+        } catch (error) {
+            console.error('Error updating teacher:', error);
+            setStatus({ type: 'error', message: 'Failed to update teacher details.' });
         } finally {
             setLoading(false);
         }
@@ -244,6 +290,7 @@ const TeacherManagement = () => {
                                 <th>{t('admin.teachermanagement.table.name') || 'Name'}</th>
                                 <th>{t('admin.teachermanagement.table.christianName') || 'Christian Name'}</th>
                                 <th>{t('admin.usermanagement.table.grade') || 'Grade'}</th>
+                                <th>Teaching Course</th>
                                 <th>{t('admin.teachermanagement.table.regDate') || 'Reg. Date'}</th>
                                 <th>{t('admin.teachermanagement.table.status') || 'Status'}</th>
                                 <th>{t('admin.teachermanagement.table.actions') || 'Actions'}</th>
@@ -256,6 +303,7 @@ const TeacherManagement = () => {
                                         <td><strong>{teacher.name}</strong></td>
                                         <td>{teacher.christianName}</td>
                                         <td>{teacher.grade || 'N/A'}</td>
+                                        <td>{teacher.course || 'Not Assigned'}</td>
                                         <td>{formatDate(teacher.createdAt)}</td>
                                         <td>
                                             <div className="status-cell-container">
@@ -305,60 +353,147 @@ const TeacherManagement = () => {
 
             {/* Teacher Details Modal */}
             {selectedTeacher && (
-                <div className="modal-overlay" onClick={() => setSelectedTeacher(null)}>
+                <div className="modal-overlay" onClick={() => { setSelectedTeacher(null); setIsEditing(false); }}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>{t('admin.teachermanagement.details.title')}</h2>
-                            <button className="close-btn" onClick={() => setSelectedTeacher(null)}>&times;</button>
+                            <h2>{isEditing ? 'Edit Teacher' : t('admin.teachermanagement.details.title')}</h2>
+                            <button className="close-btn" onClick={() => { setSelectedTeacher(null); setIsEditing(false); }}>&times;</button>
                         </div>
                         <div className="modal-body">
                             <div className="detail-grid">
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.name')}</label>
-                                    <p>{selectedTeacher.name}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.name || ''} onChange={(e) => setEditData({ ...editData, name: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedTeacher.name}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.christianName')}</label>
-                                    <p>{selectedTeacher.christianName}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.christianName || ''} onChange={(e) => setEditData({ ...editData, christianName: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedTeacher.christianName}</p>
+                                    )}
+                                </div>
+                                <div className="detail-item">
+                                    <label>{t('admin.usermanagement.details.grade') || 'Grade'}</label>
+                                    {isEditing ? (
+                                        <select
+                                            value={editData.grade || ''}
+                                            onChange={(e) => setEditData({ ...editData, grade: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem' }}
+                                        >
+                                            <option value="">Select Grade</option>
+                                            {[...Array(12)].map((_, i) => (
+                                                <option key={`edit-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                                    Grade {i + 1}
+                                                </option>
+                                            ))}
+                                            <option value="Adult">Adult / Other</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedTeacher.grade || 'N/A'}</p>
+                                    )}
+                                </div>
+                                <div className="detail-item">
+                                    <label>Teaching Course</label>
+                                    {isEditing ? (
+                                        <select
+                                            value={editData.course || ''}
+                                            onChange={(e) => setEditData({ ...editData, course: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem' }}
+                                        >
+                                            <option value="">Select Course</option>
+                                            {courses.map(course => (
+                                                <option key={course._id} value={course.title}>
+                                                    {course.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <p>{selectedTeacher.course || 'Not Assigned'}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.email')}</label>
-                                    <p>{selectedTeacher.email}</p>
+                                    {isEditing ? (
+                                        <input type="email" value={editData.email || ''} onChange={(e) => setEditData({ ...editData, email: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedTeacher.email}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.phone')}</label>
-                                    <p>{selectedTeacher.phone}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.phone || ''} onChange={(e) => setEditData({ ...editData, phone: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedTeacher.phone}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.sex')}</label>
-                                    <p>{selectedTeacher.sex}</p>
+                                    {isEditing ? (
+                                        <select value={editData.sex || ''} onChange={(e) => setEditData({ ...editData, sex: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedTeacher.sex}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.nationalId')}</label>
-                                    <p>{selectedTeacher.nationalId}</p>
+                                    {isEditing ? (
+                                        <input type="text" value={editData.nationalId || ''} onChange={(e) => setEditData({ ...editData, nationalId: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{selectedTeacher.nationalId}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.dob')}</label>
-                                    <p>{formatDate(selectedTeacher.dob)}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <label>{t('admin.teachermanagement.details.regDate')}</label>
-                                    <p>{formatDate(selectedTeacher.createdAt)}</p>
+                                    {isEditing ? (
+                                        <input type="date" value={editData.dob ? new Date(editData.dob).toISOString().split('T')[0] : ''} onChange={(e) => setEditData({ ...editData, dob: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    ) : (
+                                        <p>{formatDate(selectedTeacher.dob)}</p>
+                                    )}
                                 </div>
                                 <div className="detail-item">
                                     <label>{t('admin.teachermanagement.details.serviceStatus')}</label>
-                                    <p>{selectedTeacher.hasServed === 'yes' ? 'Yes' : 'No'}</p>
+                                    {isEditing ? (
+                                        <select value={editData.hasServed || 'no'} onChange={(e) => setEditData({ ...editData, hasServed: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    ) : (
+                                        <p>{selectedTeacher.hasServed === 'yes' ? 'Yes' : 'No'}</p>
+                                    )}
                                 </div>
-                                {selectedTeacher.hasServed === 'yes' && (
+                                {(isEditing ? editData.hasServed === 'yes' : selectedTeacher.hasServed === 'yes') && (
                                     <div className="detail-item full-width">
                                         <label>{t('admin.teachermanagement.details.previousChurch')}</label>
-                                        <p>{selectedTeacher.previousChurch}</p>
+                                        {isEditing ? (
+                                            <input type="text" value={editData.previousChurch || ''} onChange={(e) => setEditData({ ...editData, previousChurch: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                        ) : (
+                                            <p>{selectedTeacher.previousChurch}</p>
+                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button className="btn-close" onClick={() => setSelectedTeacher(null)}>
+                        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div>
+                                {isEditing ? (
+                                    <>
+                                        <button className="view-btn" onClick={handleSaveEdit} style={{ backgroundColor: '#28a745', marginRight: '10px' }}>Save Changes</button>
+                                        <button className="btn-close" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    </>
+                                ) : (
+                                    <button className="view-btn" onClick={handleEditToggle} style={{ backgroundColor: '#ffc107', color: '#000' }}>Edit Details</button>
+                                )}
+                            </div>
+                            <button className="btn-close" onClick={() => { setSelectedTeacher(null); setIsEditing(false); }}>
                                 {t('admin.teachermanagement.details.close')}
                             </button>
                         </div>

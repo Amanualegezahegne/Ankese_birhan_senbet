@@ -11,11 +11,12 @@ const Attendance = () => {
     const [attendanceData, setAttendanceData] = useState({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [selectedGrade, setSelectedGrade] = useState('All');
     const [message, setMessage] = useState({ type: '', text: '' });
 
     useEffect(() => {
         fetchStudentsAndAttendance();
-    }, [date, activeTab]);
+    }, [date, activeTab, selectedGrade]);
 
     const fetchStudentsAndAttendance = async () => {
         try {
@@ -23,8 +24,9 @@ const Attendance = () => {
             const adminToken = sessionStorage.getItem('adminToken');
             const config = { headers: { Authorization: `Bearer ${adminToken}` } };
 
-            // Fetch approved members based on active tab
-            const response = await api.get(`/students?role=${activeTab}`, config);
+            // Fetch approved members based on active tab and grade
+            const gradeQuery = selectedGrade !== 'All' ? `&grade=${selectedGrade}` : '';
+            const response = await api.get(`/students?role=${activeTab}${gradeQuery}`, config);
             const approvedStudents = response.data.data.filter(s => s.status === 'Approved');
             setStudents(approvedStudents);
 
@@ -89,14 +91,32 @@ const Attendance = () => {
                     <h2>{t('admin.attendance.title')}</h2>
                     <p>{t('admin.attendance.subtitle')}</p>
                 </div>
-                <div className="date-picker-container">
-                    <label>{t('admin.attendance.date')}</label>
-                    <input
-                        type="date"
-                        className="date-input"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
+                    <div className="date-picker-container">
+                        <label>{t('admin.usermanagement.table.grade') || 'Grade'}</label>
+                        <select
+                            className="date-input"
+                            value={selectedGrade}
+                            onChange={(e) => setSelectedGrade(e.target.value)}
+                        >
+                            <option value="All">{t('admin.usermanagement.filter.allGrades') || 'All Grades'}</option>
+                            {[...Array(12)].map((_, i) => (
+                                <option key={`filter-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                    Grade {i + 1}
+                                </option>
+                            ))}
+                            <option value="Adult">Adult / Other</option>
+                        </select>
+                    </div>
+                    <div className="date-picker-container">
+                        <label>{t('admin.attendance.date')}</label>
+                        <input
+                            type="date"
+                            className="date-input"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
 
