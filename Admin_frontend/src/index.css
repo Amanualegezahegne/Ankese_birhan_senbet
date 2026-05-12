@@ -89,9 +89,14 @@ body {
 }
 
 .admin-main-layout.has-sidebar {
+  padding-left: 70px;
+  /* Collapsed width */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-main-layout.has-sidebar.is-sidebar-open {
   padding-left: 260px;
-  /* Sidebar width */
-  transition: padding 0.3s ease;
+  /* Expanded width */
 }
 
 .admin-content {
@@ -104,10 +109,16 @@ body {
   .admin-main-layout.has-sidebar {
     padding-left: 70px;
   }
+  .admin-main-layout.has-sidebar.is-sidebar-open {
+    padding-left: 260px;
+  }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .admin-main-layout.has-sidebar {
+    padding-left: 0;
+  }
+  .admin-main-layout.has-sidebar.is-sidebar-open {
     padding-left: 0;
   }
 }

@@ -19,6 +19,23 @@ const TeacherManagement = () => {
     const [teacherToDelete, setTeacherToDelete] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [registerData, setRegisterData] = useState({
+        name: '',
+        christianName: '',
+        email: '',
+        password: '',
+        phone: '',
+        sex: 'male',
+        nationalId: '',
+        dob: '',
+        grade: '',
+        hasServed: 'no',
+        previousChurch: '',
+        role: 'teacher',
+        status: 'Approved',
+        course: ''
+    });
 
     useEffect(() => {
         fetchTeachers();
@@ -171,6 +188,46 @@ const TeacherManagement = () => {
         }
     };
 
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem('adminToken');
+            const response = await api.post('/students/register', registerData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data.success) {
+                setStatus({ type: 'success', message: 'New teacher registered successfully!' });
+                setTeachers([response.data.data, ...teachers]);
+                setShowRegisterModal(false);
+                setRegisterData({
+                    name: '',
+                    christianName: '',
+                    email: '',
+                    password: '',
+                    phone: '',
+                    sex: 'male',
+                    nationalId: '',
+                    dob: '',
+                    grade: '',
+                    hasServed: 'no',
+                    previousChurch: '',
+                    role: 'teacher',
+                    status: 'Approved',
+                    course: ''
+                });
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            setStatus({ type: 'error', message: error.response?.data?.message || 'Failed to register teacher.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleStatusUpdate = async (id, newStatus) => {
         try {
             const token = sessionStorage.getItem('adminToken');
@@ -228,6 +285,13 @@ const TeacherManagement = () => {
                             disabled={importing}
                         >
                             {importing ? t('admin.teachermanagement.import.uploading') : t('admin.teachermanagement.table.import')}
+                        </button>
+                        <button 
+                            className="view-btn" 
+                            style={{ backgroundColor: '#28a745', color: '#fff', padding: '0.6rem 1.2rem', marginLeft: '10px' }}
+                            onClick={() => setShowRegisterModal(true)}
+                        >
+                            Register New
                         </button>
                     </div>
                     {/* Delete All Disabled for Safety */}
@@ -522,6 +586,109 @@ const TeacherManagement = () => {
                                 {t('admin.teachermanagement.table.delete')}
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Registration Modal */}
+            {showRegisterModal && (
+                <div className="modal-overlay" onClick={() => setShowRegisterModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Register New Teacher</h2>
+                            <button className="close-btn" onClick={() => setShowRegisterModal(false)}>&times;</button>
+                        </div>
+                        <form onSubmit={handleRegisterSubmit}>
+                            <div className="modal-body">
+                                <div className="detail-grid">
+                                    <div className="detail-item">
+                                        <label>Full Name *</label>
+                                        <input required type="text" value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Christian Name</label>
+                                        <input type="text" value={registerData.christianName} onChange={(e) => setRegisterData({ ...registerData, christianName: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Email *</label>
+                                        <input required type="email" value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Password *</label>
+                                        <input required type="password" value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Phone</label>
+                                        <input type="text" value={registerData.phone} onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Sex</label>
+                                        <select value={registerData.sex} onChange={(e) => setRegisterData({ ...registerData, sex: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Grade</label>
+                                        <select
+                                            value={registerData.grade}
+                                            onChange={(e) => setRegisterData({ ...registerData, grade: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem' }}
+                                        >
+                                            <option value="">Select Grade</option>
+                                            {[...Array(12)].map((_, i) => (
+                                                <option key={`reg-grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                                    Grade {i + 1}
+                                                </option>
+                                            ))}
+                                            <option value="Adult">Adult / Other</option>
+                                        </select>
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Teaching Course</label>
+                                        <select
+                                            value={registerData.course}
+                                            onChange={(e) => setRegisterData({ ...registerData, course: e.target.value })}
+                                            style={{ width: '100%', padding: '0.5rem' }}
+                                        >
+                                            <option value="">Select Course</option>
+                                            {courses.map(course => (
+                                                <option key={course._id} value={course.title}>
+                                                    {course.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>National ID</label>
+                                        <input type="text" value={registerData.nationalId} onChange={(e) => setRegisterData({ ...registerData, nationalId: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Date of Birth</label>
+                                        <input type="date" value={registerData.dob} onChange={(e) => setRegisterData({ ...registerData, dob: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                    </div>
+                                    <div className="detail-item">
+                                        <label>Service Status</label>
+                                        <select value={registerData.hasServed} onChange={(e) => setRegisterData({ ...registerData, hasServed: e.target.value })} style={{ width: '100%', padding: '0.5rem' }}>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                    {registerData.hasServed === 'yes' && (
+                                        <div className="detail-item full-width">
+                                            <label>Previous Church</label>
+                                            <input type="text" value={registerData.previousChurch} onChange={(e) => setRegisterData({ ...registerData, previousChurch: e.target.value })} style={{ width: '100%', padding: '0.5rem' }} />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn-cancel" onClick={() => setShowRegisterModal(false)}>Cancel</button>
+                                <button type="submit" className="view-btn" style={{ backgroundColor: '#28a745' }} disabled={loading}>
+                                    {loading ? 'Registering...' : 'Register Teacher'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

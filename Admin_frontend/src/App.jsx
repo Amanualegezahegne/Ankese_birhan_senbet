@@ -35,6 +35,17 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+    handleResize(); // Check on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
@@ -63,7 +74,7 @@ function App() {
           toggleSidebar={toggleSidebar}
           isSidebarOpen={isSidebarOpen}
         />
-        <div className={`admin-main-layout ${isAuthenticated ? 'has-sidebar' : ''}`}>
+        <div className={`admin-main-layout ${isAuthenticated ? 'has-sidebar' : ''} ${isSidebarOpen ? 'is-sidebar-open' : ''}`}>
           {isAuthenticated && (
             <Sidebar
               handleLogout={handleLogout}

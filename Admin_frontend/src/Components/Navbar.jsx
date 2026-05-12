@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaTimes, FaGlobe, FaMoon, FaSun } from 'react-icons/fa';
 import '../Styles/Navbar.css';
 
 const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout, toggleSidebar, isSidebarOpen }) => {
@@ -19,15 +19,17 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout, toggleSideb
 
     return (
         <nav className="navbar">
-            {/* Sidebar Toggle for Mobile */}
+            {/* Sidebar Toggle */}
             {isAuthenticated && (
-                <button
-                    className="sidebar-toggle-btn"
-                    onClick={toggleSidebar}
-                    aria-label="Toggle Sidebar"
-                >
-                    {isSidebarOpen ? <FaArrowLeft /> : <FaArrowRight />}
-                </button>
+                <div className="nav-left-group">
+                    <button
+                        className={`sidebar-toggle-btn ${isSidebarOpen ? 'open' : ''}`}
+                        onClick={toggleSidebar}
+                        aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+                    >
+                        {isSidebarOpen ? <FaChevronLeft /> : <FaChevronRight />}
+                    </button>
+                </div>
             )}
 
             {/* Brand */}
@@ -61,24 +63,26 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, handleLogout, toggleSideb
                         <Link to="/contact" onClick={() => setIsOpen(false)}>{t('admin.navbar.contact')}</Link>
                     </>
                 ) : (
-                    <Link to="/signin" onClick={() => setIsOpen(false)}>{t('admin.navbar.signIn')}</Link>
+                    <Link to="/signin" onClick={() => setIsOpen(false)} className="btn-signin">{t('admin.navbar.signIn')}</Link>
                 )}
 
                 <button
                     onClick={changeLanguage}
-                    className="theme-toggle-btn"
+                    className="theme-toggle-btn lang-btn"
                     aria-label="Change Language"
-                    style={{ fontSize: '1rem', fontWeight: 'bold' }}
+                    title={i18n.language === 'en' ? 'Switch to Amharic' : 'Switch to English'}
                 >
-                    {i18n.language === 'en' ? 'AM' : 'EN'}
+                    <FaGlobe className="nav-icon" />
+                    <span>{i18n.language === 'en' ? 'AM' : 'EN'}</span>
                 </button>
 
                 <button
                     onClick={toggleTheme}
-                    className="theme-toggle-btn"
+                    className="theme-toggle-btn mode-btn"
                     aria-label="Toggle Dark Mode"
+                    title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
                 >
-                    {theme === 'light' ? '🌙' : '☀️'}
+                    {theme === 'light' ? <FaMoon /> : <FaSun />}
                 </button>
             </div>
         </nav>

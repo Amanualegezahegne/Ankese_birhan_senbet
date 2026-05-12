@@ -5,6 +5,7 @@ import '../Styles/GradeReport.css';
 import '../Styles/Alert.css';
 
 const GradeReport = () => {
+    console.log('GradeReport rendering...');
     const { t } = useTranslation();
     const [students, setStudents] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -21,6 +22,8 @@ const GradeReport = () => {
     });
 
     const [dirtyRows, setDirtyRows] = useState(new Set()); // Track modified rows
+    const [expandedRows, setExpandedRows] = useState(new Set());
+    const [passingScore, setPassingScore] = useState(50);
 
     useEffect(() => {
         fetchStudents();
@@ -104,16 +107,38 @@ const GradeReport = () => {
 
     // Handle input change in the grid
     const handleGradeChange = (studentId, field, value) => {
-        setGradesMap(prev => ({
-            ...prev,
-            [studentId]: {
-                ...prev[studentId],
+        setGradesMap(prev => {
+            const currentGrade = prev[studentId] || {};
+            const updatedGrade = {
+                ...currentGrade,
                 [field]: value,
-                student: studentId // Ensure relationship is key
+                student: studentId
+            };
+
+            // Auto-calculate total score if component scores change
+            if (['mid_exam', 'final_exam', 'assignment'].includes(field)) {
+                const mid = Number(updatedGrade.mid_exam) || 0;
+                const final = Number(updatedGrade.final_exam) || 0;
+                const assignment = Number(updatedGrade.assignment) || 0;
+                updatedGrade.score = mid + final + assignment;
             }
-        }));
+
+            return {
+                ...prev,
+                [studentId]: updatedGrade
+            };
+        });
 
         setDirtyRows(prev => new Set(prev).add(studentId));
+    };
+
+    const toggleRow = (studentId) => {
+        setExpandedRows(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(studentId)) newSet.delete(studentId);
+            else newSet.add(studentId);
+            return newSet;
+        });
     };
 
     // Save all modified rows
@@ -136,7 +161,10 @@ const GradeReport = () => {
                 const payload = {
                     studentId,
                     score: gradeData.score,
-                    // comment removed
+                    mid_exam: Number(gradeData.mid_exam) || 0,
+                    final_exam: Number(gradeData.final_exam) || 0,
+                    assignment: Number(gradeData.assignment) || 0,
+                    status: (Number(gradeData.score) || 0) >= passingScore ? 'Pass' : 'Fail',
                     ...filters
                 };
 
@@ -274,35 +302,117 @@ const GradeReport = () => {
                             <th>{t('gradeReport.studentName')}</th>
                             <th>{t('signup.christianName') || 'Christian Name'}</th>
                             <th style={{ width: '150px' }}>{t('gradeReport.score')}</th>
+                            <th>{t('admin.results.statusColumn') || 'Status'}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {students.length > 0 ? (
                             students.map((student, index) => {
-                                const grade = gradesMap[student._id] || {};
-                                const isDirty = dirtyRows.has(student._id);
+                                const grade = gradesMap[student.id || student._id] || {};
+                                const isDirty = dirtyRows.has(student.id || student._id);
+                                const isExpanded = expandedRows.has(student.id || student._id);
 
                                 return (
-                                    <tr key={student._id}>
+                                    <tr key={student.id || student._id} className={isExpanded ? 'expanded-row-parent' : ''}>
                                         <td>{index + 1}</td>
                                         <td>
                                             <strong>{student.name}</strong>
                                         </td>
                                         <td>{student.christianName}</td>
                                         <td>
-                                            <input
-                                                type="number"
-                                                value={grade.score || ''}
-                                                onChange={(e) => handleGradeChange(student._id, 'score', e.target.value)}
-                                                className="score-input"
-                                                style={{ width: '100px', padding: '0.4rem', border: isDirty ? '1px solid #007bff' : '1px solid #ccc' }}
-                                            />
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <input
+                                                        type="number"
+                                                        value={grade.score || ''}
+                                                        readOnly
+                                                        placeholder="Total"
+                                                        style={{ width: '80px', padding: '0.4rem', border: isDirty ? '2px solid #007bff' : '1px solid #ccc', backgroundColor: '#f8f9fa', fontWeight: 'bold' }}
+                                                    />
+                                                    <button 
+                                                        onClick={() => toggleRow(student.id || student._id)}
+                                                        className="score-toggle-btn"
+                                                        style={{ 
+                                                            padding: '4px 12px', 
+                                                            fontSize: '0.8rem', 
+                                                            borderRadius: '4px',
+                                                            backgroundColor: isExpanded ? '#ffd700' : '#f0f0f0',
+                                                            color: '#000',
+                                                            border: '1px solid #ccc',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        {isExpanded ? 'Close' : 'Score'}
+                                                    </button>
+                                                </div>
+                                                
+                                                {isExpanded && (
+                                                    <div className="score-details-grid" style={{ 
+                                                        display: 'grid', 
+                                                        gridTemplateColumns: 'repeat(3, 1fr)', 
+                                                        gap: '8px',
+                                                        padding: '10px',
+                                                        background: 'rgba(255, 215, 0, 0.05)',
+                                                        borderRadius: '8px',
+                                                        marginTop: '5px',
+                                                        border: '1px dashed #ffd700'
+                                                    }}>
+                                                        <div>
+                                                            <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Mid (40)</label>
+                                                            <input
+                                                                type="number"
+                                                                value={grade.mid_exam || ''}
+                                                                onChange={(e) => handleGradeChange(student.id || student._id, 'mid_exam', e.target.value)}
+                                                                style={{ width: '100%', padding: '3px' }}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Final (40)</label>
+                                                            <input
+                                                                type="number"
+                                                                value={grade.final_exam || ''}
+                                                                onChange={(e) => handleGradeChange(student.id || student._id, 'final_exam', e.target.value)}
+                                                                style={{ width: '100%', padding: '3px' }}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Assign (20)</label>
+                                                            <input
+                                                                type="number"
+                                                                value={grade.assignment || ''}
+                                                                onChange={(e) => handleGradeChange(student.id || student._id, 'assignment', e.target.value)}
+                                                                style={{ width: '100%', padding: '3px' }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {(() => {
+                                                const currentStatus = (grade.score !== undefined && grade.score !== '') 
+                                                    ? (Number(grade.score) >= passingScore ? 'Pass' : 'Fail') 
+                                                    : (grade.status || '-');
+                                                
+                                                return (
+                                                    <span style={{
+                                                        padding: '0.25rem 0.5rem',
+                                                        borderRadius: '4px',
+                                                        fontWeight: 'bold',
+                                                        backgroundColor: currentStatus === 'Pass' ? '#d4edda' : (currentStatus === 'Fail' ? '#f8d7da' : '#e2e3e5'),
+                                                        color: currentStatus === 'Pass' ? '#155724' : (currentStatus === 'Fail' ? '#721c24' : '#383d41')
+                                                    }}>
+                                                        {currentStatus === 'Pass' ? (t('gradeReport.pass') || 'Pass') 
+                                                            : (currentStatus === 'Fail' ? (t('gradeReport.fail') || 'Fail') : '-')}
+                                                    </span>
+                                                );
+                                            })()}
                                         </td>
                                     </tr>
                                 );
                             })
                         ) : (
-                            <tr><td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>{t('gradeReport.noStudents')}</td></tr>
+                            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('gradeReport.noStudents')}</td></tr>
                         )}
                     </tbody>
                 </table>

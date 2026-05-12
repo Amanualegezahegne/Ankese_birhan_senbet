@@ -241,7 +241,9 @@
         "loadSuccess": "Grades loaded successfully",
         "saveSuccess": "All grades saved successfully",
         "partialSave": "Saved {{success}} out of {{total}} grades. Please check for errors.",
-        "allGrades": "All Grades"
+        "allGrades": "All Grades",
+        "pass": "Pass",
+        "fail": "Fail"
     },
     "subscription": {
         "title": "Subscribe to Our Newsletter",

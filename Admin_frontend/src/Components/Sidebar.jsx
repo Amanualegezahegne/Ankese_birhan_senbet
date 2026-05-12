@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar } from 'react-icons/fa';
+import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Sidebar.css';
@@ -51,52 +51,100 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
 
     return (
         <aside className={`admin-sidebar ${isOpen ? 'show' : ''}`}>
-            <div className="sidebar-header">
-                <h3>Management</h3>
-                <button className="sidebar-close-btn" onClick={toggleSidebar}>&times;</button>
+            <div className="sidebar-header-mobile">
+                <button className="sidebar-close-btn" onClick={toggleSidebar}>
+                    <FaTimes />
+                </button>
             </div>
             <nav className="sidebar-nav">
-                <NavLink to="/users" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/users" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.users') || 'Students'}
+                >
                     <FaUsers className="icon" />
                     <span className="label">{t('admin.navbar.users') || 'Students'}</span>
                     {pendingCounts.students > 0 && <span className="nav-item-pin" title={`${pendingCounts.students} Pending`}></span>}
                 </NavLink>
 
-                <NavLink to="/teachers" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/teachers" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.teachermanagement.title') || 'Teachers'}
+                >
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.teachermanagement.title') || 'Teachers'}</span>
                     {pendingCounts.teachers > 0 && <span className="nav-item-pin" title={`${pendingCounts.teachers} Pending`}></span>}
                 </NavLink>
 
-                <NavLink to="/attendance" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/attendance" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.attendance')}
+                >
                     <FaClipboardCheck className="icon" />
                     <span className="label">{t('admin.navbar.attendance')}</span>
                 </NavLink>
 
-                <NavLink to="/courses" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/courses" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.courses') || 'Courses'}
+                >
                     <FaBookOpen className="icon" />
                     <span className="label">{t('admin.navbar.courses') || 'Courses'}</span>
                 </NavLink>
 
-                <NavLink to="/results" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/results" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.results') || 'Results'}
+                >
                     <FaChalkboardTeacher className="icon" />
                     <span className="label">{t('admin.navbar.results') || 'Results'}</span>
                 </NavLink>
 
-                <NavLink to="/report" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/report" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.report') || 'Reports'}
+                >
                     <FaChartBar className="icon" />
                     <span className="label">{t('admin.navbar.report') || 'Reports'}</span>
                 </NavLink>
 
-                <NavLink to="/news" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <NavLink 
+                    to="/news" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.news')}
+                >
                     <FaInfoCircle className="icon" />
                     <span className="label">{t('admin.navbar.news')}</span>
                 </NavLink>
-                <NavLink to="/settings" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                
+                <NavLink 
+                    to="/settings" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.settings')}
+                >
                     <FaCog className="icon" />
                     <span className="label">{t('admin.navbar.settings')}</span>
                 </NavLink>
-                <NavLink to="/messages" onClick={() => isOpen && toggleSidebar()} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                
+                <NavLink 
+                    to="/messages" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.messages') || 'Messages'}
+                >
                     <div className="icon-wrapper">
                         <FaEnvelope className="icon" />
                         {unreadCount > 0 && <span className="notification-dot"></span>}
@@ -104,12 +152,12 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                     <span className="label">{t('admin.navbar.messages') || 'Messages'}</span>
                 </NavLink>
 
-                <div className="sidebar-divider" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', margin: '1rem 0' }}></div>
+                <div className="sidebar-divider"></div>
 
                 <button
                     onClick={handleLogout}
                     className="nav-item logout-nav-item"
-                    style={{ background: 'none', border: 'none', width: '100%', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem', color: '#ff4444' }}
+                    title={t('admin.navbar.logout')}
                 >
                     <FaSignOutAlt className="icon" />
                     <span className="label">{t('admin.navbar.logout')}</span>
