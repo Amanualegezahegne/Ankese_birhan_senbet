@@ -67,7 +67,7 @@ const getGradesByStudent = async (req, res) => {
             .from('grades')
             .select(`
                 *,
-                teacher:students!teacher_id (name, email)
+                teacher:students!grades_teacher_id_fkey (name, email)
             `)
             .eq('student_id', studentId)
             .order('year', { ascending: false })
@@ -184,8 +184,8 @@ const getGradesByFilter = async (req, res) => {
             .from('grades')
             .select(`
                 *,
-                student:students!student_id (name, email),
-                teacher:students!teacher_id (name, email)
+                student:students!grades_student_id_fkey (name, email),
+                teacher:students!grades_teacher_id_fkey (name, email)
             `)
             .eq('course', course)
             .eq('semester', semester)
@@ -200,6 +200,7 @@ const getGradesByFilter = async (req, res) => {
         });
     } catch (error) {
         console.error('Get Grades By Filter Error:', error);
+        fs.appendFileSync(path.join(__dirname, '../error_log.txt'), `Get Grades By Filter Error at ${new Date().toISOString()}: ${error.message}\n${error.stack}\n\n`);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -214,7 +215,7 @@ const getGradesReport = async (req, res) => {
             .select(`
                 score,
                 status,
-                student:students!student_id (grade)
+                student:students!grades_student_id_fkey (grade)
             `);
 
         if (error) throw error;

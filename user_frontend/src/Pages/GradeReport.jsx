@@ -60,9 +60,20 @@ const GradeReport = () => {
         try {
             const response = await api.get('/courses');
             if (response.data.success) {
-                setCourses(response.data.data);
-                if (response.data.data.length > 0) {
-                    setFilters(prev => ({ ...prev, course: response.data.data[0].title }));
+                const studentInfo = JSON.parse(localStorage.getItem('studentInfo') || '{}');
+                let filteredCourses = response.data.data;
+
+                if (studentInfo.role === 'teacher' && studentInfo.course) {
+                    // Split by ", " to support teachers teaching multiple courses (e.g. "Math, Science")
+                    const teacherCourses = studentInfo.course.split(', ').map(c => c.trim().toLowerCase());
+                    filteredCourses = response.data.data.filter(course => 
+                        teacherCourses.includes(course.title.trim().toLowerCase())
+                    );
+                }
+
+                setCourses(filteredCourses);
+                if (filteredCourses.length > 0) {
+                    setFilters(prev => ({ ...prev, course: filteredCourses[0].title }));
                 }
             }
         } catch (error) {
@@ -89,9 +100,11 @@ const GradeReport = () => {
                 // Convert array to map: studentId -> grade
                 const newMap = {};
                 response.data.data.forEach(grade => {
-                    // Handle both populated object and direct ID
-                    const studentId = typeof grade.student === 'object' ? grade.student._id || grade.student.id : grade.student;
-                    newMap[studentId] = grade;
+                    // Handle both populated object and direct ID (prioritizing student_id from Supabase)
+                    const studentId = grade.student_id || (typeof grade.student === 'object' ? grade.student.id || grade.student._id : grade.student);
+                    if (studentId) {
+                        newMap[studentId] = grade;
+                    }
                 });
                 setGradesMap(newMap);
                 setDirtyRows(new Set()); // Clear dirty state
@@ -168,8 +181,9 @@ const GradeReport = () => {
                     ...filters
                 };
 
-                if (gradeData._id) {
-                    return api.put(`/grades/${gradeData._id}`, payload, {
+                const gradeId = gradeData.id || gradeData._id;
+                if (gradeId) {
+                    return api.put(`/grades/${gradeId}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 } else {
@@ -302,7 +316,7 @@ const GradeReport = () => {
                             <th>{t('gradeReport.studentName')}</th>
                             <th>{t('signup.christianName') || 'Christian Name'}</th>
                             <th style={{ width: '150px' }}>{t('gradeReport.score')}</th>
-                            <th>{t('admin.results.statusColumn') || 'Status'}</th>
+                            <th>{t('gradeReport.status', 'Status')}</th>
                         </tr>
                     </thead>
                     <tbody>

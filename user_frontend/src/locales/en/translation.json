@@ -243,7 +243,8 @@
         "partialSave": "Saved {{success}} out of {{total}} grades. Please check for errors.",
         "allGrades": "All Grades",
         "pass": "Pass",
-        "fail": "Fail"
+        "fail": "Fail",
+        "status": "Status"
     },
     "subscription": {
         "title": "Subscribe to Our Newsletter",

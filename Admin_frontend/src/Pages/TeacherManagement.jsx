@@ -4,6 +4,24 @@ import api from '../api/axios';
 import '../Styles/UserManagement.css';
 import '../Styles/Alert.css';
 
+const parseCourses = (courseStr, allCourses) => {
+    if (!courseStr || !allCourses || allCourses.length === 0) return [];
+    const found = [];
+    const sortedCourses = [...allCourses].sort((a, b) => b.title.length - a.title.length);
+    
+    // Normalize spaces for robust matching
+    let tempStr = courseStr.toLowerCase().replace(/\s+/g, '');
+    for (const course of sortedCourses) {
+        const titleNormalized = course.title.toLowerCase().replace(/\s+/g, '');
+        if (tempStr.includes(titleNormalized)) {
+            found.push(course.title);
+            // Remove all occurrences of this course title
+            tempStr = tempStr.split(titleNormalized).join('');
+        }
+    }
+    return found;
+};
+
 const TeacherManagement = () => {
     const { t } = useTranslation();
     const [teachers, setTeachers] = useState([]);
@@ -461,23 +479,54 @@ const TeacherManagement = () => {
                                         <p>{selectedTeacher.grade || 'N/A'}</p>
                                     )}
                                 </div>
-                                <div className="detail-item">
-                                    <label>Teaching Course</label>
+                                <div className="detail-item" style={{ gridColumn: 'span 2' }}>
+                                    <label>Teaching Courses (Select all that apply)</label>
                                     {isEditing ? (
-                                        <select
-                                            value={editData.course || ''}
-                                            onChange={(e) => setEditData({ ...editData, course: e.target.value })}
-                                            style={{ width: '100%', padding: '0.5rem' }}
-                                        >
-                                            <option value="">Select Course</option>
-                                            {courses.map(course => (
-                                                <option key={course._id} value={course.title}>
-                                                    {course.title}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <div style={{ 
+                                            maxHeight: '130px', 
+                                            overflowY: 'auto', 
+                                            border: '1px solid #ccc', 
+                                            borderRadius: '6px', 
+                                            padding: '10px',
+                                            backgroundColor: '#2b2b2b',
+                                            color: '#fff',
+                                            marginTop: '5px',
+                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)'
+                                        }}>
+                                            {courses.length > 0 ? (
+                                                (() => {
+                                                    const selectedList = parseCourses(editData.course, courses);
+                                                    return courses.map(course => {
+                                                        const isChecked = selectedList.includes(course.title);
+                                                        return (
+                                                            <label key={course._id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.9rem', cursor: 'pointer', userSelect: 'none' }}>
+                                                                <input 
+                                                                    type="checkbox" 
+                                                                    checked={isChecked}
+                                                                    onChange={(e) => {
+                                                                        let currentList = [...selectedList];
+                                                                        if (e.target.checked) {
+                                                                            if (!currentList.includes(course.title)) {
+                                                                                currentList.push(course.title);
+                                                                            }
+                                                                        } else {
+                                                                            currentList = currentList.filter(item => item !== course.title);
+                                                                        }
+                                                                        setEditData({ ...editData, course: currentList.join(', ') });
+                                                                    }}
+                                                                    style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                                                                />
+                                                                <span>{course.title}</span>
+                                                            </label>
+                                                        );
+                                                    });
+                                                })()
+                                            ) : (
+                                                <p style={{ color: '#aaa', margin: 0 }}>No courses available.</p>
+                                            )}
+                                        </div>
                                     ) : (
-                                        <p>{selectedTeacher.course || 'Not Assigned'}</p>
+                                        <p style={{ fontWeight: 'bold', color: '#ffd700' }}>{selectedTeacher.course || 'Not Assigned'}</p>
                                     )}
                                 </div>
                                 <div className="detail-item">
@@ -644,20 +693,51 @@ const TeacherManagement = () => {
                                             <option value="Adult">Adult / Other</option>
                                         </select>
                                     </div>
-                                    <div className="detail-item">
-                                        <label>Teaching Course</label>
-                                        <select
-                                            value={registerData.course}
-                                            onChange={(e) => setRegisterData({ ...registerData, course: e.target.value })}
-                                            style={{ width: '100%', padding: '0.5rem' }}
-                                        >
-                                            <option value="">Select Course</option>
-                                            {courses.map(course => (
-                                                <option key={course._id} value={course.title}>
-                                                    {course.title}
-                                                </option>
-                                            ))}
-                                        </select>
+                                    <div className="detail-item" style={{ gridColumn: 'span 2' }}>
+                                        <label>Teaching Courses (Select all that apply)</label>
+                                        <div style={{ 
+                                            maxHeight: '130px', 
+                                            overflowY: 'auto', 
+                                            border: '1px solid #ccc', 
+                                            borderRadius: '6px', 
+                                            padding: '10px',
+                                            backgroundColor: '#2b2b2b',
+                                            color: '#fff',
+                                            marginTop: '5px',
+                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)'
+                                        }}>
+                                            {courses.length > 0 ? (
+                                                (() => {
+                                                    const selectedList = parseCourses(registerData.course, courses);
+                                                    return courses.map(course => {
+                                                        const isChecked = selectedList.includes(course.title);
+                                                        return (
+                                                            <label key={course._id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '0.9rem', cursor: 'pointer', userSelect: 'none' }}>
+                                                                <input 
+                                                                    type="checkbox" 
+                                                                    checked={isChecked}
+                                                                    onChange={(e) => {
+                                                                        let currentList = [...selectedList];
+                                                                        if (e.target.checked) {
+                                                                            if (!currentList.includes(course.title)) {
+                                                                                currentList.push(course.title);
+                                                                            }
+                                                                        } else {
+                                                                            currentList = currentList.filter(item => item !== course.title);
+                                                                        }
+                                                                        setRegisterData({ ...registerData, course: currentList.join(', ') });
+                                                                    }}
+                                                                    style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                                                                />
+                                                                <span>{course.title}</span>
+                                                            </label>
+                                                        );
+                                                    });
+                                                })()
+                                            ) : (
+                                                <p style={{ color: '#aaa', margin: 0 }}>No courses available.</p>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="detail-item">
                                         <label>National ID</label>

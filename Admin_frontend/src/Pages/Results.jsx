@@ -82,8 +82,10 @@ const Results = () => {
             if (response.data.success) {
                 const newMap = {};
                 response.data.data.forEach(grade => {
-                    const studentId = typeof grade.student === 'object' ? grade.student._id || grade.student.id : grade.student;
-                    newMap[studentId] = grade;
+                    const studentId = grade.student_id || (typeof grade.student === 'object' ? grade.student.id || grade.student._id : grade.student);
+                    if (studentId) {
+                        newMap[studentId] = grade;
+                    }
                 });
                 setGradesMap(newMap);
                 setDirtyRows(new Set());
@@ -181,8 +183,9 @@ const Results = () => {
                     ...filters
                 };
 
-                if (gradeData._id) {
-                    return api.put(`/grades/${gradeData._id}`, payload, {
+                const gradeId = gradeData.id || gradeData._id;
+                if (gradeId) {
+                    return api.put(`/grades/${gradeId}`, payload, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                 } else {

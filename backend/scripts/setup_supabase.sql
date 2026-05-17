@@ -92,7 +92,8 @@ CREATE TABLE IF NOT EXISTS grades (
     semester TEXT NOT NULL,
     year TEXT NOT NULL,
     status TEXT DEFAULT '-',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(student_id, course, semester, year)
 );
 
 -- 8. Attendance Table

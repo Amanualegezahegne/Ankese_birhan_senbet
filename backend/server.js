@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
+const { runCleanup } = require('./config/cleanup');
 
 // Load environment variables
 dotenv.config();
@@ -9,8 +10,10 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Connect to Supabase
-connectDB();
+// Connect to Supabase and run startup cleanup
+connectDB().then(() => {
+    runCleanup();
+});
 console.log('--- ADMIN AUTH SYSTEM V2 ACTIVE ---');
 
 // Middleware

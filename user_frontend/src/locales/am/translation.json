@@ -241,7 +241,8 @@
         "loadSuccess": "ውጤቶች በተሳካ ሁኔታ ተጭነዋል",
         "saveSuccess": "ሁሉም ውጤቶች በተሳካ ሁኔታ ተቀምጠዋል",
         "partialSave": "ከ{{total}} ውጤቶች ውስጥ {{success}} ተቀምጠዋል። እባክዎ ስህተቶችን ያረጋግጡ።",
-        "allGrades": "ሁሉም ክፍሎች"
+        "allGrades": "ሁሉም ክፍሎች",
+        "status": "ሁኔታ"
     },
     "subscription": {
         "title": "ለዜና መጽሔታችን ይመዝገቡ",
