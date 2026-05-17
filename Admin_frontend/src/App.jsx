@@ -10,6 +10,7 @@ import TeacherManagement from './Pages/TeacherManagement';
 import NewsManager from './Pages/NewsManager';
 import Settings from './Pages/Settings';
 import Attendance from './Pages/Attendance';
+import AttendanceReport from './Pages/AttendanceReport';
 import CourseManagement from './Pages/CourseManagement';
 import Results from './Pages/Results';
 import Report from './Pages/Report';
@@ -137,6 +138,12 @@ function App() {
               <Route path="/attendance" element={
                 <ProtectedRoute>
                   <Attendance />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/attendance-report" element={
+                <ProtectedRoute>
+                  <AttendanceReport />
                 </ProtectedRoute>
               } />
 

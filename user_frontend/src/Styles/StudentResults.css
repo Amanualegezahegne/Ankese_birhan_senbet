@@ -1,0 +1,214 @@
+.student-results-page {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    padding-bottom: 3rem;
+}
+
+.results-header {
+    background-color: #000000;
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.results-header h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+}
+
+.results-header p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.results-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.filter-container {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.course-filter-select {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--nav-border);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    min-width: 250px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.course-filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.term-section {
+    margin-bottom: 3rem;
+}
+
+.term-title {
+    font-size: 1.4rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--nav-border);
+    padding-bottom: 0.5rem;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.result-card {
+    background: var(--card-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-top: 4px solid var(--primary-color);
+}
+
+.result-card.pass {
+    border-top-color: #10b981;
+}
+
+.result-card.fail {
+    border-top-color: #ef4444;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px var(--shadow-color);
+}
+
+.result-course {
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--nav-border);
+    padding-bottom: 1rem;
+}
+
+.result-course h4 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin: 0 0 0.4rem 0;
+}
+
+.teacher-name {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.score-breakdown {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    background: rgba(128, 128, 128, 0.05);
+    padding: 0.8rem;
+    border-radius: 8px;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.score-label {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.score-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.total-score-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-score {
+    display: flex;
+    flex-direction: column;
+}
+
+.total-label {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.2rem;
+}
+
+.total-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.status-badge {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+
+.status-badge.pass {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-badge.fail {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.status-badge.pending {
+    background-color: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
+.no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px dashed var(--nav-border);
+}
+
+.no-results-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}

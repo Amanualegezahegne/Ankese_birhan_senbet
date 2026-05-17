@@ -91,7 +91,7 @@ const CourseManagement = () => {
             description: course.description || '', 
             grade: course.grade || '' 
         });
-        setEditingId(course._id);
+        setEditingId(course._id || course.id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -127,7 +127,7 @@ const CourseManagement = () => {
 
         try {
             const token = sessionStorage.getItem('adminToken');
-            const response = await api.post(`/courses/${selectedCourse._id}/materials`, formData, {
+            const response = await api.post(`/courses/${selectedCourse._id || selectedCourse.id}/materials`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -141,7 +141,7 @@ const CourseManagement = () => {
                 setSelectedCourse(updatedCourse);
 
                 // Update main courses list
-                setCourses(courses.map(c => c._id === selectedCourse._id ? updatedCourse : c));
+                setCourses(courses.map(c => (c._id || c.id) === (selectedCourse._id || selectedCourse.id) ? updatedCourse : c));
 
                 setMaterialFile(null);
                 setMaterialName('');
@@ -161,15 +161,15 @@ const CourseManagement = () => {
 
         try {
             const token = sessionStorage.getItem('adminToken');
-            const response = await api.delete(`/courses/${selectedCourse._id}/materials/${materialId}`, {
+            const response = await api.delete(`/courses/${selectedCourse._id || selectedCourse.id}/materials/${materialId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             if (response.data.success) {
                 const updatedCourse = { ...selectedCourse };
-                updatedCourse.materials = updatedCourse.materials.filter(m => m._id !== materialId);
+                updatedCourse.materials = updatedCourse.materials.filter(m => (m._id || m.id) !== materialId);
                 setSelectedCourse(updatedCourse);
-                setCourses(courses.map(c => c._id === selectedCourse._id ? updatedCourse : c));
+                setCourses(courses.map(c => (c._id || c.id) === (selectedCourse._id || selectedCourse.id) ? updatedCourse : c));
             }
         } catch (error) {
             console.error('Delete material error:', error);
@@ -274,7 +274,7 @@ const CourseManagement = () => {
                     <tbody>
                         {courses.length > 0 ? (
                             courses.map((course) => (
-                                <tr key={course._id}>
+                                <tr key={course._id || course.id}>
                                     <td><strong>{course.title}</strong></td>
                                     <td><span className="status-badge status-approved" style={{ fontSize: '0.8rem' }}>{course.grade || 'General'}</span></td>
                                     <td>{course.description}</td>
@@ -286,7 +286,7 @@ const CourseManagement = () => {
                                             <button className="view-btn" onClick={() => handleManageMaterials(course)} title="Manage Materials" style={{ padding: '0.5rem', backgroundColor: '#4f46e5', color: 'white' }}>
                                                 <FaBook />
                                             </button>
-                                            <button className="delete-item-btn" onClick={() => handleDelete(course._id)} title={t('admin.coursemanagement.deleteCourse')} style={{ padding: '0.5rem' }}>
+                                            <button className="delete-item-btn" onClick={() => handleDelete(course._id || course.id)} title={t('admin.coursemanagement.deleteCourse')} style={{ padding: '0.5rem' }}>
                                                 <FaTrash />
                                             </button>
                                         </div>
@@ -359,7 +359,7 @@ const CourseManagement = () => {
                                     <tbody>
                                         {selectedCourse.materials && selectedCourse.materials.length > 0 ? (
                                             selectedCourse.materials.map((m) => (
-                                                <tr key={m._id}>
+                                                <tr key={m._id || m.id}>
                                                     <td>{m.name}</td>
                                                     <td><span className="status-badge status-pending" style={{ fontSize: '0.7rem' }}>{m.fileType?.toUpperCase()}</span></td>
                                                     <td>
@@ -376,7 +376,7 @@ const CourseManagement = () => {
                                                             </a>
                                                             <button
                                                                 className="delete-item-btn"
-                                                                onClick={() => handleDeleteMaterial(m._id)}
+                                                                onClick={() => handleDeleteMaterial(m._id || m.id)}
                                                                 style={{ padding: '0.4rem' }}
                                                                 title="Delete"
                                                             >

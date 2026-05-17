@@ -57,7 +57,55 @@ const getAttendanceByDate = async (req, res) => {
     }
 };
 
+// @desc    Get attendance report/analysis
+// @route   GET /api/attendance/report
+// @access  Private (Admin Only)
+const getAttendanceReport = async (req, res) => {
+    try {
+        const { data: attendanceData, error } = await supabase
+            .from('attendance')
+            .select(`
+                status,
+                student:students (role)
+            `);
+
+        if (error) throw error;
+
+        const report = {
+            student: { present: 0, absent: 0, permission: 0, total: 0 },
+            teacher: { present: 0, absent: 0, permission: 0, total: 0 },
+            overall: { present: 0, absent: 0, permission: 0, total: 0 }
+        };
+
+        attendanceData.forEach(record => {
+            // Note: student can be an array if it's a 1-to-many from the perspective of Supabase,
+            // but it's a foreign key on attendance, so it should be an object.
+            const role = Array.isArray(record.student) ? record.student[0]?.role : record.student?.role;
+            const actualRole = role || 'student';
+            const status = record.status.toLowerCase();
+
+            if (report[actualRole]) {
+                if (status === 'present') report[actualRole].present++;
+                if (status === 'absent') report[actualRole].absent++;
+                if (status === 'permission') report[actualRole].permission++;
+                report[actualRole].total++;
+            }
+
+            if (status === 'present') report.overall.present++;
+            if (status === 'absent') report.overall.absent++;
+            if (status === 'permission') report.overall.permission++;
+            report.overall.total++;
+        });
+
+        res.status(200).json({ success: true, data: report });
+    } catch (error) {
+        console.error('Error fetching attendance report:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     recordAttendance,
-    getAttendanceByDate
+    getAttendanceByDate,
+    getAttendanceReport
 };

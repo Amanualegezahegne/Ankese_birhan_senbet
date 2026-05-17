@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { FaChartBar } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/Attendance.css';
 
 const Attendance = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [activeTab, setActiveTab] = useState('student');
     const [students, setStudents] = useState([]);
@@ -91,7 +94,27 @@ const Attendance = () => {
                     <h2>{t('admin.attendance.title')}</h2>
                     <p>{t('admin.attendance.subtitle')}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                    <button 
+                        className="btn-primary" 
+                        onClick={() => navigate('/attendance-report')}
+                        style={{ 
+                            padding: '0.6rem 1.2rem', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.5rem', 
+                            height: '42px',
+                            backgroundColor: 'var(--primary-color)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            boxShadow: '0 2px 4px var(--shadow-color)'
+                        }}
+                    >
+                        <FaChartBar /> Report & Analysis
+                    </button>
                     <div className="date-picker-container">
                         <label>{t('admin.usermanagement.table.grade') || 'Grade'}</label>
                         <select

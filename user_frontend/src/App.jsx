@@ -13,6 +13,7 @@ import ResetPassword from './Pages/ResetPassword';
 import News from './Pages/News';
 import Profile from './Pages/Profile';
 import GradeReport from './Pages/GradeReport';
+import StudentResults from './Pages/StudentResults';
 import Courses from './Pages/Courses';
 import './App.css';
 
@@ -55,7 +56,7 @@ function App() {
           setIsAuthenticated={setIsAuthenticated}
         />
 
-        {isTeacher && (
+        {isAuthenticated && (
           <Sidebar
             isOpen={isSidebarOpen}
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -63,7 +64,7 @@ function App() {
           />
         )}
 
-        <main className={`main-content ${isTeacher ? 'sidebar-open' : ''}`}>
+        <main className={`main-content ${isAuthenticated ? 'sidebar-open' : ''}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -89,6 +90,12 @@ function App() {
             <Route path="/grades" element={
               <ProtectedRoute>
                 <GradeReport />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/my-grades" element={
+              <ProtectedRoute>
+                <StudentResults />
               </ProtectedRoute>
             } />
 

@@ -63,9 +63,11 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                     title={t('admin.navbar.users') || 'Students'}
                 >
-                    <FaUsers className="icon" />
+                    <div className="icon-wrapper">
+                        <FaUsers className="icon" />
+                        {pendingCounts.students > 0 && <span className="notification-dot"></span>}
+                    </div>
                     <span className="label">{t('admin.navbar.users') || 'Students'}</span>
-                    {pendingCounts.students > 0 && <span className="nav-item-pin" title={`${pendingCounts.students} Pending`}></span>}
                 </NavLink>
 
                 <NavLink 
@@ -74,9 +76,11 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                     title={t('admin.teachermanagement.title') || 'Teachers'}
                 >
-                    <FaChalkboardTeacher className="icon" />
+                    <div className="icon-wrapper">
+                        <FaChalkboardTeacher className="icon" />
+                        {pendingCounts.teachers > 0 && <span className="notification-dot"></span>}
+                    </div>
                     <span className="label">{t('admin.teachermanagement.title') || 'Teachers'}</span>
-                    {pendingCounts.teachers > 0 && <span className="nav-item-pin" title={`${pendingCounts.teachers} Pending`}></span>}
                 </NavLink>
 
                 <NavLink 

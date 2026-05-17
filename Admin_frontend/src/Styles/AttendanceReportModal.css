@@ -1,0 +1,107 @@
+.report-modal {
+    max-width: 900px;
+    width: 95%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--nav-border);
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.report-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--nav-border);
+}
+
+.stat-item {
+    margin-bottom: 1rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.progress-value {
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.progress-percentage {
+    color: var(--secondary-color);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+}
+
+.present-fill { background-color: #10b981; }
+.absent-fill { background-color: #ef4444; }
+.permission-fill { background-color: #f59e0b; }
+
+.stat-total {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--nav-border);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.report-loading {
+    padding: 3rem;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.report-error {
+    padding: 2rem;
+    text-align: center;
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+}

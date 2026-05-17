@@ -1,12 +1,14 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt } from 'react-icons/fa';
+import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt, FaBook } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const userInfo = JSON.parse(localStorage.getItem('studentInfo'));
+    const isTeacher = userInfo?.role === 'teacher';
 
     const handleLogout = () => {
         localStorage.removeItem('studentToken');
@@ -39,12 +41,30 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
                             <span className="label">{t('navbar.profile')}</span>
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                            <FaGraduationCap className="icon" title={t('navbar.gradeReport')} />
-                            <span className="label">{t('navbar.gradeReport')}</span>
-                        </NavLink>
-                    </li>
+                    {(!isTeacher) && (
+                        <>
+                            <li>
+                                <NavLink to="/courses" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaBook className="icon" title={t('navbar.courses') || 'Courses'} />
+                                    <span className="label">{t('navbar.courses') || 'Courses'}</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/my-grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaGraduationCap className="icon" title="Grade Result" />
+                                    <span className="label">Grade Result</span>
+                                </NavLink>
+                            </li>
+                        </>
+                    )}
+                    {isTeacher && (
+                        <li>
+                            <NavLink to="/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                <FaGraduationCap className="icon" title={t('navbar.gradeReport')} />
+                                <span className="label">{t('navbar.gradeReport')}</span>
+                            </NavLink>
+                        </li>
+                    )}
                 </ul>
 
                 <div className="sidebar-footer">

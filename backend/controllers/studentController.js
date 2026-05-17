@@ -281,12 +281,7 @@ const loginStudent = async (req, res) => {
             res.json({
                 success: true,
                 token,
-                student: {
-                    id: student.id,
-                    name: student.name,
-                    email: student.email,
-                    role: student.role
-                }
+                student: mapStudentForFrontend(student)
             });
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });

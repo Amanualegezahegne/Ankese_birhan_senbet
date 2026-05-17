@@ -2,6 +2,18 @@ const { supabase } = require('../config/db');
 const path = require('path');
 const fs = require('fs');
 
+const mapCourseForFrontend = (course) => {
+    if (!course) return course;
+    return {
+        ...course,
+        _id: course.id,
+        materials: Array.isArray(course.materials) ? course.materials.map(m => ({
+            ...m,
+            _id: m.id
+        })) : []
+    };
+};
+
 // @desc    Get all courses
 // @route   GET /api/courses
 // @access  Public
@@ -17,7 +29,7 @@ exports.getCourses = async (req, res) => {
         res.status(200).json({
             success: true,
             count: courses.length,
-            data: courses
+            data: courses.map(mapCourseForFrontend)
         });
     } catch (error) {
         console.error('Error fetching courses:', error);
@@ -65,7 +77,7 @@ exports.createCourse = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            data: course
+            data: mapCourseForFrontend(course)
         });
     } catch (error) {
         console.error('Error creating course:', error);
@@ -95,7 +107,7 @@ exports.updateCourse = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: course
+            data: mapCourseForFrontend(course)
         });
     } catch (error) {
         console.error('Error updating course:', error);
@@ -183,7 +195,7 @@ exports.uploadMaterial = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: newMaterial
+            data: { ...newMaterial, _id: newMaterial.id }
         });
     } catch (error) {
         console.error('Error uploading material:', error);

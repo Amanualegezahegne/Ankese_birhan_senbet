@@ -25,7 +25,7 @@ const addGrade = async (req, res) => {
             .from('grades')
             .insert([{
                 student_id: studentId,
-                teacher_id: req.user.id,
+                teacher_id: req.user.role === 'admin' ? null : req.user.id,
                 course,
                 mid_exam: req.body.mid_exam || 0,
                 final_exam: req.body.final_exam || 0,
@@ -46,6 +46,7 @@ const addGrade = async (req, res) => {
         });
     } catch (error) {
         console.error('Add Grade Error:', error);
+        fs.appendFileSync(path.join(__dirname, '../error_log.txt'), `Add Grade Error at ${new Date().toISOString()}: ${error.message}\n${error.stack}\n\n`);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -106,9 +107,17 @@ const updateGrade = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Not authorized to update this grade' });
         }
 
+        const validFields = ['course', 'mid_exam', 'final_exam', 'assignment', 'score', 'semester', 'year', 'status'];
+        const updateData = {};
+        for (const key of validFields) {
+            if (req.body[key] !== undefined) {
+                updateData[key] = req.body[key];
+            }
+        }
+
         const { data: updatedGrade, error: updateError } = await supabase
             .from('grades')
-            .update(req.body)
+            .update(updateData)
             .eq('id', req.params.id)
             .select()
             .single();
@@ -121,6 +130,7 @@ const updateGrade = async (req, res) => {
         });
     } catch (error) {
         console.error('Update Grade Error:', error);
+        fs.appendFileSync(path.join(__dirname, '../error_log.txt'), `Update Grade Error at ${new Date().toISOString()}: ${error.message}\n${error.stack}\n\n`);
         res.status(500).json({ success: false, message: error.message });
     }
 };

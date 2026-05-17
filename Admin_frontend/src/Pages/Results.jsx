@@ -107,6 +107,22 @@ const Results = () => {
     }, [filters]);
 
     const handleGradeChange = (studentId, field, value) => {
+        // Enforce score constraints (Mid: 40, Final: 40, Assignment: 20)
+        if (value !== '') {
+            const numVal = Number(value);
+            if (!isNaN(numVal)) {
+                if (numVal < 0) {
+                    value = '0';
+                } else if (field === 'mid_exam' && numVal > 40) {
+                    value = '40';
+                } else if (field === 'final_exam' && numVal > 40) {
+                    value = '40';
+                } else if (field === 'assignment' && numVal > 20) {
+                    value = '20';
+                }
+            }
+        }
+
         setGradesMap(prev => {
             const currentGrade = prev[studentId] || {};
             const updatedGrade = {
@@ -182,7 +198,7 @@ const Results = () => {
             loadGrades();
         } catch (error) {
             console.error('Error saving grades:', error);
-            setStatus({ type: 'error', message: t('admin.results.errorSave') });
+            setStatus({ type: 'error', message: error.response?.data?.message || t('admin.results.errorSave') || 'Error saving grades' });
         } finally {
             setLoading(false);
         }
@@ -444,6 +460,8 @@ const Results = () => {
                                                         <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Mid (40)</label>
                                                         <input
                                                             type="number"
+                                                            min="0"
+                                                            max="40"
                                                             value={grade.mid_exam || ''}
                                                             onChange={(e) => handleGradeChange(student._id, 'mid_exam', e.target.value)}
                                                             style={{ width: '100%', padding: '3px' }}
@@ -453,6 +471,8 @@ const Results = () => {
                                                         <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Final (40)</label>
                                                         <input
                                                             type="number"
+                                                            min="0"
+                                                            max="40"
                                                             value={grade.final_exam || ''}
                                                             onChange={(e) => handleGradeChange(student._id, 'final_exam', e.target.value)}
                                                             style={{ width: '100%', padding: '3px' }}
@@ -462,6 +482,8 @@ const Results = () => {
                                                         <label style={{ fontSize: '0.7rem', display: 'block', marginBottom: '2px' }}>Assign (20)</label>
                                                         <input
                                                             type="number"
+                                                            min="0"
+                                                            max="20"
                                                             value={grade.assignment || ''}
                                                             onChange={(e) => handleGradeChange(student._id, 'assignment', e.target.value)}
                                                             style={{ width: '100%', padding: '3px' }}
