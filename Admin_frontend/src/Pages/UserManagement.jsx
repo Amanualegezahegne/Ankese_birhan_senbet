@@ -337,6 +337,7 @@ const UserManagement = () => {
                     <table className="management-table user-table">
                         <thead>
                             <tr>
+                                <th style={{ width: '50px', textAlign: 'center' }}>#</th>
                                 <th>{t('admin.usermanagement.table.name') || 'Name'}</th>
                                 <th>{t('admin.usermanagement.table.christianName') || 'Christian Name'}</th>
                                 <th>{t('admin.usermanagement.table.grade') || 'Grade'}</th>
@@ -347,8 +348,9 @@ const UserManagement = () => {
                         </thead>
                         <tbody>
                             {filteredStudents.length > 0 ? (
-                                filteredStudents.map((student) => (
+                                filteredStudents.map((student, index) => (
                                     <tr key={student._id}>
+                                        <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#a0aec0' }}>{index + 1}</td>
                                         <td><strong>{student.name}</strong></td>
                                         <td>{student.christianName}</td>
                                         <td>{student.grade || 'N/A'}</td>
@@ -391,7 +393,7 @@ const UserManagement = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="no-data">No students found.</td>
+                                    <td colSpan="7" className="no-data">No students found.</td>
                                 </tr>
                             )}
                         </tbody>

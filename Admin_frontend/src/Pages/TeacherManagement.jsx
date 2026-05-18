@@ -369,6 +369,7 @@ const TeacherManagement = () => {
                     <table className="management-table">
                         <thead>
                             <tr>
+                                <th style={{ width: '50px', textAlign: 'center' }}>#</th>
                                 <th>{t('admin.teachermanagement.table.name') || 'Name'}</th>
                                 <th>{t('admin.teachermanagement.table.christianName') || 'Christian Name'}</th>
                                 <th>{t('admin.usermanagement.table.grade') || 'Grade'}</th>
@@ -380,8 +381,9 @@ const TeacherManagement = () => {
                         </thead>
                         <tbody>
                             {filteredTeachers.length > 0 ? (
-                                filteredTeachers.map((teacher) => (
+                                filteredTeachers.map((teacher, index) => (
                                     <tr key={teacher._id}>
+                                        <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#a0aec0' }}>{index + 1}</td>
                                         <td><strong>{teacher.name}</strong></td>
                                         <td>{teacher.christianName}</td>
                                         <td>{teacher.grade || 'N/A'}</td>
@@ -425,7 +427,7 @@ const TeacherManagement = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="no-data">No teachers found.</td>
+                                    <td colSpan="8" className="no-data">No teachers found.</td>
                                 </tr>
                             )}
                         </tbody>
