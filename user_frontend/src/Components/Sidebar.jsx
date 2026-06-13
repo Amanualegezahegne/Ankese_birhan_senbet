@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt, FaBook } from 'react-icons/fa';
+import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt, FaBook, FaCalendarCheck } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
@@ -58,12 +58,20 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
                         </>
                     )}
                     {isTeacher && (
-                        <li>
-                            <NavLink to="/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                                <FaGraduationCap className="icon" title={t('navbar.gradeReport')} />
-                                <span className="label">{t('navbar.gradeReport')}</span>
-                            </NavLink>
-                        </li>
+                        <>
+                            <li>
+                                <NavLink to="/attendance" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaCalendarCheck className="icon" title="Attendance" />
+                                    <span className="label">Attendance</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaGraduationCap className="icon" title={t('navbar.gradeReport')} />
+                                    <span className="label">{t('navbar.gradeReport')}</span>
+                                </NavLink>
+                            </li>
+                        </>
                     )}
                 </ul>
 

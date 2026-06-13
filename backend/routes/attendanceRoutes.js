@@ -5,10 +5,10 @@ const {
     getAttendanceByDate,
     getAttendanceReport
 } = require('../controllers/attendanceController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, teacher } = require('../middleware/authMiddleware');
 
-router.post('/', protect, recordAttendance);
-router.get('/report', protect, getAttendanceReport);
-router.get('/date/:date', protect, getAttendanceByDate);
+router.post('/', protect, teacher, recordAttendance);
+router.get('/report', protect, teacher, getAttendanceReport);
+router.get('/date/:date', protect, teacher, getAttendanceByDate);
 
 module.exports = router;

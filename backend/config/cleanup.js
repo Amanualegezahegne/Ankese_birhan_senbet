@@ -40,8 +40,8 @@ const runCleanup = async () => {
             await client.query(constraintQuery);
             console.log('🛡️ [Startup Cleanup] UNIQUE constraint added successfully to grades table.');
         } catch (err) {
-            if (err.code === '42710') {
-                // Constraint already exists, ignore
+            if (err.code === '42710' || err.message?.includes('already exists')) {
+                // Constraint already exists, this is fine — skip silently
             } else {
                 console.error('⚠️ [Startup Cleanup] Failed to add UNIQUE constraint:', err.message);
             }

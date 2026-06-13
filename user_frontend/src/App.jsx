@@ -15,12 +15,21 @@ import Profile from './Pages/Profile';
 import GradeReport from './Pages/GradeReport';
 import StudentResults from './Pages/StudentResults';
 import Courses from './Pages/Courses';
+import Attendance from './Pages/Attendance';
 import './App.css';
 
 // Protected Route Component for Students
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('studentToken');
   return isAuthenticated ? children : <Navigate to="/signin" />;
+};
+
+// Teacher-only Route Component
+const TeacherRoute = ({ children }) => {
+    const token = localStorage.getItem('studentToken');
+    if (!token) return <Navigate to="/signin" />;
+    const info = JSON.parse(localStorage.getItem('studentInfo') || '{}');
+    return info?.role === 'teacher' ? children : <Navigate to="/" />;
 };
 
 import Sidebar from './Components/Sidebar'; // Import Sidebar
@@ -103,6 +112,12 @@ function App() {
               <ProtectedRoute>
                 <Courses />
               </ProtectedRoute>
+            } />
+
+            <Route path="/attendance" element={
+                <TeacherRoute>
+                    <Attendance />
+                </TeacherRoute>
             } />
           </Routes>
           <Footer />

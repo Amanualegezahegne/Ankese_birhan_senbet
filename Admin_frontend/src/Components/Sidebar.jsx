@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar, FaTimes } from 'react-icons/fa';
+import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar, FaTimes, FaCalendarAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Sidebar.css';
@@ -91,6 +91,16 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                 >
                     <FaClipboardCheck className="icon" />
                     <span className="label">{t('admin.navbar.attendance')}</span>
+                </NavLink>
+
+                <NavLink 
+                    to="/attendance-date-report" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title="Attendance Report"
+                >
+                    <FaCalendarAlt className="icon" />
+                    <span className="label">Attendance Report</span>
                 </NavLink>
 
                 <NavLink 

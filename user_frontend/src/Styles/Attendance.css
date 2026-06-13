@@ -1,0 +1,249 @@
+/* Attendance.css — Teacher portal, matches admin UI style */
+
+.attendance-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.attendance-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.attendance-header h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.attendance-header p {
+    color: var(--muted-text);
+    margin: 0;
+}
+
+.attendance-header-controls {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.date-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.date-picker-container label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.date-input {
+    padding: 0.8rem 1.2rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    min-width: 160px;
+}
+
+/* Alert variants */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+}
+
+/* Loading */
+.loading-overlay {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted-text);
+    font-size: 1.1rem;
+}
+
+/* Table */
+.attendance-table-container {
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    overflow-x: auto;
+    border: 1px solid var(--nav-border);
+    margin-bottom: 1.5rem;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+}
+
+.attendance-table th {
+    background-color: #000;
+    color: #fff;
+    padding: 1.2rem;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.attendance-table td {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--nav-border);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.attendance-table tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-table tr:hover td {
+    background-color: var(--nav-bg);
+}
+
+/* Student name cell — name + christian name stacked */
+.student-name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.christian-name {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Status toggle buttons */
+.status-toggle {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.status-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid var(--nav-border);
+    background: transparent;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+
+.status-btn.present.active {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.status-btn.absent.active {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.status-btn.permission.active {
+    background: #4da3ff;
+    color: white;
+    border-color: #4da3ff;
+}
+
+.status-btn:hover:not(.active) {
+    opacity: 0.75;
+}
+
+/* Save button */
+.attendance-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.save-btn {
+    padding: 0.8rem 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.save-btn:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .attendance-page {
+        padding: 1rem;
+    }
+
+    .attendance-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .attendance-header-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .date-input {
+        width: 100%;
+    }
+
+    .attendance-table {
+        min-width: 450px;
+    }
+
+    .status-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+}
