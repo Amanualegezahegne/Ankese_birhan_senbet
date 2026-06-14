@@ -20,11 +20,31 @@ const recordAttendance = async (req, res) => {
             status: record.status
         }));
 
+        // Try upsert with conflict resolution first
         const { error } = await supabase
             .from('attendance')
-            .upsert(upsertData, { onConflict: 'student_id,date' });
+            .upsert(upsertData, { onConflict: 'student_id,date', ignoreDuplicates: false });
 
-        if (error) throw error;
+        if (error) {
+            // If upsert fails (e.g. no unique constraint), fall back to delete + insert
+            console.warn('Upsert failed, falling back to delete+insert:', error.message);
+            const dates = [...new Set(upsertData.map(r => r.date))];
+            const studentIds = upsertData.map(r => r.student_id);
+
+            for (const d of dates) {
+                const { error: delError } = await supabase
+                    .from('attendance')
+                    .delete()
+                    .eq('date', d)
+                    .in('student_id', studentIds);
+                if (delError) throw delError;
+            }
+
+            const { error: insertError } = await supabase
+                .from('attendance')
+                .insert(upsertData);
+            if (insertError) throw insertError;
+        }
 
         res.status(200).json({ success: true, message: 'Attendance recorded successfully' });
     } catch (error) {
@@ -44,7 +64,7 @@ const getAttendanceByDate = async (req, res) => {
             .from('attendance')
             .select(`
                 *,
-                student:students (id, name, christian_name)
+                student:students (id, name, christian_name, grade)
             `)
             .eq('date', searchDate);
 

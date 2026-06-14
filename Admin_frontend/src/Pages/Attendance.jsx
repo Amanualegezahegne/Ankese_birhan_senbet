@@ -38,14 +38,17 @@ const Attendance = () => {
 
             const existingData = {};
             attendanceRes.data.data.forEach(record => {
-                existingData[record.student._id] = record.status;
+                // Supabase returns 'id', not '_id'
+                const sid = record.student_id || record.student?.id || record.student?._id;
+                if (sid) existingData[sid] = record.status;
             });
 
             // Initialize missing students as 'Present' by default
             const initialData = { ...existingData };
             approvedStudents.forEach(student => {
-                if (!initialData[student._id]) {
-                    initialData[student._id] = 'Present';
+                const sid = student.id || student._id;
+                if (!initialData[sid]) {
+                    initialData[sid] = 'Present';
                 }
             });
 
@@ -197,38 +200,41 @@ const Attendance = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {students.map(student => (
-                                    <tr key={student._id}>
+                                {students.map(student => {
+                                    const sid = student.id || student._id;
+                                    return (
+                                    <tr key={sid}>
                                         <td className="student-name-cell">
                                             <strong>{student.name}</strong>
-                                            <span className="christian-name">{student.christianName}</span>
+                                            <span className="christian-name">{student.christianName || student.christian_name}</span>
                                         </td>
                                         <td>{student.sex}</td>
-                                        <td>{student.nationalId || 'N/A'}</td>
+                                        <td>{student.nationalId || student.national_id || 'N/A'}</td>
                                         <td>
                                             <div className="status-toggle">
                                                 <button
-                                                    className={`status-btn present ${attendanceData[student._id] === 'Present' ? 'active' : ''}`}
-                                                    onClick={() => handleStatusChange(student._id, 'Present')}
+                                                    className={`status-btn present ${attendanceData[sid] === 'Present' ? 'active' : ''}`}
+                                                    onClick={() => handleStatusChange(sid, 'Present')}
                                                 >
                                                     {t('admin.attendance.present')}
                                                 </button>
                                                 <button
-                                                    className={`status-btn absent ${attendanceData[student._id] === 'Absent' ? 'active' : ''}`}
-                                                    onClick={() => handleStatusChange(student._id, 'Absent')}
+                                                    className={`status-btn absent ${attendanceData[sid] === 'Absent' ? 'active' : ''}`}
+                                                    onClick={() => handleStatusChange(sid, 'Absent')}
                                                 >
                                                     {t('admin.attendance.absent')}
                                                 </button>
                                                 <button
-                                                    className={`status-btn permission ${attendanceData[student._id] === 'Permission' ? 'active' : ''}`}
-                                                    onClick={() => handleStatusChange(student._id, 'Permission')}
+                                                    className={`status-btn permission ${attendanceData[sid] === 'Permission' ? 'active' : ''}`}
+                                                    onClick={() => handleStatusChange(sid, 'Permission')}
                                                 >
                                                     {t('admin.attendance.permission')}
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
