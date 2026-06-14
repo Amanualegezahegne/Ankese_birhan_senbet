@@ -16,6 +16,7 @@ import GradeReport from './Pages/GradeReport';
 import StudentResults from './Pages/StudentResults';
 import Courses from './Pages/Courses';
 import Attendance from './Pages/Attendance';
+import HymnManagement from './Pages/HymnManagement';
 import './App.css';
 
 // Protected Route Component for Students
@@ -30,6 +31,14 @@ const TeacherRoute = ({ children }) => {
     if (!token) return <Navigate to="/signin" />;
     const info = JSON.parse(localStorage.getItem('studentInfo') || '{}');
     return info?.role === 'teacher' ? children : <Navigate to="/" />;
+};
+
+// Mezmure-only Route Component
+const MezmureRoute = ({ children }) => {
+    const token = localStorage.getItem('studentToken');
+    if (!token) return <Navigate to="/signin" />;
+    const info = JSON.parse(localStorage.getItem('studentInfo') || '{}');
+    return info?.role === 'mezmure' ? children : <Navigate to="/" />;
 };
 
 import Sidebar from './Components/Sidebar'; // Import Sidebar
@@ -118,6 +127,23 @@ function App() {
                 <TeacherRoute>
                     <Attendance />
                 </TeacherRoute>
+            } />
+
+            {/* Mezmure Kifel routes */}
+            <Route path="/mezmure" element={
+                <MezmureRoute>
+                    <HymnManagement />
+                </MezmureRoute>
+            } />
+            <Route path="/mezmure/attendance" element={
+                <MezmureRoute>
+                    <Attendance />
+                </MezmureRoute>
+            } />
+            <Route path="/mezmure/grades" element={
+                <MezmureRoute>
+                    <GradeReport />
+                </MezmureRoute>
             } />
           </Routes>
           <Footer />

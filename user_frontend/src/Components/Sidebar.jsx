@@ -1,14 +1,17 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt, FaBook, FaCalendarCheck } from 'react-icons/fa';
+import { FaNewspaper, FaUser, FaGraduationCap, FaSignOutAlt, FaBook, FaCalendarCheck, FaMusic } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const userInfo = JSON.parse(localStorage.getItem('studentInfo'));
-    const isTeacher = userInfo?.role === 'teacher';
+    const role = userInfo?.role;
+    const isTeacher = role === 'teacher';
+    const isMezmure = role === 'mezmure';
+    const isStudent = !isTeacher && !isMezmure;
 
     const handleLogout = () => {
         localStorage.removeItem('studentToken');
@@ -26,22 +29,32 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
             <div className={`sidebar ${isOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <h3>{t('navbar.brand')}</h3>
+                    {isMezmure && (
+                        <span style={{ fontSize: '0.7rem', color: 'var(--secondary-color)', fontWeight: 600, letterSpacing: '0.05em' }}>
+                            MEZMURE KIFEL
+                        </span>
+                    )}
                 </div>
 
                 <ul className="sidebar-links">
-                    <li>
-                        <NavLink to="/news" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
-                            <FaNewspaper className="icon" title={t('navbar.news')} />
-                            <span className="label">{t('navbar.news')}</span>
-                        </NavLink>
-                    </li>
+                    {/* Common links for all roles */}
+                    {!isMezmure && (
+                        <li>
+                            <NavLink to="/news" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                <FaNewspaper className="icon" title={t('navbar.news')} />
+                                <span className="label">{t('navbar.news')}</span>
+                            </NavLink>
+                        </li>
+                    )}
                     <li>
                         <NavLink to="/profile" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                             <FaUser className="icon" title={t('navbar.profile')} />
                             <span className="label">{t('navbar.profile')}</span>
                         </NavLink>
                     </li>
-                    {(!isTeacher) && (
+
+                    {/* Student-only links */}
+                    {isStudent && (
                         <>
                             <li>
                                 <NavLink to="/courses" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
@@ -57,6 +70,8 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
                             </li>
                         </>
                     )}
+
+                    {/* Teacher-only links */}
                     {isTeacher && (
                         <>
                             <li>
@@ -69,6 +84,30 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
                                 <NavLink to="/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                                     <FaGraduationCap className="icon" title={t('navbar.gradeReport')} />
                                     <span className="label">{t('navbar.gradeReport')}</span>
+                                </NavLink>
+                            </li>
+                        </>
+                    )}
+
+                    {/* Mezmure Kifel links */}
+                    {isMezmure && (
+                        <>
+                            <li>
+                                <NavLink to="/mezmure" end onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaMusic className="icon" title="Hymns" />
+                                    <span className="label">Hymns</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/mezmure/attendance" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaCalendarCheck className="icon" title="Attendance" />
+                                    <span className="label">Attendance</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/mezmure/grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaGraduationCap className="icon" title="Grade Report" />
+                                    <span className="label">Grade Report</span>
                                 </NavLink>
                             </li>
                         </>

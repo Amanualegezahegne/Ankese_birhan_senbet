@@ -56,11 +56,19 @@ const admin = (req, res, next) => {
 };
 
 const teacher = (req, res, next) => {
-    if (req.user && (req.user.role === 'teacher' || req.user.role === 'admin')) {
+    if (req.user && (req.user.role === 'teacher' || req.user.role === 'admin' || req.user.role === 'mezmure')) {
         next();
     } else {
         res.status(403).json({ success: false, message: 'Not authorized as a teacher' });
     }
 };
 
-module.exports = { protect, admin, teacher };
+const mezmure = (req, res, next) => {
+    if (req.user && (req.user.role === 'mezmure' || req.user.role === 'admin')) {
+        next();
+    } else {
+        res.status(403).json({ success: false, message: 'Not authorized as mezmure' });
+    }
+};
+
+module.exports = { protect, admin, teacher, mezmure };

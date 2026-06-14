@@ -27,7 +27,12 @@ const SignIn = ({ setAuthState }) => {
                 localStorage.setItem('studentToken', response.data.token);
                 localStorage.setItem('studentInfo', JSON.stringify(response.data.student));
                 setAuthState(true);
-                navigate('/news');
+                const role = response.data.student?.role;
+                if (role === 'mezmure') {
+                    navigate('/mezmure');
+                } else {
+                    navigate('/news');
+                }
             }
         } catch (error) {
             let errorMessage = error.response?.data?.message || 'Invalid email or password';
