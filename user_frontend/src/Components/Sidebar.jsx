@@ -63,6 +63,12 @@ const Sidebar = ({ isOpen, toggleSidebar, setIsAuthenticated }) => {
                                 </NavLink>
                             </li>
                             <li>
+                                <NavLink to="/mezmur" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
+                                    <FaMusic className="icon" title={t('navbar.hymns') || 'Hymns'} />
+                                    <span className="label">{t('navbar.hymns') || 'መዝሙሮች'}</span>
+                                </NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/my-grades" onClick={toggleSidebar} className={({ isActive }) => isActive ? "active" : ""}>
                                     <FaGraduationCap className="icon" title="Grade Result" />
                                     <span className="label">Grade Result</span>

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Attendance.css';
 
 const Attendance = () => {
+    const { t } = useTranslation();
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [students, setStudents] = useState([]);
     const [attendanceMap, setAttendanceMap] = useState({});
@@ -36,7 +38,7 @@ const Attendance = () => {
             return [];
         } catch (error) {
             console.error('Error fetching students:', error);
-            setMessage({ type: 'error', text: 'Failed to load students. Please try again.' });
+            setMessage({ type: 'error', text: t('attendance.studentsError') });
             return [];
         }
     };
@@ -66,7 +68,7 @@ const Attendance = () => {
             }
         } catch (error) {
             console.error('Error fetching attendance:', error);
-            setMessage({ type: 'error', text: 'Failed to load attendance for this date.' });
+            setMessage({ type: 'error', text: t('attendance.loadError') });
         }
     };
 
@@ -111,7 +113,7 @@ const Attendance = () => {
             .map(([id, s]) => ({ student: id, status: s }));
 
         if (records.length === 0) {
-            setMessage({ type: 'warning', text: 'Please mark at least one student before saving.' });
+            setMessage({ type: 'warning', text: t('attendance.noMarked') });
             return;
         }
 
@@ -121,7 +123,7 @@ const Attendance = () => {
             await api.post('/attendance', { date, records }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setMessage({ type: 'success', text: 'Attendance saved successfully!' });
+            setMessage({ type: 'success', text: t('attendance.success') });
         } catch (error) {
             console.error('Error saving attendance:', error);
             setMessage({

@@ -1,0 +1,278 @@
+/* Mezmur.css — Student read-only hymn page */
+
+.mezmur-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.mezmur-header {
+    margin-bottom: 1.5rem;
+}
+
+.mezmur-header h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+}
+
+.mezmur-header p {
+    color: var(--muted-text);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Filters */
+.mezmur-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.mezmur-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.mezmur-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-text);
+    font-size: 0.85rem;
+}
+
+.mezmur-search-input {
+    width: 100%;
+    padding: 0.7rem 2.5rem 0.7rem 2.2rem;
+    border: 2px solid var(--nav-border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.mezmur-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.mezmur-clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.mezmur-filter-select {
+    padding: 0.7rem 1rem;
+    border: 2px solid var(--nav-border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    min-width: 160px;
+}
+
+/* Error / loading / empty */
+.mezmur-error {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    margin-bottom: 1.5rem;
+}
+
+.mezmur-loading,
+.mezmur-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted-text);
+    background: var(--card-bg);
+    border-radius: 15px;
+    border: 1px solid var(--nav-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Layout: list + detail */
+.mezmur-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .mezmur-layout {
+        grid-template-columns: 1fr;
+    }
+    .mezmur-page {
+        padding: 1rem;
+    }
+}
+
+/* Hymn list */
+.mezmur-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.mezmur-card {
+    background: var(--card-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mezmur-card:hover {
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-color: var(--primary-color);
+}
+
+.mezmur-card.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color);
+    background: var(--nav-bg);
+}
+
+.mezmur-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.mezmur-card-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.mezmur-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: rgba(0,123,255,0.1);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.mezmur-badge.lang {
+    background: rgba(100,100,100,0.08);
+    color: var(--muted-text);
+    border-color: var(--nav-border);
+}
+
+.mezmur-card-meta {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.mezmur-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    color: var(--muted-text);
+}
+
+/* Detail panel */
+.mezmur-detail {
+    background: var(--card-bg);
+    border: 1px solid var(--nav-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    position: sticky;
+    top: 1rem;
+}
+
+.mezmur-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.mezmur-detail-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--text-color);
+    line-height: 1.3;
+}
+
+.mezmur-detail-author {
+    margin: 0.3rem 0 0 0;
+    font-size: 0.88rem;
+    color: var(--muted-text);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.mezmur-close-btn {
+    background: none;
+    border: 1px solid var(--nav-border);
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+    color: var(--muted-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.mezmur-close-btn:hover {
+    background: var(--nav-bg);
+    color: var(--text-color);
+}
+
+.mezmur-detail-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.mezmur-lyrics {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--text-color);
+    white-space: pre-wrap;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 0.4rem;
+    font-family: 'Noto Sans Ethiopic', 'Nyala', sans-serif;
+}
+
+.mezmur-no-lyrics {
+    color: var(--muted-text);
+    font-style: italic;
+    margin: 0;
+}

@@ -17,6 +17,7 @@ import StudentResults from './Pages/StudentResults';
 import Courses from './Pages/Courses';
 import Attendance from './Pages/Attendance';
 import HymnManagement from './Pages/HymnManagement';
+import Mezmur from './Pages/Mezmur';
 import './App.css';
 
 // Protected Route Component for Students
@@ -120,6 +121,12 @@ function App() {
             <Route path="/courses" element={
               <ProtectedRoute>
                 <Courses />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/mezmur" element={
+              <ProtectedRoute>
+                <Mezmur />
               </ProtectedRoute>
             } />
 
