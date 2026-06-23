@@ -35,7 +35,8 @@
         "noCourses": "No courses found.",
         "download": "Download File",
         "loading": "Loading courses...",
-        "error": "Failed to load courses. Please try again later."
+        "error": "Failed to load courses. Please try again later.",
+        "searchPlaceholder": "Search course here..."
     },
     "home": {
         "heroTitle": "Welcome to Ankese Birhan Sunday School",
@@ -148,8 +149,8 @@
             "error": "The reset link or code is invalid or has expired.",
             "mismatch": "Passwords do not match."
         },
-        "pendingError": "your need to be patient till the admin approves you",
-        "rejectedError": "You are rejected by the admin so that you can't login"
+        "pendingError": "Your account is pending approval by the admin.",
+        "rejectedError": "Your account has been rejected by the admin."
     },
     "signup": {
         "title": "Create Account",
@@ -166,6 +167,7 @@
         "male": "Male (ወንድ)",
         "female": "Female (ሴት)",
         "grade": "Grade",
+        "adult": "Adult / Other",
         "nationalId": "National ID (ብሄራዊ መታወቂያ)",
         "dob": "Date of Birth (የትውልድ ቀን)",
         "password": "Password (የይለፍ ቃል)",
@@ -248,6 +250,20 @@
         "fail": "Fail",
         "status": "Status"
     },
+    "studentResults": {
+        "title": "Grade Result",
+        "subtitle": "View your academic performance across all courses.",
+        "searchPlaceholder": "Search or select course...",
+        "noGrades": "No grades have been posted yet.",
+        "notFound": "Student information not found. Please log in again.",
+        "fetchError": "Failed to fetch results.",
+        "fetchErrorGeneral": "An error occurred while fetching your results.",
+        "mid": "Mid",
+        "final": "Final",
+        "assign": "Assign.",
+        "total": "Total",
+        "pending": "Pending"
+    },
     "attendance": {
         "title": "Attendance",
         "subtitle": "Mark and review daily student attendance",
@@ -303,6 +319,10 @@
             "closing": "Closing",
             "other": "Other"
         }
+    },
+    "mezmur": {
+        "subtitle": "Browse our congregation's hymn list",
+        "noHymns": "No hymns have been added yet."
     },
     "subscription": {
         "title": "Subscribe to Our Newsletter",

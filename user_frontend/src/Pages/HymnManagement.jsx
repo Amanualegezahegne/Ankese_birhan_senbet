@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaMusic, FaPlus, FaEdit, FaTrash, FaTimes, FaSearch } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/HymnManagement.css';
@@ -9,6 +10,7 @@ const LANGUAGES = ['Amharic', 'English', 'Oromiffa', 'Tigrinya', 'Other'];
 const emptyForm = { title: '', lyrics: '', category: '', author: '', language: 'Amharic' };
 
 const HymnManagement = () => {
+    const { t } = useTranslation();
     const [hymns, setHymns] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -46,7 +48,7 @@ const HymnManagement = () => {
             const res = await api.get('/hymns', config);
             if (res.data.success) setHymns(res.data.data);
         } catch (err) {
-            setMessage({ type: 'error', text: 'Failed to load hymns.' });
+            setMessage({ type: 'error', text: t('hymns.loadError') });
         } finally {
             setLoading(false);
         }
@@ -78,36 +80,36 @@ const HymnManagement = () => {
 
     const handleSave = async () => {
         if (!form.title.trim()) {
-            setMessage({ type: 'warning', text: 'Title is required.' });
+            setMessage({ type: 'warning', text: t('hymns.titleRequired') });
             return;
         }
         setSaving(true);
         try {
             if (editingHymn) {
                 await api.put(`/hymns/${editingHymn.id}`, form, config);
-                setMessage({ type: 'success', text: 'Hymn updated successfully!' });
+                setMessage({ type: 'success', text: t('hymns.updateSuccess') });
             } else {
                 await api.post('/hymns', form, config);
-                setMessage({ type: 'success', text: 'Hymn added successfully!' });
+                setMessage({ type: 'success', text: t('hymns.saveSuccess') });
             }
             closeModal();
             fetchHymns();
         } catch (err) {
-            setMessage({ type: 'error', text: err?.response?.data?.message || 'Failed to save hymn.' });
+            setMessage({ type: 'error', text: err?.response?.data?.message || t('hymns.saveError') });
         } finally {
             setSaving(false);
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Delete this hymn? This cannot be undone.')) return;
+        if (!window.confirm(t('hymns.deleteConfirm'))) return;
         try {
             await api.delete(`/hymns/${id}`, config);
-            setMessage({ type: 'success', text: 'Hymn deleted.' });
+            setMessage({ type: 'success', text: t('hymns.deleteSuccess') });
             if (viewHymn?.id === id) setViewHymn(null);
             fetchHymns();
         } catch (err) {
-            setMessage({ type: 'error', text: 'Failed to delete hymn.' });
+            setMessage({ type: 'error', text: t('hymns.deleteError') });
         }
     };
 
@@ -123,11 +125,11 @@ const HymnManagement = () => {
             {/* Header */}
             <div className="hymn-header">
                 <div>
-                    <h2><FaMusic style={{ marginRight: '0.5rem' }} />Hymn / Song Management</h2>
-                    <p>Add, edit, and manage the congregation's song list</p>
+                    <h2><FaMusic style={{ marginRight: '0.5rem' }} />{t('hymns.title')}</h2>
+                    <p>{t('hymns.subtitle')}</p>
                 </div>
                 <button className="hymn-add-btn" onClick={openAdd}>
-                    <FaPlus /> Add Hymn
+                    <FaPlus /> {t('hymns.addBtn')}
                 </button>
             </div>
 
@@ -142,7 +144,7 @@ const HymnManagement = () => {
                     <FaSearch className="hymn-search-icon" />
                     <input
                         type="text"
-                        placeholder="Search by title or author..."
+                        placeholder={t('hymns.searchPlaceholder')}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         className="hymn-search-input"
@@ -156,7 +158,7 @@ const HymnManagement = () => {
                     value={categoryFilter}
                     onChange={e => setCategoryFilter(e.target.value)}
                 >
-                    <option value="">All Categories</option>
+                    <option value="">{t('hymns.allCategories')}</option>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
             </div>
@@ -166,11 +168,11 @@ const HymnManagement = () => {
                 {/* List */}
                 <div className="hymn-list-panel">
                     {loading ? (
-                        <div className="hymn-loading">Loading hymns...</div>
+                        <div className="hymn-loading">{t('gradeReport.loading')}</div>
                     ) : filtered.length === 0 ? (
                         <div className="hymn-empty">
                             <FaMusic size={40} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                            <p>{hymns.length === 0 ? 'No hymns yet. Click "Add Hymn" to get started.' : 'No hymns match your search.'}</p>
+                            <p>{hymns.length === 0 ? t('hymns.noHymns') : t('hymns.noMatch')}</p>
                         </div>
                     ) : (
                         filtered.map(hymn => (
@@ -188,8 +190,8 @@ const HymnManagement = () => {
                                     {hymn.language && <span className="hymn-badge lang">{hymn.language}</span>}
                                 </div>
                                 <div className="hymn-card-actions" onClick={e => e.stopPropagation()}>
-                                    <button className="hymn-icon-btn edit" onClick={() => openEdit(hymn)} title="Edit"><FaEdit /></button>
-                                    <button className="hymn-icon-btn delete" onClick={() => handleDelete(hymn.id)} title="Delete"><FaTrash /></button>
+                                    <button className="hymn-icon-btn edit" onClick={() => openEdit(hymn)}><FaEdit /></button>
+                                    <button className="hymn-icon-btn delete" onClick={() => handleDelete(hymn.id)}><FaTrash /></button>
                                 </div>
                             </div>
                         ))
@@ -202,7 +204,7 @@ const HymnManagement = () => {
                         <div className="hymn-detail-header">
                             <div>
                                 <h3>{viewHymn.title}</h3>
-                                {viewHymn.author && <p className="hymn-detail-author">by {viewHymn.author}</p>}
+                                {viewHymn.author && <p className="hymn-detail-author">{viewHymn.author}</p>}
                             </div>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <button className="hymn-icon-btn edit" onClick={() => openEdit(viewHymn)}><FaEdit /></button>
@@ -219,7 +221,7 @@ const HymnManagement = () => {
                                 ? viewHymn.lyrics.split('\n').map((line, i) => (
                                     <p key={i} style={{ margin: '0.2rem 0' }}>{line || <br />}</p>
                                 ))
-                                : <p style={{ color: 'var(--muted-text)', fontStyle: 'italic' }}>No lyrics added.</p>
+                                : <p style={{ color: 'var(--muted-text)', fontStyle: 'italic' }}>{t('hymns.noLyrics')}</p>
                             }
                         </div>
                     </div>
@@ -231,32 +233,32 @@ const HymnManagement = () => {
                 <div className="hymn-modal-overlay" onClick={closeModal}>
                     <div className="hymn-modal" onClick={e => e.stopPropagation()}>
                         <div className="hymn-modal-header">
-                            <h3>{editingHymn ? 'Edit Hymn' : 'Add New Hymn'}</h3>
+                            <h3>{editingHymn ? t('hymns.editTitle') : t('hymns.addTitle')}</h3>
                             <button className="hymn-icon-btn" onClick={closeModal}><FaTimes /></button>
                         </div>
 
                         <div className="hymn-modal-body">
                             <div className="hymn-field">
-                                <label>Title *</label>
+                                <label>{t('hymns.titleField')} *</label>
                                 <input
                                     type="text"
                                     value={form.title}
                                     onChange={e => setForm({ ...form, title: e.target.value })}
-                                    placeholder="Hymn title"
+                                    placeholder={t('hymns.titleField')}
                                     className="hymn-input"
                                 />
                             </div>
 
                             <div className="hymn-field-row">
                                 <div className="hymn-field">
-                                    <label>Category</label>
+                                    <label>{t('hymns.category')}</label>
                                     <select className="hymn-input" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
-                                        <option value="">Select category</option>
+                                        <option value="">{t('hymns.allCategories')}</option>
                                         {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
                                 <div className="hymn-field">
-                                    <label>Language</label>
+                                    <label>{t('hymns.language')}</label>
                                     <select className="hymn-input" value={form.language} onChange={e => setForm({ ...form, language: e.target.value })}>
                                         {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
                                     </select>
@@ -264,22 +266,22 @@ const HymnManagement = () => {
                             </div>
 
                             <div className="hymn-field">
-                                <label>Author / Composer</label>
+                                <label>{t('hymns.author')}</label>
                                 <input
                                     type="text"
                                     value={form.author}
                                     onChange={e => setForm({ ...form, author: e.target.value })}
-                                    placeholder="Author or composer name"
+                                    placeholder={t('hymns.author')}
                                     className="hymn-input"
                                 />
                             </div>
 
                             <div className="hymn-field">
-                                <label>Lyrics</label>
+                                <label>{t('hymns.lyrics')}</label>
                                 <textarea
                                     value={form.lyrics}
                                     onChange={e => setForm({ ...form, lyrics: e.target.value })}
-                                    placeholder="Enter lyrics here..."
+                                    placeholder={t('hymns.lyrics') + '...'}
                                     className="hymn-textarea"
                                     rows={10}
                                 />
@@ -287,9 +289,9 @@ const HymnManagement = () => {
                         </div>
 
                         <div className="hymn-modal-footer">
-                            <button className="hymn-cancel-btn" onClick={closeModal}>Cancel</button>
+                            <button className="hymn-cancel-btn" onClick={closeModal}>{t('hymns.cancel')}</button>
                             <button className="hymn-save-btn" onClick={handleSave} disabled={saving}>
-                                {saving ? 'Saving...' : editingHymn ? 'Update' : 'Add Hymn'}
+                                {saving ? t('gradeReport.loading') : editingHymn ? t('hymns.update') : t('hymns.save')}
                             </button>
                         </div>
                     </div>

@@ -101,7 +101,7 @@ const Courses = () => {
                         <FaSearch className="search-icon" />
                         <input 
                             type="text" 
-                            placeholder="Search course here..." 
+                            placeholder={t('courses.searchPlaceholder')} 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="courses-search-input"

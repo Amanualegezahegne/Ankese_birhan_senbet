@@ -142,26 +142,26 @@ const Attendance = () => {
             {/* Header */}
             <div className="attendance-header">
                 <div>
-                    <h2>Attendance</h2>
-                    <p>Mark and review daily student attendance</p>
+                    <h2>{t('attendance.title')}</h2>
+                    <p>{t('attendance.subtitle')}</p>
                 </div>
                 <div className="attendance-header-controls">
                     <div className="date-picker-container">
-                        <label>Grade</label>
+                        <label>{t('attendance.grade')}</label>
                         <select
                             className="date-input"
                             value={gradeFilter}
                             onChange={e => setGradeFilter(e.target.value)}
                         >
-                            <option value="All">All Grades</option>
+                            <option value="All">{t('attendance.allGrades')}</option>
                             {[...Array(12)].map((_, i) => (
                                 <option key={i} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
                             ))}
-                            <option value="Adult / Other">Adult / Other</option>
+                            <option value="Adult / Other">{t('signup.adult') || 'Adult / Other'}</option>
                         </select>
                     </div>
                     <div className="date-picker-container">
-                        <label>Date</label>
+                        <label>{t('attendance.date')}</label>
                         <input
                             type="date"
                             className="date-input"
@@ -181,7 +181,7 @@ const Attendance = () => {
 
             {/* Table */}
             {loading ? (
-                <div className="loading-overlay">Loading students...</div>
+                <div className="loading-overlay">{t('attendance.loading')}</div>
             ) : (
                 <>
                     <div className="attendance-table-container">
@@ -189,16 +189,16 @@ const Attendance = () => {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Student Name</th>
-                                    <th>Grade</th>
-                                    <th>Status</th>
+                                    <th>{t('gradeReport.studentName')}</th>
+                                    <th>{t('signup.grade')}</th>
+                                    <th>{t('gradeReport.status')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredStudents.length === 0 ? (
                                     <tr>
                                         <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-text)' }}>
-                                            No students found.
+                                            {t('attendance.noStudents')}
                                         </td>
                                     </tr>
                                 ) : (
@@ -225,19 +225,19 @@ const Attendance = () => {
                                                             className={`status-btn present${currentStatus === 'Present' ? ' active' : ''}`}
                                                             onClick={() => handleStatusChange(id, 'Present')}
                                                         >
-                                                            Present
+                                                            {t('attendance.present')}
                                                         </button>
                                                         <button
                                                             className={`status-btn absent${currentStatus === 'Absent' ? ' active' : ''}`}
                                                             onClick={() => handleStatusChange(id, 'Absent')}
                                                         >
-                                                            Absent
+                                                            {t('attendance.absent')}
                                                         </button>
                                                         <button
                                                             className={`status-btn permission${currentStatus === 'Permission' ? ' active' : ''}`}
                                                             onClick={() => handleStatusChange(id, 'Permission')}
                                                         >
-                                                            Permission
+                                                            {t('attendance.permission')}
                                                         </button>
                                                     </div>
                                                 </td>
@@ -251,7 +251,7 @@ const Attendance = () => {
 
                     <div className="attendance-actions">
                         <button className="save-btn" onClick={handleSave} disabled={saving}>
-                            {saving ? 'Saving...' : 'Save Attendance'}
+                            {saving ? t('attendance.saving') : t('attendance.save')}
                         </button>
                     </div>
                 </>

@@ -15,7 +15,7 @@ const StudentResults = () => {
     useEffect(() => {
         const fetchResults = async () => {
             if (!studentInfo.id && !studentInfo._id) {
-                setError('Student information not found. Please log in again.');
+                setError(t('studentResults.notFound'));
                 setLoading(false);
                 return;
             }
@@ -30,11 +30,11 @@ const StudentResults = () => {
                 if (response.data.success) {
                     setResults(response.data.data);
                 } else {
-                    setError('Failed to fetch results.');
+                    setError(t('studentResults.fetchError'));
                 }
             } catch (err) {
                 console.error('Error fetching student results:', err);
-                setError('An error occurred while fetching your results.');
+                setError(t('studentResults.fetchErrorGeneral'));
             } finally {
                 setLoading(false);
             }
@@ -63,8 +63,8 @@ const StudentResults = () => {
     return (
         <div className="student-results-page">
             <header className="results-header">
-                <h2><FaGraduationCap /> Grade Result</h2>
-                <p>View your academic performance across all courses.</p>
+                <h2><FaGraduationCap /> {t('studentResults.title')}</h2>
+                <p>{t('studentResults.subtitle')}</p>
             </header>
 
             <div className="container">
@@ -77,7 +77,7 @@ const StudentResults = () => {
                                 type="text"
                                 value={courseFilter} 
                                 onChange={(e) => setCourseFilter(e.target.value)}
-                                placeholder="Search or select course..."
+                                placeholder={t('studentResults.searchPlaceholder')}
                                 list="courses-list"
                                 className="course-filter-select search-filter-input"
                                 style={{ paddingRight: '2.5rem' }}
@@ -118,7 +118,7 @@ const StudentResults = () => {
                 {Object.keys(groupedResults).length === 0 && !error ? (
                     <div className="no-results">
                         <FaGraduationCap className="no-results-icon" />
-                        <p>No grades have been posted yet.</p>
+                        <p>{t('studentResults.noGrades')}</p>
                     </div>
                 ) : (
                     Object.keys(groupedResults).map(term => (
@@ -136,25 +136,25 @@ const StudentResults = () => {
                                         <div className="result-details">
                                             <div className="score-breakdown">
                                                 <div className="score-item">
-                                                    <span className="score-label">Mid</span>
+                                                    <span className="score-label">{t('studentResults.mid')}</span>
                                                     <span className="score-value">{grade.mid_exam || 0}</span>
                                                 </div>
                                                 <div className="score-item">
-                                                    <span className="score-label">Final</span>
+                                                    <span className="score-label">{t('studentResults.final')}</span>
                                                     <span className="score-value">{grade.final_exam || 0}</span>
                                                 </div>
                                                 <div className="score-item">
-                                                    <span className="score-label">Assign.</span>
+                                                    <span className="score-label">{t('studentResults.assign')}</span>
                                                     <span className="score-value">{grade.assignment || 0}</span>
                                                 </div>
                                             </div>
                                             <div className="total-score-container">
                                                 <div className="total-score">
-                                                    <span className="total-label">Total</span>
+                                                    <span className="total-label">{t('studentResults.total')}</span>
                                                     <span className="total-value">{grade.score !== null ? grade.score : '-'} / 100</span>
                                                 </div>
                                                 <div className={`status-badge ${grade.status?.toLowerCase() || 'pending'}`}>
-                                                    {grade.status === 'Pass' ? (t('gradeReport.pass') || 'Pass') : (grade.status === 'Fail' ? (t('gradeReport.fail') || 'Fail') : (grade.status || 'Pending'))}
+                                                    {grade.status === 'Pass' ? t('gradeReport.pass') : (grade.status === 'Fail' ? t('gradeReport.fail') : (grade.status || t('studentResults.pending')))}
                                                 </div>
                                             </div>
                                         </div>

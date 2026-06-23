@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaMusic, FaSearch, FaTimes, FaTag, FaUser, FaLanguage } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/Mezmur.css';
@@ -6,6 +7,7 @@ import '../Styles/Mezmur.css';
 const CATEGORIES = ['Praise', 'Worship', 'Offertory', 'Communion', 'Opening', 'Closing', 'Other'];
 
 const Mezmur = () => {
+    const { t } = useTranslation();
     const [hymns, setHymns] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -23,7 +25,7 @@ const Mezmur = () => {
                 });
                 if (res.data.success) setHymns(res.data.data);
             } catch (err) {
-                setError('Failed to load hymns. Please try again.');
+                setError(t('hymns.loadError'));
             } finally {
                 setLoading(false);
             }
@@ -31,7 +33,6 @@ const Mezmur = () => {
         fetchHymns();
     }, []);
 
-    // Client-side filtering
     const filtered = hymns.filter(h => {
         const matchSearch = !search ||
             h.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,21 +43,21 @@ const Mezmur = () => {
 
     return (
         <div className="mezmur-page">
-            {/* Header */}
             <div className="mezmur-header">
                 <div>
-                    <h2><FaMusic style={{ marginRight: '0.5rem' }} />መዝሙሮች (Hymns)</h2>
-                    <p>የጉባኤያችንን መዝሙሮች ዝርዝር ይዩ — Browse our congregation's hymn list</p>
+                    <h2><FaMusic style={{ marginRight: '0.5rem' }} />
+                        {t('navbar.hymns')} — መዝሙሮች
+                    </h2>
+                    <p>{t('mezmur.subtitle')}</p>
                 </div>
             </div>
 
-            {/* Search & filter bar */}
             <div className="mezmur-filters">
                 <div className="mezmur-search-wrap">
                     <FaSearch className="mezmur-search-icon" />
                     <input
                         type="text"
-                        placeholder="Search by title or author..."
+                        placeholder={t('hymns.searchPlaceholder')}
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         className="mezmur-search-input"
@@ -72,7 +73,7 @@ const Mezmur = () => {
                     value={categoryFilter}
                     onChange={e => setCategoryFilter(e.target.value)}
                 >
-                    <option value="">All Categories</option>
+                    <option value="">{t('hymns.allCategories')}</option>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
             </div>
@@ -82,16 +83,15 @@ const Mezmur = () => {
             {loading ? (
                 <div className="mezmur-loading">
                     <FaMusic size={32} style={{ opacity: 0.4, marginBottom: '0.5rem' }} />
-                    <p>Loading hymns...</p>
+                    <p>{t('gradeReport.loading')}</p>
                 </div>
             ) : (
                 <div className="mezmur-layout">
-                    {/* Hymn list */}
                     <div className="mezmur-list">
                         {filtered.length === 0 ? (
                             <div className="mezmur-empty">
                                 <FaMusic size={40} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                                <p>{hymns.length === 0 ? 'No hymns have been added yet.' : 'No hymns match your search.'}</p>
+                                <p>{hymns.length === 0 ? t('mezmur.noHymns') : t('hymns.noMatch')}</p>
                             </div>
                         ) : (
                             filtered.map(hymn => (
@@ -125,7 +125,6 @@ const Mezmur = () => {
                         )}
                     </div>
 
-                    {/* Detail view */}
                     {selected && (
                         <div className="mezmur-detail">
                             <div className="mezmur-detail-header">
@@ -158,7 +157,7 @@ const Mezmur = () => {
                                     ? selected.lyrics.split('\n').map((line, i) => (
                                         <p key={i} style={{ margin: '0.2rem 0' }}>{line || <br />}</p>
                                     ))
-                                    : <p className="mezmur-no-lyrics">ምንም ግጥም አልተጨመረም — No lyrics added yet.</p>
+                                    : <p className="mezmur-no-lyrics">{t('hymns.noLyrics')}</p>
                                 }
                             </div>
                         </div>

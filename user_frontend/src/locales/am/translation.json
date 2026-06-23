@@ -35,7 +35,8 @@
         "noCourses": "ምንም ትምህርት አልተገኘም።",
         "download": "ፋይሉን ያውርዱ",
         "loading": "ትምህርቶችን በመጫን ላይ...",
-        "error": "ትምህርቶችን መጫን አልተሳካም። እባክዎ ቆይተው እንደገና ይሞክሩ።"
+        "error": "ትምህርቶችን መጫን አልተሳካም። እባክዎ ቆይተው እንደገና ይሞክሩ።",
+        "searchPlaceholder": "ትምህርት ፈልጉ..."
     },
     "home": {
         "heroTitle": "እንኳን ወደ አንቀፀ ብርሃን ሰንበት ት/ቤት በደህና መጡ",
@@ -78,18 +79,9 @@
             }
         },
         "values": {
-            "spirituality": {
-                "title": "መንፈሳዊነት",
-                "desc": "በኢኦተቤ ቅዱሳት ትውፊቶች እና ቀኖናዎች ውስጥ ጠልቆ የሰረጸ።"
-            },
-            "education": {
-                "title": "ትምህርት",
-                "desc": "እውቀትንና ጥበብን ለቀጣዩ ትውልድ መጠበቅ።"
-            },
-            "community": {
-                "title": "ማህበረሰብ",
-                "desc": "በፍቅር እና በእግዚአብሔር አገልግሎት የተዋሃደ ንቁ ቤተሰብ።"
-            }
+            "spirituality": { "title": "መንፈሳዊነት", "desc": "በኢኦተቤ ቅዱሳት ትውፊቶች እና ቀኖናዎች ውስጥ ጠልቆ የሰረጸ።" },
+            "education": { "title": "ትምህርት", "desc": "እውቀትንና ጥበብን ለቀጣዩ ትውልድ መጠበቅ።" },
+            "community": { "title": "ማህበረሰብ", "desc": "በፍቅር እና በእግዚአብሔር አገልግሎት የተዋሃደ ንቁ ቤተሰብ።" }
         }
     },
     "contact": {
@@ -112,14 +104,14 @@
         }
     },
     "signin": {
-        "title": "ይግቡ (Sign In)",
+        "title": "ይግቡ",
         "subtitle": "ለመቀጠል መለያዎን ያስገቡ",
-        "email": "ኢሜይል (Email)",
-        "password": "የይለፍ ቃል (Password)",
+        "email": "ኢሜይል",
+        "password": "የይለፍ ቃል",
         "button": "ይግቡ",
-        "rememberMe": "አስታውሰኝ (Remember me)",
+        "rememberMe": "አስታውሰኝ",
         "noAccount": "መለያ የለዎትም?",
-        "createOne": "አዲስ ይፍጠሩ (Create one)",
+        "createOne": "አዲስ ይፍጠሩ",
         "signup": "ይመዝገቡ",
         "forgotPassword": "የይለፍ ቃል ረስተዋል?",
         "forgotPasswordPage": {
@@ -153,23 +145,24 @@
     },
     "signup": {
         "title": "መለያ ይፍጠሩ",
-        "christianName": "የክርስትና ስም (Christian Name)",
-        "name": "ሙሉ ስም (Full Name)",
-        "email": "ኢሜይል (Email)",
-        "phone": "ስልክ ቁጥር (Phone Number)",
-        "sex": "ጾታ (Sex)",
-        "role": "ይመዝገቡ እንደ (Register As)",
-        "selectRole": "ሚና ይምረጡ (Select Role)",
-        "student": "ተማሪ (Student)",
-        "teacher": "መምህር (Teacher)",
-        "selectSex": "ጾታ ይምረጡ (Select Sex)",
-        "male": "ወንድ (Male)",
-        "female": "ሴት (Female)",
-        "grade": "ክፍል (Grade)",
-        "nationalId": "ብሄራዊ መታወቂያ (National ID)",
-        "dob": "የትውልድ ቀን (Date of Birth)",
-        "password": "የይለፍ ቃል (Password)",
-        "confirmPassword": "የይለፍ ቃል ያረጋግጡ (Confirm Password)",
+        "christianName": "የክርስትና ስም",
+        "name": "ሙሉ ስም",
+        "email": "ኢሜይል",
+        "phone": "ስልክ ቁጥር",
+        "sex": "ጾታ",
+        "role": "ይመዝገቡ እንደ",
+        "selectRole": "ሚና ይምረጡ",
+        "student": "ተማሪ",
+        "teacher": "መምህር",
+        "selectSex": "ጾታ ይምረጡ",
+        "male": "ወንድ",
+        "female": "ሴት",
+        "grade": "ክፍል",
+        "adult": "ትልቅ / ሌላ",
+        "nationalId": "ብሄራዊ መታወቂያ",
+        "dob": "የትውልድ ቀን",
+        "password": "የይለፍ ቃል",
+        "confirmPassword": "የይለፍ ቃል ያረጋግጡ",
         "selectOption": "ምርጫ ይምረጡ",
         "button": "ይመዝገቡ",
         "registering": "በመመዝገብ ላይ...",
@@ -177,8 +170,8 @@
         "haveAccount": "መለያ አለዎት?",
         "signIn": "ይግቡ",
         "passwordMismatch": "የይለፍ ቃሎች አይዛመዱም!",
-        "servedQuestion": "በሌላ ሰንበት ት/ቤት/ቤተክርስቲያን አገልግለው ያውቃሉ? (Have you served in another Sunday School/Church?)",
-        "servedWhere": "የት ነው ያገለገሉት? (Where did you serve?)",
+        "servedQuestion": "በሌላ ሰንበት ት/ቤት/ቤተክርስቲያን አገልግለው ያውቃሉ?",
+        "servedWhere": "የት ነው ያገለገሉት?",
         "yesLabel": "አዎ",
         "noLabel": "አይ",
         "attachCertificate": "የምስክር ወረቀት ወይም የድጋፍ ደብዳቤ ካለዎት እዚህ ያያይዙ",
@@ -197,7 +190,7 @@
         "title": "ፕሮፋይል",
         "personalInfo": "የግል መረጃ",
         "saveChanges": "ለውጦችን አስቀምጥ",
-        "changePassword": "የይለፍ ቃል ለመቀየር",
+        "changePassword": "የይለፍ ቃል ቀይር",
         "currentPassword": "የአሁኑ የይለፍ ቃል",
         "newPassword": "አዲስ የይለፍ ቃል",
         "confirmNewPassword": "አዲሱን የይለፍ ቃል ያረጋግጡ",
@@ -248,6 +241,20 @@
         "fail": "ያልፈ",
         "status": "ሁኔታ"
     },
+    "studentResults": {
+        "title": "የውጤት ዝርዝር",
+        "subtitle": "በሁሉም ትምህርቶች ያለዎትን ውጤት ይመልከቱ።",
+        "searchPlaceholder": "ትምህርት ፈልጉ ወይም ይምረጡ...",
+        "noGrades": "እስካሁን ምንም ውጤት አልተለጠፈም።",
+        "notFound": "የተማሪ መረጃ አልተገኘም። እባክዎ እንደገና ይግቡ።",
+        "fetchError": "ውጤቶችን ማምጣት አልተቻለም።",
+        "fetchErrorGeneral": "ውጤቶችዎን ሲያመጡ ስህተት ተፈጥሯል።",
+        "mid": "አጋማሽ",
+        "final": "ፍፃሜ",
+        "assign": "ሥርዓተ ትምህርት",
+        "total": "ድምር",
+        "pending": "በመጠባበቅ ላይ"
+    },
     "attendance": {
         "title": "መገኘት",
         "subtitle": "የዕለት ተማሪዎች መገኘት ይመዝግቡ እና ይገምግሙ",
@@ -269,7 +276,7 @@
     },
     "hymns": {
         "title": "የመዝሙር አስተዳደር",
-        "subtitle": "የጉባኤውን የዘፈን ዝርዝር ያክሉ፣ ያርሙ እና ያስተዳድሩ",
+        "subtitle": "የጉባኤውን መዝሙሮች ዝርዝር ያክሉ፣ ያርሙ እና ያስተዳድሩ",
         "addBtn": "መዝሙር ጨምር",
         "editTitle": "መዝሙር አርም",
         "addTitle": "አዲስ መዝሙር ጨምር",
@@ -294,6 +301,7 @@
         "cancel": "ሰርዝ",
         "save": "መዝሙር ጨምር",
         "update": "አዘምን",
+        "song": "መዝሙር",
         "categories": {
             "praise": "ምስጋና",
             "worship": "አምልኮ",
@@ -303,6 +311,10 @@
             "closing": "መዝጊያ",
             "other": "ሌላ"
         }
+    },
+    "mezmur": {
+        "subtitle": "የጉባኤያችንን መዝሙሮች ዝርዝር ይዩ",
+        "noHymns": "እስካሁን ምንም መዝሙር አልተጨመረም።"
     },
     "subscription": {
         "title": "ለዜና መጽሔታችን ይመዝገቡ",
