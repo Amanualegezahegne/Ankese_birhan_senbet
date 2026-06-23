@@ -6,6 +6,16 @@ import '../Styles/Mezmur.css';
 
 const CATEGORIES = ['Praise', 'Worship', 'Offertory', 'Communion', 'Opening', 'Closing', 'Other'];
 
+const CATEGORY_KEYS = {
+    Praise: 'hymns.categories.praise',
+    Worship: 'hymns.categories.worship',
+    Offertory: 'hymns.categories.offertory',
+    Communion: 'hymns.categories.communion',
+    Opening: 'hymns.categories.opening',
+    Closing: 'hymns.categories.closing',
+    Other: 'hymns.categories.other',
+};
+
 const Mezmur = () => {
     const { t } = useTranslation();
     const [hymns, setHymns] = useState([]);
@@ -74,7 +84,7 @@ const Mezmur = () => {
                     onChange={e => setCategoryFilter(e.target.value)}
                 >
                     <option value="">{t('hymns.allCategories')}</option>
-                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    {CATEGORIES.map(c => <option key={c} value={c}>{t(CATEGORY_KEYS[c])}</option>)}
                 </select>
             </div>
 

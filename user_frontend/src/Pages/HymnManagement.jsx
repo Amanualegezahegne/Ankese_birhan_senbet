@@ -7,6 +7,16 @@ import '../Styles/HymnManagement.css';
 const CATEGORIES = ['Praise', 'Worship', 'Offertory', 'Communion', 'Opening', 'Closing', 'Other'];
 const LANGUAGES = ['Amharic', 'English', 'Oromiffa', 'Tigrinya', 'Other'];
 
+const CATEGORY_KEYS = {
+    Praise: 'hymns.categories.praise',
+    Worship: 'hymns.categories.worship',
+    Offertory: 'hymns.categories.offertory',
+    Communion: 'hymns.categories.communion',
+    Opening: 'hymns.categories.opening',
+    Closing: 'hymns.categories.closing',
+    Other: 'hymns.categories.other',
+};
+
 const emptyForm = { title: '', lyrics: '', category: '', author: '', language: 'Amharic' };
 
 const HymnManagement = () => {
@@ -159,7 +169,7 @@ const HymnManagement = () => {
                     onChange={e => setCategoryFilter(e.target.value)}
                 >
                     <option value="">{t('hymns.allCategories')}</option>
-                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    {CATEGORIES.map(c => <option key={c} value={c}>{t(CATEGORY_KEYS[c])}</option>)}
                 </select>
             </div>
 
@@ -254,7 +264,7 @@ const HymnManagement = () => {
                                     <label>{t('hymns.category')}</label>
                                     <select className="hymn-input" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
                                         <option value="">{t('hymns.allCategories')}</option>
-                                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                        {CATEGORIES.map(c => <option key={c} value={c}>{t(CATEGORY_KEYS[c])}</option>)}
                                     </select>
                                 </div>
                                 <div className="hymn-field">
