@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaEdit } from 'react-icons/fa';
 import api from '../api/axios';
 import '../Styles/Attendance.css';
 
@@ -8,6 +9,8 @@ const Attendance = () => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [students, setStudents] = useState([]);
     const [attendanceMap, setAttendanceMap] = useState({});
+    const [originalMap, setOriginalMap] = useState({}); // saved state from DB
+    const [hasExistingRecords, setHasExistingRecords] = useState(false);
     const [gradeFilter, setGradeFilter] = useState('All');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -15,7 +18,6 @@ const Attendance = () => {
 
     const isMounted = useRef(false);
 
-    // Derived: filter students by selected grade
     const filteredStudents = gradeFilter && gradeFilter !== 'All'
         ? students.filter(s => s.grade === gradeFilter)
         : students;
@@ -29,15 +31,12 @@ const Attendance = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.success) {
-                const sorted = response.data.data.sort((a, b) =>
-                    a.name.localeCompare(b.name)
-                );
+                const sorted = response.data.data.sort((a, b) => a.name.localeCompare(b.name));
                 setStudents(sorted);
                 return sorted;
             }
             return [];
         } catch (error) {
-            console.error('Error fetching students:', error);
             setMessage({ type: 'error', text: t('attendance.studentsError') });
             return [];
         }
@@ -50,12 +49,16 @@ const Attendance = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.success) {
+                const records = response.data.data || [];
                 const existingMap = {};
-                (response.data.data || []).forEach(record => {
+                records.forEach(record => {
                     existingMap[record.student_id] = record.status;
                 });
 
-                // Pre-fill students without a record as 'Present' (same as admin)
+                const hasRecords = records.length > 0;
+                setHasExistingRecords(hasRecords);
+
+                // Pre-fill: existing records first, then default new students to 'Present'
                 const initialMap = { ...existingMap };
                 (studentList || students).forEach(student => {
                     const id = student.id || student._id;
@@ -65,9 +68,9 @@ const Attendance = () => {
                 });
 
                 setAttendanceMap(initialMap);
+                setOriginalMap({ ...initialMap }); // snapshot for change detection
             }
         } catch (error) {
-            console.error('Error fetching attendance:', error);
             setMessage({ type: 'error', text: t('attendance.loadError') });
         }
     };
@@ -86,7 +89,6 @@ const Attendance = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Reload attendance when date changes
     useEffect(() => {
         if (!isMounted.current) return;
         setMessage({ type: '', text: '' });
@@ -94,7 +96,6 @@ const Attendance = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [date]);
 
-    // Auto-dismiss message after 5 seconds
     useEffect(() => {
         if (!message.text) return;
         const timer = setTimeout(() => setMessage({ type: '', text: '' }), 5000);
@@ -123,17 +124,25 @@ const Attendance = () => {
             await api.post('/attendance', { date, records }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setMessage({ type: 'success', text: t('attendance.success') });
+            const msg = hasExistingRecords ? t('attendance.updateSuccess') : t('attendance.success');
+            setMessage({ type: 'success', text: msg });
+            // Refresh snapshot so changed indicators reset
+            setOriginalMap({ ...attendanceMap });
         } catch (error) {
-            console.error('Error saving attendance:', error);
             setMessage({
                 type: 'error',
-                text: error?.response?.data?.message || 'Failed to save attendance.'
+                text: error?.response?.data?.message || t('attendance.error')
             });
         } finally {
             setSaving(false);
         }
     };
+
+    // Count how many rows have been changed from the saved state
+    const changedCount = filteredStudents.filter(s => {
+        const id = s.id || s._id;
+        return attendanceMap[id] !== originalMap[id];
+    }).length;
 
     // ── Render ─────────────────────────────────────────────────
 
@@ -174,6 +183,38 @@ const Attendance = () => {
                 </div>
             </div>
 
+            {/* Edit mode banner */}
+            {hasExistingRecords && !loading && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    padding: '0.75rem 1.2rem',
+                    borderRadius: '10px',
+                    background: 'rgba(77, 163, 255, 0.12)',
+                    border: '1px solid #4da3ff',
+                    color: '#4da3ff',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    marginBottom: '1rem'
+                }}>
+                    <FaEdit />
+                    {t('attendance.editMode') || 'Editing existing attendance — change any status and click Save to update.'}
+                    {changedCount > 0 && (
+                        <span style={{
+                            marginLeft: 'auto',
+                            background: '#4da3ff',
+                            color: 'white',
+                            borderRadius: '12px',
+                            padding: '0.15rem 0.7rem',
+                            fontSize: '0.8rem'
+                        }}>
+                            {changedCount} {t('attendance.changed') || 'changed'}
+                        </span>
+                    )}
+                </div>
+            )}
+
             {/* Alert */}
             {message.text && (
                 <div className={`alert alert-${message.type}`}>{message.text}</div>
@@ -205,8 +246,13 @@ const Attendance = () => {
                                     filteredStudents.map((student, index) => {
                                         const id = student.id || student._id;
                                         const currentStatus = attendanceMap[id];
+                                        const isChanged = currentStatus !== originalMap[id];
+
                                         return (
-                                            <tr key={id}>
+                                            <tr key={id} style={isChanged ? {
+                                                background: 'rgba(77, 163, 255, 0.06)',
+                                                borderLeft: '3px solid #4da3ff'
+                                            } : {}}>
                                                 <td>{index + 1}</td>
                                                 <td>
                                                     <div className="student-name-cell">
@@ -220,7 +266,7 @@ const Attendance = () => {
                                                 </td>
                                                 <td>{student.grade || '—'}</td>
                                                 <td>
-                                                    <div className="status-toggle">
+                                                    <div className="status-toggle" style={{ alignItems: 'center', gap: '0.4rem' }}>
                                                         <button
                                                             className={`status-btn present${currentStatus === 'Present' ? ' active' : ''}`}
                                                             onClick={() => handleStatusChange(id, 'Present')}
@@ -239,6 +285,14 @@ const Attendance = () => {
                                                         >
                                                             {t('attendance.permission')}
                                                         </button>
+                                                        {isChanged && (
+                                                            <FaEdit
+                                                                size={12}
+                                                                color="#4da3ff"
+                                                                title="Changed"
+                                                                style={{ flexShrink: 0 }}
+                                                            />
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -251,7 +305,11 @@ const Attendance = () => {
 
                     <div className="attendance-actions">
                         <button className="save-btn" onClick={handleSave} disabled={saving}>
-                            {saving ? t('attendance.saving') : t('attendance.save')}
+                            {saving
+                                ? t('attendance.saving')
+                                : hasExistingRecords
+                                    ? t('attendance.update') || 'Update Attendance'
+                                    : t('attendance.save')}
                         </button>
                     </div>
                 </>

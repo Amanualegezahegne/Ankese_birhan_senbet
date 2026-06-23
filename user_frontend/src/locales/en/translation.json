@@ -281,7 +281,11 @@
         "studentsError": "Failed to load students. Please try again.",
         "noStudents": "No students found.",
         "loading": "Loading students...",
-        "noMarked": "Please mark at least one student before saving."
+        "noMarked": "Please mark at least one student before saving.",
+        "editMode": "Editing existing attendance — change any status and click Update to correct it.",
+        "changed": "changed",
+        "update": "Update Attendance",
+        "updateSuccess": "Attendance updated successfully!"
     },
     "hymns": {
         "title": "Hymn / Song Management",
