@@ -50,7 +50,7 @@ function App() {
   const { t } = useTranslation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('studentToken'));
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default open for desktop if desired, or false
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 769);
 
   // Check if user is teacher
   const userInfo = JSON.parse(localStorage.getItem('studentInfo'));
@@ -73,6 +73,7 @@ function App() {
           toggleTheme={toggleTheme}
           isAuthenticated={isAuthenticated}
           setIsAuthenticated={setIsAuthenticated}
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
         {isAuthenticated && (

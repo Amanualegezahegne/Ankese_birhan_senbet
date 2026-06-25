@@ -2,9 +2,10 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { FaBars } from 'react-icons/fa';
 import '../Styles/Navbar.css';
 
-const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated }) => {
+const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggleSidebar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -27,6 +28,17 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated }) => 
 
   return (
     <nav className="navbar">
+      {/* Sidebar toggle — mobile only, shown when authenticated */}
+      {isAuthenticated && (
+        <button
+          className="sidebar-toggle-btn"
+          onClick={toggleSidebar}
+          aria-label="Toggle Sidebar"
+        >
+          <FaBars />
+        </button>
+      )}
+
       {/* Brand */}
       <div className="navbar-brand">
         <Link to="/">{t('navbar.brand')}</Link>

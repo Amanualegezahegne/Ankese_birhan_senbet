@@ -23,10 +23,10 @@
     }
 }
 
-/* Mobile Sidebar behavior - persistent mini sidebar (70px) */
+/* Mobile Sidebar behavior - sidebar hidden by default, shows as overlay when open */
 @media (max-width: 768px) {
     .main-content.sidebar-open {
-        margin-left: 70px;
-        width: calc(100% - 70px);
+        margin-left: 0;
+        width: 100%;
     }
 }
