@@ -1,4 +1,6 @@
 const { supabase } = require('../config/db');
+const XLSX = require('xlsx');
+const fs = require('fs');
 
 // @desc    Get all hymns
 // @route   GET /api/hymns
@@ -132,4 +134,62 @@ const deleteHymn = async (req, res) => {
     }
 };
 
-module.exports = { getHymns, getHymnById, createHymn, updateHymn, deleteHymn };
+// @desc    Bulk import hymns from Excel/CSV
+// @route   POST /api/hymns/import
+// @access  Private (mezmure, admin)
+const bulkImportHymns = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Please upload a file' });
+        }
+
+        const workbook = XLSX.readFile(req.file.path);
+        const sheetName = workbook.SheetNames[0];
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        fs.unlinkSync(req.file.path); // clean up temp file
+
+        if (rows.length === 0) {
+            return res.status(400).json({ success: false, message: 'File is empty' });
+        }
+
+        const hymnsToInsert = [];
+        const errors = [];
+
+        rows.forEach((row, i) => {
+            const title = row.title || row.Title || row['ርዕስ'];
+            if (!title) {
+                errors.push(`Row ${i + 2}: missing title`);
+                return;
+            }
+            hymnsToInsert.push({
+                title: String(title).trim(),
+                lyrics: String(row.lyrics || row.Lyrics || row['ግጥም'] || '').trim(),
+                category: String(row.category || row.Category || row['ምድብ'] || '').trim(),
+                author: String(row.author || row.Author || row['ደራሲ'] || '').trim(),
+                language: String(row.language || row.Language || row['ቋንቋ'] || 'Amharic').trim(),
+                created_by: req.user.id
+            });
+        });
+
+        if (hymnsToInsert.length === 0) {
+            return res.status(400).json({ success: false, message: 'No valid hymns found', errors });
+        }
+
+        const { error } = await supabase.from('hymns').insert(hymnsToInsert);
+        if (error) throw error;
+
+        res.status(201).json({
+            success: true,
+            message: `Successfully imported ${hymnsToInsert.length} hymn(s).`,
+            count: hymnsToInsert.length,
+            errors: errors.length > 0 ? errors : undefined
+        });
+    } catch (error) {
+        if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        console.error('Bulk Import Hymns Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { getHymns, getHymnById, createHymn, updateHymn, deleteHymn, bulkImportHymns };

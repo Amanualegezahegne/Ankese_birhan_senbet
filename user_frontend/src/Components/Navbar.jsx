@@ -2,17 +2,15 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FaBars } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import '../Styles/Navbar.css';
 
-const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggleSidebar }) => {
+const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggleSidebar, isSidebarOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const changeLanguage = () => {
     const newLang = i18n.language === 'en' ? 'am' : 'en';
@@ -28,14 +26,14 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggl
 
   return (
     <nav className="navbar">
-      {/* Sidebar toggle — mobile only, shown when authenticated */}
+      {/* Sidebar arrow toggle — mobile only, shown when authenticated */}
       {isAuthenticated && (
         <button
           className="sidebar-toggle-btn"
           onClick={toggleSidebar}
           aria-label="Toggle Sidebar"
         >
-          <FaBars />
+          {isSidebarOpen ? <FaChevronLeft /> : <FaChevronRight />}
         </button>
       )}
 
@@ -44,12 +42,8 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggl
         <Link to="/">{t('navbar.brand')}</Link>
       </div>
 
-      {/* Hamburger */}
-      <button
-        className="hamburger"
-        onClick={toggleMenu}
-        aria-label="Toggle Menu"
-      >
+      {/* Hamburger for the top nav links */}
+      <button className="hamburger" onClick={toggleMenu} aria-label="Toggle Menu">
         <span className="bar"></span>
         <span className="bar"></span>
         <span className="bar"></span>
@@ -60,11 +54,6 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggl
         <Link to="/" onClick={() => setIsOpen(false)}>{t('navbar.home')}</Link>
         <Link to="/about" onClick={() => setIsOpen(false)}>{t('navbar.about')}</Link>
         <Link to="/contact" onClick={() => setIsOpen(false)}>{t('navbar.contact')}</Link>
-
-        {isAuthenticated && (
-          <>
-          </>
-        )}
 
         <button
           onClick={changeLanguage}
@@ -86,19 +75,12 @@ const Navbar = ({ theme, toggleTheme, isAuthenticated, setIsAuthenticated, toggl
         {isAuthenticated ? (
           <button
             className="btn-signin logout-btn"
-            onClick={() => {
-              handleLogout();
-              setIsOpen(false);
-            }}
+            onClick={() => { handleLogout(); setIsOpen(false); }}
           >
             {t('navbar.logout')}
           </button>
         ) : (
-          <Link
-            to="/signin"
-            className="btn-signin"
-            onClick={() => setIsOpen(false)}
-          >
+          <Link to="/signin" className="btn-signin" onClick={() => setIsOpen(false)}>
             {t('navbar.signIn')}
           </Link>
         )}

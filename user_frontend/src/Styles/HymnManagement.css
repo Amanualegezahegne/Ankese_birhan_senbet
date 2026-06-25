@@ -47,6 +47,32 @@
 
 .hymn-add-btn:hover { opacity: 0.85; }
 
+.hymn-import-btn {
+    padding: 0.7rem 1.2rem;
+    background-color: #1d4ed8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.hymn-import-btn:hover:not(:disabled) { opacity: 0.85; }
+.hymn-import-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.hymn-import-btn.secondary {
+    background-color: transparent;
+    border: 2px solid var(--nav-border);
+    color: var(--text-color);
+}
+
+.hymn-import-btn.secondary:hover { background-color: var(--nav-bg); }
+
 /* Alert */
 .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 500; }
 .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }

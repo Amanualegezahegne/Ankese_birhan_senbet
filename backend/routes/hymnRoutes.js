@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { getHymns, getHymnById, createHymn, updateHymn, deleteHymn } = require('../controllers/hymnController');
+const { getHymns, getHymnById, createHymn, updateHymn, deleteHymn, bulkImportHymns } = require('../controllers/hymnController');
 const { protect, mezmure } = require('../middleware/authMiddleware');
+const upload = require('../middleware/multer');
 
-// GET is open to all authenticated users (students can read)
-// POST/PUT/DELETE require mezmure or admin role
+// Bulk import — mezmure/admin only
+router.post('/import', protect, mezmure, upload.single('file'), bulkImportHymns);
+
+// GET open to all authenticated users (students can read)
 router.route('/')
     .get(protect, getHymns)
     .post(protect, mezmure, createHymn);
