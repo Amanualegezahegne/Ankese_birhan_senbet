@@ -211,4 +211,15 @@
     .sidebar-close-btn {
         display: block;
     }
+    
+    .mobile-only-logout {
+        display: flex !important;
+    }
+}
+
+/* Hide mobile-only logout on desktop */
+@media (min-width: 769px) {
+    .mobile-only-logout {
+        display: none !important;
+    }
 }

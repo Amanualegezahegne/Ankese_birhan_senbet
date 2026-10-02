@@ -29,6 +29,14 @@
     min-width: 0;
 }
 
+@media (max-width: 768px) {
+    .navbar-brand {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
 .sidebar-toggle-btn {
     display: flex;
     background: rgba(255, 255, 255, 0.1);
@@ -95,69 +103,17 @@
     font-size: 1.2rem;
 }
 
-/* Hamburger */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    gap: 5px;
-    z-index: 1300;
-    position: relative;
+/* Desktop and Mobile links */
+.navbar-links {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    margin-left: auto;
 }
 
-.hamburger .bar {
-    width: 25px;
-    height: 3px;
-    background-color: var(--secondary-color);
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-/* Desktop links - CRITICAL: This makes buttons visible on desktop */
-@media (min-width: 769px) {
-    .navbar-links {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-        margin-left: auto;
-    }
-}
-
-/* Mobile links */
 @media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-
     .navbar-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        flex-direction: column;
-        background-color: var(--nav-bg);
-        padding: 2rem 1rem;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        align-items: center;
-        z-index: 1200;
-        border-bottom: 5px solid var(--secondary-color);
-    }
-
-    .navbar-links.active {
-        display: flex;
-    }
-
-    .navbar-links a {
-        margin: 1rem 0;
-        font-size: 1.2rem;
-    }
-
-    .theme-toggle-btn {
-        margin-bottom: 1rem;
+        display: none !important; /* Hide completely on mobile */
     }
 }
 
@@ -246,4 +202,48 @@
 
 .nav-icon {
     font-size: 1rem;
+}
+
+/* Search Bar */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    margin-right: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-search:focus-within {
+    border-color: rgba(212, 175, 55, 0.5);
+    background: rgba(15, 23, 42, 0.6);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+.navbar-search .search-icon {
+    color: #94a3b8;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.navbar-search .search-input {
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    outline: none;
+    width: 200px;
+    transition: width 0.3s ease;
+}
+
+.navbar-search .search-input::placeholder {
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .navbar-search {
+        display: none; /* Hide search bar on mobile to save space */
+    }
 }

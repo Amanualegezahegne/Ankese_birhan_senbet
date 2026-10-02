@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar, FaTimes, FaCalendarAlt } from 'react-icons/fa';
+import { FaHome, FaUsers, FaInfoCircle, FaEnvelope, FaCog, FaClipboardCheck, FaChalkboardTeacher, FaBookOpen, FaSignOutAlt, FaChartBar, FaTimes, FaCalendarAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import '../Styles/Sidebar.css';
@@ -58,6 +58,16 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
             </div>
             <nav className="sidebar-nav">
                 <NavLink 
+                    to="/" 
+                    onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                    title={t('admin.navbar.dashboard')}
+                >
+                    <FaHome className="icon" />
+                    <span className="label">{t('admin.navbar.dashboard')}</span>
+                </NavLink>
+
+                <NavLink 
                     to="/users" 
                     onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
@@ -97,10 +107,10 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
                     to="/attendance-date-report" 
                     onClick={() => isOpen && window.innerWidth <= 768 && toggleSidebar()} 
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                    title="Attendance Report"
+                    title={t('admin.navbar.attendanceReport')}
                 >
                     <FaCalendarAlt className="icon" />
-                    <span className="label">Attendance Report</span>
+                    <span className="label">{t('admin.navbar.attendanceReport')}</span>
                 </NavLink>
 
                 <NavLink 
@@ -170,7 +180,7 @@ const Sidebar = ({ handleLogout, isOpen, toggleSidebar }) => {
 
                 <button
                     onClick={handleLogout}
-                    className="nav-item logout-nav-item"
+                    className="nav-item logout-nav-item mobile-only-logout"
                     title={t('admin.navbar.logout')}
                 >
                     <FaSignOutAlt className="icon" />

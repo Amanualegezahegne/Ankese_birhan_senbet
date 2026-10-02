@@ -98,3 +98,36 @@ code {
 .animate-slide-up {
     animation: slideUp 0.8s ease-out forwards;
 }
+
+/* Universal Premium Buttons */
+.btn-signin, 
+.cta-button, 
+.submit-btn, 
+.read-more-btn,
+.subscribe-btn,
+.signin-btn,
+.save-btn {
+    font-weight: 800 !important;
+    color: #1a202c !important;
+    background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-decoration: none !important;
+}
+
+.btn-signin:hover, 
+.cta-button:hover, 
+.submit-btn:hover, 
+.read-more-btn:hover,
+.subscribe-btn:hover,
+.signin-btn:hover,
+.save-btn:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5) !important;
+    background: linear-gradient(135deg, #FDB931 0%, #FFD700 100%) !important;
+}

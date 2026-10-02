@@ -1,13 +1,12 @@
 const { Client } = require('pg');
 
 const runCleanup = async () => {
-    const password = process.env.DB_PASSWORD;
-    if (!password) {
-        console.warn('⚠️ DB_PASSWORD not found in environment. Cleanup skipped.');
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+        console.warn('⚠️ DATABASE_URL not found in environment. Cleanup skipped.');
         return;
     }
 
-    const connectionString = `postgresql://postgres.pklskjkzdqlioeqvfcqk:${password}@aws-1-eu-central-1.pooler.supabase.com:6543/postgres`;
     const client = new Client({ connectionString });
 
     try {

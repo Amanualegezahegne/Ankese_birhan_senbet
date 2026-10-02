@@ -13,11 +13,12 @@
 }
 
 .navbar-brand a {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 800;
     text-decoration: none;
     color: var(--secondary-color);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
 }
 
 /* Hamburger */
@@ -81,22 +82,25 @@
     }
 
     .navbar-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
+        display: flex;
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100vh;
         flex-direction: column;
         background-color: var(--nav-bg);
-        padding: 2rem 1rem;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        padding: 5rem 1rem 2rem 1rem;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
         align-items: center;
         z-index: 1200;
-        border-bottom: 5px solid var(--secondary-color);
+        border-bottom: none;
+        border-left: 3px solid var(--secondary-color);
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .navbar-links.active {
-        display: flex;
+        right: 0;
     }
 
     .navbar-links a {

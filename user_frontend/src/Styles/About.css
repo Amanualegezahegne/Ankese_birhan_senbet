@@ -5,30 +5,30 @@
 
 /* Hero Section */
 .about-hero {
-    height: 60vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/images/church_hero.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    padding: 4rem 2rem 2rem;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
 .about-hero-content {
     text-align: center;
     z-index: 2;
-    color: white;
 }
 
 .about-hero-content h1 {
-    font-size: 4rem;
-    font-weight: 800;
+    font-size: 3.5rem;
+    font-weight: 900;
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
 }
 
 .accent-line {
@@ -397,8 +397,13 @@
         transform: translateX(-50%);
     }
 
+    .about-hero {
+        padding: 3rem 1rem 1rem;
+        margin-bottom: 2rem;
+    }
+
     .about-hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
 
     .values-grid {

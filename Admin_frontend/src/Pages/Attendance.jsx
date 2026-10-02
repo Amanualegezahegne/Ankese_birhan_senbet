@@ -16,9 +16,12 @@ const Attendance = () => {
     const [saving, setSaving] = useState(false);
     const [selectedGrade, setSelectedGrade] = useState('All');
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(20);
 
     useEffect(() => {
         fetchStudentsAndAttendance();
+        setCurrentPage(1);
     }, [date, activeTab, selectedGrade]);
 
     const fetchStudentsAndAttendance = async () => {
@@ -89,6 +92,11 @@ const Attendance = () => {
             setSaving(false);
         }
     };
+
+    // Pagination logic
+    const totalPages = Math.ceil(students.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentStudents = students.slice(startIndex, startIndex + itemsPerPage);
 
     return (
         <div className="attendance-page">
@@ -200,7 +208,7 @@ const Attendance = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {students.map(student => {
+                                {currentStudents.map(student => {
                                     const sid = student.id || student._id;
                                     return (
                                     <tr key={sid}>
@@ -238,6 +246,39 @@ const Attendance = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {!loading && totalPages > 1 && (
+                        <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '1.5rem', background: 'var(--card-bg, #fff)', padding: '1rem', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)' }}>
+                            <button 
+                                className="save-btn" 
+                                disabled={currentPage === 1} 
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                style={{ backgroundColor: '#17a2b8', opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer', padding: '0.5rem 1rem', width: 'auto', marginBottom: 0 }}
+                            >
+                                Previous
+                            </button>
+                            <span style={{ color: 'var(--text-color, #000)', fontSize: '0.95rem' }}>
+                                Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                            </span>
+                            <button 
+                                className="save-btn" 
+                                disabled={currentPage === totalPages} 
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                style={{ backgroundColor: '#17a2b8', opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', padding: '0.5rem 1rem', width: 'auto', marginBottom: 0 }}
+                            >
+                                Next
+                            </button>
+                            <select 
+                                value={itemsPerPage} 
+                                onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', marginLeft: '1rem', backgroundColor: 'var(--input-bg, #fff)', color: 'var(--text-color, #000)' }}
+                            >
+                                <option value={10}>10 / page</option>
+                                <option value={20}>20 / page</option>
+                                <option value={50}>50 / page</option>
+                            </select>
+                        </div>
+                    )}
 
                     <div className="attendance-actions">
                         <button

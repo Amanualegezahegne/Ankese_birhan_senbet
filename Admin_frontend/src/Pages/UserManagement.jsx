@@ -19,6 +19,8 @@ const UserManagement = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
     const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [registerData, setRegisterData] = useState({
         name: '',
         christianName: '',
@@ -244,6 +246,15 @@ const UserManagement = () => {
         return matchesSearch && matchesStatus && matchesGrade;
     });
 
+    // Pagination logic
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, filterStatus, filterGrade]);
+
+    const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -347,10 +358,10 @@ const UserManagement = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredStudents.length > 0 ? (
-                                filteredStudents.map((student, index) => (
+                            {currentStudents.length > 0 ? (
+                                currentStudents.map((student, index) => (
                                     <tr key={student._id}>
-                                        <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#a0aec0' }}>{index + 1}</td>
+                                        <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#a0aec0' }}>{startIndex + index + 1}</td>
                                         <td><strong>{student.name}</strong></td>
                                         <td>{student.christianName}</td>
                                         <td>{student.grade || 'N/A'}</td>
@@ -398,6 +409,40 @@ const UserManagement = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+            )}
+
+            {!loading && totalPages > 1 && (
+                <div className="pagination-container">
+                    <button 
+                        className="pagination-btn" 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    >
+                        Previous
+                    </button>
+                    <span className="pagination-info">
+                        Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                    </span>
+                    <button 
+                        className="pagination-btn" 
+                        disabled={currentPage === totalPages} 
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    >
+                        Next
+                    </button>
+                    <div className="items-per-page">
+                        <select 
+                            value={itemsPerPage} 
+                            onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                            className="status-filter"
+                            style={{ padding: '0.4rem 0.8rem', marginLeft: '1rem', fontSize: '0.85rem' }}
+                        >
+                            <option value={10}>10 / page</option>
+                            <option value={20}>20 / page</option>
+                            <option value={50}>50 / page</option>
+                        </select>
+                    </div>
                 </div>
             )}
 

@@ -8,6 +8,7 @@ import Messages from './Pages/Messages';
 import UserManagement from './Pages/UserManagement';
 import TeacherManagement from './Pages/TeacherManagement';
 import NewsManager from './Pages/NewsManager';
+import PostNews from './Pages/PostNews';
 import Settings from './Pages/Settings';
 import Attendance from './Pages/Attendance';
 import AttendanceReport from './Pages/AttendanceReport';
@@ -15,6 +16,7 @@ import AttendanceDateReport from './Pages/AttendanceDateReport';
 import CourseManagement from './Pages/CourseManagement';
 import Results from './Pages/Results';
 import Report from './Pages/Report';
+import SearchResults from './Pages/SearchResults';
 import About from './Pages/About';
 import SignIn from './Pages/SignIn';
 import ForgotPassword from './Pages/ForgotPassword';
@@ -136,6 +138,12 @@ function App() {
                 </ProtectedRoute>
               } />
 
+              <Route path="/news/post" element={
+                <ProtectedRoute>
+                  <PostNews />
+                </ProtectedRoute>
+              } />
+
               <Route path="/attendance" element={
                 <ProtectedRoute>
                   <Attendance />
@@ -169,6 +177,12 @@ function App() {
               <Route path="/report" element={
                 <ProtectedRoute>
                   <Report />
+                </ProtectedRoute>
+              } />
+
+              <Route path="/search" element={
+                <ProtectedRoute>
+                  <SearchResults />
                 </ProtectedRoute>
               } />
 

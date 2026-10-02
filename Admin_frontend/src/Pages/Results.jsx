@@ -23,6 +23,8 @@ const Results = () => {
     const [dirtyRows, setDirtyRows] = useState(new Set());
     const [expandedRows, setExpandedRows] = useState(new Set());
     const [passingScore, setPassingScore] = useState(50);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         fetchStudents();
@@ -52,6 +54,7 @@ const Results = () => {
 
     useEffect(() => {
         fetchStudents();
+        setCurrentPage(1);
     }, [filters.grade]);
 
     const fetchCourses = async () => {
@@ -300,6 +303,10 @@ const Results = () => {
         document.body.removeChild(link);
     };
 
+    const totalPages = Math.ceil(students.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentStudents = students.slice(startIndex, startIndex + itemsPerPage);
+
     return (
         <div className="user-management-page" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -406,7 +413,7 @@ const Results = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {students.map((student, index) => {
+                        {currentStudents.map((student, index) => {
                             const grade = gradesMap[student._id] || {};
                             const isDirty = dirtyRows.has(student._id);
                             const isExpanded = expandedRows.has(student._id);
@@ -419,7 +426,7 @@ const Results = () => {
 
                             return (
                                 <tr key={student._id} className={isExpanded ? 'expanded-row-parent' : ''}>
-                                    <td>{index + 1}</td>
+                                    <td>{startIndex + index + 1}</td>
                                     <td><strong>{student.name}</strong></td>
                                     <td>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -513,6 +520,40 @@ const Results = () => {
                     </tbody>
                 </table>
             </div>
+
+            {!loading && totalPages > 1 && (
+                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '1.5rem', background: 'var(--card-bg, rgba(30, 41, 59, 0.7))', padding: '1rem', borderRadius: '12px' }}>
+                    <button 
+                        className="save-all-btn" 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        style={{ backgroundColor: '#17a2b8', opacity: currentPage === 1 ? 0.5 : 1, cursor: currentPage === 1 ? 'not-allowed' : 'pointer', padding: '0.5rem 1rem' }}
+                    >
+                        Previous
+                    </button>
+                    <span style={{ color: 'var(--text-color, #fff)', fontSize: '0.95rem' }}>
+                        Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                    </span>
+                    <button 
+                        className="save-all-btn" 
+                        disabled={currentPage === totalPages} 
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                        style={{ backgroundColor: '#17a2b8', opacity: currentPage === totalPages ? 0.5 : 1, cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', padding: '0.5rem 1rem' }}
+                    >
+                        Next
+                    </button>
+                    <select 
+                        value={itemsPerPage} 
+                        onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                        style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ffd700', marginLeft: '1rem', backgroundColor: 'var(--input-bg, #fff)', color: 'var(--text-color, #000)' }}
+                    >
+                        <option value={10}>10 / page</option>
+                        <option value={20}>20 / page</option>
+                        <option value={50}>50 / page</option>
+                    </select>
+                </div>
+            )}
+
             {loading && <p style={{ textAlign: 'center', marginTop: '1rem' }}>{t('admin.results.loading')}</p>}
         </div>
     );

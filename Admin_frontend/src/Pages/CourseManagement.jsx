@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
-import { FaTrash, FaEdit, FaPlus, FaBook, FaDownload, FaTimes, FaCloudUploadAlt } from 'react-icons/fa';
-import '../Styles/UserManagement.css'; // Reusing table and card styles
+import { FaTrash, FaEdit, FaPlus, FaBook, FaDownload, FaTimes, FaCloudUploadAlt, FaSave } from 'react-icons/fa';
+import '../Styles/CourseManagement.css'; 
 
 const CourseManagement = () => {
     const { t } = useTranslation();
@@ -11,12 +11,18 @@ const CourseManagement = () => {
     const [formData, setFormData] = useState({ title: '', description: '', grade: '' });
     const [editingId, setEditingId] = useState(null);
     const [status, setStatus] = useState({ type: '', message: '' });
+    
+    // Modal states
+    const [showFormModal, setShowFormModal] = useState(false);
     const [showMaterialsModal, setShowMaterialsModal] = useState(false);
+    
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [materialFile, setMaterialFile] = useState(null);
     const [materialName, setMaterialName] = useState('');
     const [uploadingMaterial, setUploadingMaterial] = useState(false);
     const [creationFile, setCreationFile] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         fetchCourses();
@@ -37,6 +43,11 @@ const CourseManagement = () => {
         }
     };
 
+    // Pagination logic
+    const totalPages = Math.ceil(courses.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentCourses = courses.slice(startIndex, startIndex + itemsPerPage);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -52,6 +63,7 @@ const CourseManagement = () => {
                 if (response.data.success) {
                     setStatus({ type: 'success', message: t('admin.coursemanagement.successUpdate') });
                     setEditingId(null);
+                    setShowFormModal(false);
                 }
             } else {
                 const data = new FormData();
@@ -71,9 +83,7 @@ const CourseManagement = () => {
                 if (response.data.success) {
                     setStatus({ type: 'success', message: t('admin.coursemanagement.successAdd') });
                     setCreationFile(null);
-                    // Reset file input if possible
-                    const fileInput = document.getElementById('creationFileInput');
-                    if (fileInput) fileInput.value = '';
+                    setShowFormModal(false);
                 }
             }
             setFormData({ title: '', description: '', grade: '' });
@@ -92,7 +102,7 @@ const CourseManagement = () => {
             grade: course.grade || '' 
         });
         setEditingId(course._id || course.id);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setShowFormModal(true);
     };
 
     const handleDelete = async (id) => {
@@ -135,17 +145,12 @@ const CourseManagement = () => {
             });
 
             if (response.data.success) {
-                // Update selected course materials locally
                 const updatedCourse = { ...selectedCourse };
                 updatedCourse.materials = [...(updatedCourse.materials || []), response.data.data];
                 setSelectedCourse(updatedCourse);
-
-                // Update main courses list
                 setCourses(courses.map(c => (c._id || c.id) === (selectedCourse._id || selectedCourse.id) ? updatedCourse : c));
-
                 setMaterialFile(null);
                 setMaterialName('');
-                // Reset file input
                 document.getElementById('materialFileInput').value = '';
             }
         } catch (error) {
@@ -178,115 +183,57 @@ const CourseManagement = () => {
     };
 
     return (
-        <div className="user-management-page">
-            <div className="header-container">
-                <h1>{t('admin.coursemanagement.title')}</h1>
-                <p className="subtitle">{t('admin.coursemanagement.subtitle')}</p>
+        <div className="course-management-page">
+            <div className="course-header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                    <h1>{t('admin.coursemanagement.title')}</h1>
+                    <p className="subtitle">{t('admin.coursemanagement.subtitle')}</p>
+                </div>
+                <button 
+                    className="btn-primary" 
+                    onClick={() => { 
+                        setEditingId(null); 
+                        setFormData({ title: '', description: '', grade: '' }); 
+                        setShowFormModal(true); 
+                    }}
+                >
+                    <FaPlus /> Add Course
+                </button>
             </div>
 
             {status.message && (
-                <div className={`alert alert-${status.type}`}>
+                <div className={`alert-modern alert-${status.type}`}>
                     {status.message}
                 </div>
             )}
 
-            {/* Form Section */}
-            <div className="card" style={{ padding: '2rem', marginBottom: '2rem' }}>
-                <h2 style={{ marginBottom: '1.5rem' }}>
-                    {editingId ? t('admin.coursemanagement.editCourse') : t('admin.coursemanagement.addCourse')}
-                </h2>
-                <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('admin.coursemanagement.titleLabel')}</label>
-                        <input
-                            type="text"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            required
-                            style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('admin.coursemanagement.descLabel')}</label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc', minHeight: '100px' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Target Grade</label>
-                        <select
-                            value={formData.grade}
-                            onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
-                            required
-                            style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc' }}
-                        >
-                            <option value="">Select Grade</option>
-                            {[...Array(12)].map((_, i) => (
-                                <option key={`grade-${i + 1}`} value={`Grade ${i + 1}`}>
-                                    Grade {i + 1}
-                                </option>
-                            ))}
-                            <option value="Adult">Adult / Other</option>
-                        </select>
-                    </div>
-                    {!editingId && (
-                        <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Initial Course Material (PDF, PPT, Word - Optional)</label>
-                            <input
-                                id="creationFileInput"
-                                type="file"
-                                onChange={(e) => setCreationFile(e.target.files[0])}
-                                style={{ width: '100%', padding: '0.5rem' }}
-                            />
-                        </div>
-                    )}
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <button type="submit" className="view-btn" disabled={loading} style={{ padding: '0.8rem 2rem' }}>
-                            <FaPlus style={{ marginRight: '0.5rem' }} /> {t('admin.coursemanagement.saveCourse')}
-                        </button>
-                        {editingId && (
-                            <button
-                                type="button"
-                                className="delete-item-btn"
-                                onClick={() => { setEditingId(null); setFormData({ title: '', description: '', grade: '' }); }}
-                                style={{ padding: '0.8rem 2rem', border: '1px solid #ccc', color: '#666' }}
-                            >
-                                {t('admin.usermanagement.details.close')}
-                            </button>
-                        )}
-                    </div>
-                </form>
-            </div>
-
             {/* List Section */}
-            <div className="table-wrapper">
-                <table className="management-table">
+            <div className="premium-table-wrapper">
+                <table className="premium-table">
                     <thead>
                         <tr>
                             <th>{t('admin.coursemanagement.titleLabel')}</th>
                             <th>Target Grade</th>
                             <th>{t('admin.coursemanagement.descLabel')}</th>
-                            <th style={{ width: '120px' }}>{t('admin.usermanagement.table.actions')}</th>
+                            <th style={{ width: '150px' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {courses.length > 0 ? (
-                            courses.map((course) => (
+                        {currentCourses.length > 0 ? (
+                            currentCourses.map((course) => (
                                 <tr key={course._id || course.id}>
-                                    <td><strong>{course.title}</strong></td>
-                                    <td><span className="status-badge status-approved" style={{ fontSize: '0.8rem' }}>{course.grade || 'General'}</span></td>
-                                    <td>{course.description}</td>
+                                    <td className="course-title-cell">{course.title}</td>
+                                    <td><span className="badge">{course.grade || 'General'}</span></td>
+                                    <td className="course-desc-cell">{course.description || 'No description provided.'}</td>
                                     <td>
-                                        <div className="action-row">
-                                            <button className="view-btn" onClick={() => handleEdit(course)} title={t('admin.coursemanagement.editCourse')} style={{ padding: '0.5rem' }}>
+                                        <div className="action-buttons">
+                                            <button className="action-btn edit" onClick={() => handleEdit(course)} title={t('admin.coursemanagement.editCourse')}>
                                                 <FaEdit />
                                             </button>
-                                            <button className="view-btn" onClick={() => handleManageMaterials(course)} title="Manage Materials" style={{ padding: '0.5rem', backgroundColor: '#4f46e5', color: 'white' }}>
+                                            <button className="action-btn material" onClick={() => handleManageMaterials(course)} title="Manage Materials">
                                                 <FaBook />
                                             </button>
-                                            <button className="delete-item-btn" onClick={() => handleDelete(course._id || course.id)} title={t('admin.coursemanagement.deleteCourse')} style={{ padding: '0.5rem' }}>
+                                            <button className="action-btn delete" onClick={() => handleDelete(course._id || course.id)} title={t('admin.coursemanagement.deleteCourse')}>
                                                 <FaTrash />
                                             </button>
                                         </div>
@@ -295,7 +242,7 @@ const CourseManagement = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>
+                                <td colSpan="4" style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
                                     {t('admin.coursemanagement.noCourses')}
                                 </td>
                             </tr>
@@ -303,102 +250,217 @@ const CourseManagement = () => {
                     </tbody>
                 </table>
             </div>
-            {loading && <p style={{ textAlign: 'center', marginTop: '1rem' }}>{t('admin.results.loading')}</p>}
+
+            {!loading && totalPages > 1 && (
+                <div className="pagination-container" style={{ background: 'rgba(30, 41, 59, 0.7)', padding: '1rem', borderRadius: '16px', marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
+                    <button 
+                        className="btn-cancel" 
+                        disabled={currentPage === 1} 
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        style={{ padding: '0.5rem 1rem' }}
+                    >
+                        Previous
+                    </button>
+                    <span style={{ color: '#e2e8f0' }}>
+                        Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                    </span>
+                    <button 
+                        className="btn-cancel" 
+                        disabled={currentPage === totalPages} 
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                        style={{ padding: '0.5rem 1rem' }}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+
+            {loading && <p style={{ textAlign: 'center', marginTop: '1rem', color: '#ffd700' }}>{t('admin.results.loading')}</p>}
+
+            {/* Form Modal */}
+            {showFormModal && (
+                <div className="premium-modal-overlay" onClick={() => setShowFormModal(false)}>
+                    <div className="premium-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+                        <div className="premium-modal-header">
+                            <h2>
+                                {editingId ? <FaEdit style={{ marginRight: '0.8rem' }} /> : <FaPlus style={{ marginRight: '0.8rem' }} />}
+                                {editingId ? t('admin.coursemanagement.editCourse') : t('admin.coursemanagement.addCourse')}
+                            </h2>
+                            <button className="close-icon-btn" onClick={() => setShowFormModal(false)}><FaTimes /></button>
+                        </div>
+                        <div className="premium-modal-body">
+                            <form onSubmit={handleSubmit} className="course-form">
+                                <div className="form-group">
+                                    <label>{t('admin.coursemanagement.titleLabel')}</label>
+                                    <input
+                                        type="text"
+                                        className="premium-input"
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        required
+                                        placeholder="e.g. Advanced Theology"
+                                    />
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label>{t('admin.coursemanagement.descLabel')}</label>
+                                    <textarea
+                                        className="premium-textarea"
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        placeholder="Briefly describe the course contents..."
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Target Grade</label>
+                                    <select
+                                        className="premium-select"
+                                        value={formData.grade}
+                                        onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
+                                        required
+                                    >
+                                        <option value="">Select Grade</option>
+                                        {[...Array(12)].map((_, i) => (
+                                            <option key={`grade-${i + 1}`} value={`Grade ${i + 1}`}>
+                                                Grade {i + 1}
+                                            </option>
+                                        ))}
+                                        <option value="Adult">Adult / Other</option>
+                                    </select>
+                                </div>
+
+                                {!editingId && (
+                                    <div className="form-group">
+                                        <label>Initial Course Material (Optional)</label>
+                                        <div className="file-upload-wrapper">
+                                            <input
+                                                id="creationFileInput"
+                                                type="file"
+                                                onChange={(e) => setCreationFile(e.target.files[0])}
+                                            />
+                                            <div className="file-upload-display">
+                                                <FaCloudUploadAlt size={24} />
+                                                <span>{creationFile ? creationFile.name : 'Upload PDF, PPT, Word...'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="btn-group" style={{ marginTop: '1.5rem', justifyContent: 'flex-end' }}>
+                                    <button type="button" className="btn-cancel" onClick={() => setShowFormModal(false)}>
+                                        Cancel
+                                    </button>
+                                    <button type="submit" className="btn-primary" disabled={loading}>
+                                        {editingId ? <FaSave /> : <FaPlus />} 
+                                        {t('admin.coursemanagement.saveCourse')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Materials Modal */}
             {showMaterialsModal && selectedCourse && (
-                <div className="modal-overlay" onClick={() => setShowMaterialsModal(false)}>
-                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '800px' }}>
-                        <div className="modal-header">
-                            <h2>Materials: {selectedCourse.title}</h2>
-                            <button className="close-btn" onClick={() => setShowMaterialsModal(false)}><FaTimes /></button>
+                <div className="premium-modal-overlay" onClick={() => setShowMaterialsModal(false)}>
+                    <div className="premium-modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="premium-modal-header">
+                            <h2>{selectedCourse.title} - Materials</h2>
+                            <button className="close-icon-btn" onClick={() => setShowMaterialsModal(false)}><FaTimes /></button>
                         </div>
-                        <div className="modal-body">
+                        <div className="premium-modal-body">
+                            
                             {/* Upload Section */}
-                            <div className="card" style={{ padding: '1.5rem', marginBottom: '2rem', backgroundColor: '#f9fafb' }}>
-                                <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Upload New Material</h3>
-                                <form onSubmit={handleMaterialUpload} style={{ display: 'grid', gap: '1rem' }}>
+                            <div className="upload-card">
+                                <h3>Upload New Material</h3>
+                                <form onSubmit={handleMaterialUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                         <input
                                             type="text"
+                                            className="premium-input"
                                             placeholder="Display Name (optional)"
                                             value={materialName}
                                             onChange={(e) => setMaterialName(e.target.value)}
-                                            style={{ padding: '0.6rem', borderRadius: '6px', border: '1px solid #ccc' }}
                                         />
-                                        <input
-                                            id="materialFileInput"
-                                            type="file"
-                                            onChange={(e) => setMaterialFile(e.target.files[0])}
-                                            required
-                                            style={{ padding: '0.4rem' }}
-                                        />
+                                        <div className="file-upload-wrapper">
+                                            <input
+                                                id="materialFileInput"
+                                                type="file"
+                                                onChange={(e) => setMaterialFile(e.target.files[0])}
+                                                required
+                                            />
+                                            <div className="file-upload-display" style={{ padding: '0.8rem 1rem' }}>
+                                                <FaCloudUploadAlt size={20} />
+                                                <span style={{ fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {materialFile ? materialFile.name : 'Choose File'}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <button
                                         type="submit"
-                                        className="view-btn"
+                                        className="btn-upload"
                                         disabled={uploadingMaterial || !materialFile}
-                                        style={{ justifySelf: 'start', padding: '0.6rem 1.5rem', backgroundColor: '#10b981', color: 'white' }}
+                                        style={{ alignSelf: 'flex-start' }}
                                     >
-                                        {uploadingMaterial ? 'Uploading...' : <><FaCloudUploadAlt style={{ marginRight: '0.5rem' }} /> Upload Material</>}
+                                        {uploadingMaterial ? 'Uploading...' : <><FaCloudUploadAlt /> Upload Material</>}
                                     </button>
                                 </form>
                             </div>
 
                             {/* List Section */}
-                            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Current Materials</h3>
-                            <div className="table-wrapper" style={{ boxShadow: 'none', border: '1px solid #eee' }}>
-                                <table className="management-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th style={{ width: '120px' }}>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {selectedCourse.materials && selectedCourse.materials.length > 0 ? (
-                                            selectedCourse.materials.map((m) => (
-                                                <tr key={m._id || m.id}>
-                                                    <td>{m.name}</td>
-                                                    <td><span className="status-badge status-pending" style={{ fontSize: '0.7rem' }}>{m.fileType?.toUpperCase()}</span></td>
-                                                    <td>
-                                                        <div className="action-row">
-                                                            <a
-                                                                href={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${m.url}`}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="view-btn"
-                                                                style={{ padding: '0.4rem', display: 'flex' }}
-                                                                title="Download"
-                                                            >
-                                                                <FaDownload />
-                                                            </a>
-                                                            <button
-                                                                className="delete-item-btn"
-                                                                onClick={() => handleDeleteMaterial(m._id || m.id)}
-                                                                style={{ padding: '0.4rem' }}
-                                                                title="Delete"
-                                                            >
-                                                                <FaTrash />
-                                                            </button>
-                                                        </div>
+                            <div className="material-list">
+                                <h3>Current Materials</h3>
+                                <div className="premium-table-wrapper" style={{ boxShadow: 'none', background: 'rgba(15, 23, 42, 0.4)' }}>
+                                    <table className="premium-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th style={{ width: '100px' }}>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedCourse.materials && selectedCourse.materials.length > 0 ? (
+                                                selectedCourse.materials.map((m) => (
+                                                    <tr key={m._id || m.id}>
+                                                        <td style={{ fontWeight: 500, color: '#f8fafc' }}>{m.name}</td>
+                                                        <td><span className="badge" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.2)' }}>{m.fileType?.toUpperCase()}</span></td>
+                                                        <td>
+                                                            <div className="action-buttons">
+                                                                <a
+                                                                    href={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${m.url}`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="action-btn material"
+                                                                    title="Download"
+                                                                >
+                                                                    <FaDownload />
+                                                                </a>
+                                                                <button
+                                                                    className="action-btn delete"
+                                                                    onClick={() => handleDeleteMaterial(m._id || m.id)}
+                                                                    title="Delete"
+                                                                >
+                                                                    <FaTrash />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: '#64748b' }}>
+                                                        No materials uploaded yet.
                                                     </td>
                                                 </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="3" style={{ textAlign: 'center', padding: '1.5rem', color: '#666' }}>
-                                                    No materials uploaded yet.
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn-close" onClick={() => setShowMaterialsModal(false)}>Close</button>
                         </div>
                     </div>
                 </div>

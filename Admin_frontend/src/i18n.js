@@ -6,13 +6,15 @@ const resources = {
         translation: {
             admin: {
                 navbar: {
-                    brand: "Ankese Birhan Senbet Sunday School",
+                    dashboard: "Admin Dashboard",
+                    brand: "Ankese Birhan Sunday School",
                     home: "Home",
                     about: "About",
                     contact: "Contact",
                     messages: "Messages",
                     users: "Student Management",
                     attendance: "Attendance",
+                    attendanceReport: "Attendance Report",
                     courses: "Course Management",
                     news: "Information",
                     profile: "Profile",
@@ -48,11 +50,27 @@ const resources = {
                 },
                 home: {
                     title: "Admin Dashboard",
-                    subtitle: "Ankese Birhan Senbet Sunday School Management",
+                    subtitle: "Ankese Birhan Sunday School Management",
+                    welcome: "Welcome back",
+                    welcomeDesc: "Here is what's happening with your Sunday School today.",
+                    loading: "Loading Dashboard Data...",
                     stats: {
                         students: "Total Students",
                         teachers: "Total Teachers",
-                        classes: "Active Classes"
+                        classes: "Active Courses",
+                        pending: "Pending Approvals",
+                        messages: "Unread Messages"
+                    },
+                    trends: {
+                        enrollment: "+ Active Enrollment",
+                        staff: "Registered Staff",
+                        curriculum: "Managed Curriculum",
+                        action: "Action Required",
+                        contact: "From Contact Form"
+                    },
+                    charts: {
+                        studentDistribution: "Students Distribution by Grade",
+                        userRoles: "User Roles Overview"
                     }
                 },
                 contact: {
@@ -336,6 +354,7 @@ const resources = {
         translation: {
             admin: {
                 navbar: {
+                    dashboard: "የአስተዳዳሪ ዳሽቦርድ",
                     brand: "አንቀፀ ብርሃን ሰንበት ት/ቤት",
                     home: "ዋና ገጽ",
                     about: "ስለ እኛ",
@@ -343,6 +362,7 @@ const resources = {
                     messages: "መልዕክቶች",
                     users: "የተማሪዎች አስተዳደር",
                     attendance: "የአባላት ክትትል",
+                    attendanceReport: "የክትትል ሪፖርት",
                     courses: "የትምህርት አይነቶች አስተዳደር",
                     news: "መረጃዎች",
                     profile: "መገለጫ",
@@ -379,10 +399,26 @@ const resources = {
                 home: {
                     title: "የአስተዳዳሪ ዳሽቦርድ",
                     subtitle: "የአንቀፀ ብርሃን ሰንበት ትምህርት ቤት አስተዳደር",
+                    welcome: "እንኳን ደህና መጡ",
+                    welcomeDesc: "በሰንበት ትምህርት ቤትዎ ውስጥ ዛሬ እየተከናወነ ያለው ይህ ነው።",
+                    loading: "ዳሽቦርድ መረጃን በማምጣት ላይ...",
                     stats: {
                         students: "ጠቅላላ ተማሪዎች",
                         teachers: "ጠቅላላ መምህራን",
-                        classes: "ንቁ ክፍሎች"
+                        classes: "ንቁ ክፍሎች",
+                        pending: "የሚጠብቁ ማረጋገጫዎች",
+                        messages: "ያልተነበቡ መልዕክቶች"
+                    },
+                    trends: {
+                        enrollment: "+ ንቁ ምዝገባ",
+                        staff: "የተመዘገቡ መምህራን",
+                        curriculum: "የሚተዳደሩ ትምህርቶች",
+                        action: "ተግባር ያስፈልጋል",
+                        contact: "ከመልዕክት ሳጥን"
+                    },
+                    charts: {
+                        studentDistribution: "የተማሪዎች ስርጭት በክፍል",
+                        userRoles: "የተጠቃሚዎች ድርሻ እይታ"
                     }
                 },
                 contact: {
