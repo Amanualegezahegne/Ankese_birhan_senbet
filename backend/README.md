@@ -22,7 +22,7 @@ npm install
 Open the `.env` file and replace the placeholder with your actual MongoDB connection string:
 
 ```env
-MONGODB_URI=mongodb+srv://your_username:your_password@cluster0.xxxxx.mongodb.net/ankese_birhan_senbet?retryWrites=true&w=majority
+MONGODB_URI="<your_mongodb_connection_string_here>"
 ```
 
 **Important:** Replace:
